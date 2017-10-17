@@ -42,7 +42,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	PhysBody* CreateCircle(int x, int y, int radius);
+	PhysBody* CreateCircle(int x, int y, int diameter);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size);
@@ -50,9 +50,12 @@ public:
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
+	// Create a Revolute Joint
+	b2RevoluteJointDef CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB);
+
 private:
 	bool debug;
-	b2World* world;
+
 	b2Body* ground;
 
 	b2MouseJoint* mouse_joint;
@@ -60,5 +63,6 @@ private:
 
 public:
 	b2Body* big_ball;
+	b2World* world;
 
 };

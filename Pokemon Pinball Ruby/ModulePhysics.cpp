@@ -75,7 +75,7 @@ update_status ModulePhysics::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int diameter)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
@@ -84,7 +84,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	b2Body* b = world->CreateBody(&body);
 
 	b2CircleShape shape;
-	shape.m_radius = PIXEL_TO_METERS(radius);
+	shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
@@ -94,7 +94,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
 	b->SetUserData(pbody);
-	pbody->width = pbody->height = radius;
+	pbody->width = pbody->height = diameter * 0.5f;
 
 	return pbody;
 }
@@ -271,12 +271,13 @@ update_status ModulePhysics::PostUpdate()
 			// TODO 1: If mouse button 1 is pressed ...
 			// App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN
 			// test if the current body contains mouse position
-
+			/*
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && b != big_ball) {
 
 				if (f->TestPoint(mouse_position))
 					body_clicked = b;
 			}
+			*/
 		}
 	}
 
@@ -285,6 +286,7 @@ update_status ModulePhysics::PostUpdate()
 	// TODO 2: If a body was selected, create a mouse joint
 	// using mouse_joint class property
 
+	
 	if (body_clicked != nullptr) {
 
 		// Mouse joint
@@ -315,11 +317,13 @@ update_status ModulePhysics::PostUpdate()
 		motor_def.maxForce = 50.0f;
 		motor_def.maxTorque = 0.0f;
 	}
+	
 
 	// TODO 3: If the player keeps pressing the mouse button, update
 	// target position and draw a red line between both anchor points
 	
 	// Draw mouse joint
+	/*
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && mouse_joint != nullptr) {
 
 		b2Vec2 anchorA = mouse_joint->GetBodyB()->GetPosition();
@@ -329,8 +333,10 @@ update_status ModulePhysics::PostUpdate()
 
 		App->renderer->DrawLine(METERS_TO_PIXELS(anchorA.x), METERS_TO_PIXELS(anchorA.y), METERS_TO_PIXELS(anchorB.x), METERS_TO_PIXELS(anchorB.y), 255, 0, 0);
 	}
+	*/
 
 	// Draw distance joint
+	/*
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && distance_joint != nullptr) {
 
 		b2Vec2 anchorA = distance_joint->GetBodyA()->GetPosition();
@@ -338,9 +344,10 @@ update_status ModulePhysics::PostUpdate()
 
 		App->renderer->DrawLine(METERS_TO_PIXELS(anchorA.x), METERS_TO_PIXELS(anchorA.y), METERS_TO_PIXELS(anchorB.x), METERS_TO_PIXELS(anchorB.y), 255, 0, 0);
 	}
+	*/
 
 	// TODO 4: If the player releases the mouse button, destroy the joint
-	
+	/*
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP) {
 
 		if (mouse_joint != nullptr) {
@@ -349,25 +356,32 @@ update_status ModulePhysics::PostUpdate()
 		}
 
 		// Uncomment if you want to maintain the distance joint
-		/*
+		
 		if (distance_joint != nullptr) {
 			world->DestroyJoint(distance_joint);
 			distance_joint = nullptr;
 		}
-		*/
+		
 
 		// Uncomment if you want to maintain the motor joint
-		/*
+		
 		if (distance_joint != nullptr) {
 			world->DestroyJoint(distance_joint);
 			distance_joint = nullptr;
 		}
-		*/
+		
 	}
+	*/
 
 	return UPDATE_CONTINUE;
 }
 
+// Create a Revolute Joint
+b2RevoluteJointDef ModulePhysics::CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB) {
+	b2RevoluteJointDef jointDef;
+	jointDef.Initialize(bodyA, bodyB, bodyA->GetWorldCenter());
+	return jointDef;
+}
 
 // Called before quitting
 bool ModulePhysics::CleanUp()
