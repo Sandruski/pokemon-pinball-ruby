@@ -1,0 +1,15 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (2D Physics - class 4.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Skipping... (no relevant changes detected)
+  ModuleWindow.cpp
+  ModuleTextures.cpp
+  ModuleSceneIntro.cpp
+  ModuleRender.cpp
+  ModulePlayer.cpp
+  ModulePhysics.cpp
+  ModuleInput.cpp
+  ModuleAudio.cpp
+  Main.cpp
+  log.cpp
+  Application.cpp
+  SDL Game.vcxproj -> C:\Users\sandraag3\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
+  SDL Game.vcxproj -> C:\Users\sandraag3\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)
