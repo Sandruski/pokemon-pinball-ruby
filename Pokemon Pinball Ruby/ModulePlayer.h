@@ -5,6 +5,22 @@
 #include "ModuleTextures.h"
 #include "Animation.h"
 
+enum ball_type {
+	pokeball,
+	superball,
+	ultraball,
+	masterball
+};
+
+struct Ball {
+
+	ball_type type = pokeball;
+
+	SDL_Rect* current_sprite;
+	int loops = 0;
+	int max_angle = 360;
+};
+
 class ModulePlayer : public Module
 {
 public:
@@ -19,16 +35,38 @@ private:
 
 	SDL_Texture* general;
 	SDL_Texture* menu;
-	SDL_Texture* pokeball;
+	SDL_Texture* pokeball1;
 
-	PhysBody* ball;
-	p2List<PhysBody*> balls;
+
 
 	SDL_Rect* r;
-	Animation* current_animation;
+
+	SDL_Rect* ball_sprite;
+	float loops;
+	int number;
+
+	//Animation* current_animation;
 	Animation ball_anim;
 
 	PhysBody* flippers[2];
+
+	//Ball
+	SDL_Rect b1 = { 159, 926, 15, 15 };
+	SDL_Rect b2 = { 176, 926, 15, 15 };
+	SDL_Rect b3 = { 193, 926, 15, 15 };
+	SDL_Rect b4 = { 210, 926, 15, 15 };
+	SDL_Rect b5 = { 227, 926, 15, 15 };
+	SDL_Rect b6 = { 244, 926, 15, 15 };
+	SDL_Rect b7 = { 261, 926, 15, 15 };
+	SDL_Rect b8 = { 278, 926, 15, 15 };
+	SDL_Rect b9 = { 295, 926, 15, 15 };
+	SDL_Rect b10 = { 312, 926, 15, 15 };
+	SDL_Rect b11 = { 329, 926, 15, 15 };
+	SDL_Rect b12 = { 346, 926, 15, 15 };
+	SDL_Rect b13 = { 363, 926, 15, 15 };
+	SDL_Rect b14 = { 380, 926, 15, 15 };
+	SDL_Rect b15 = { 397, 926, 15, 15 };
+	SDL_Rect b16 = { 414, 926, 15, 15 };
 
 	//Left flipper
 	SDL_Rect l_f1 = { 0, 1149, 29, 26 };
@@ -50,6 +88,14 @@ private:
 	SDL_Rect s1 = { 92, 815, 20, 35 };
 	SDL_Rect s2 = { 114, 815, 20, 35 };
 	SDL_Rect s3 = { 136, 815, 20, 35 };
+
+	//Get ball sprites
+	void GetBallSprites(float angle, Ball* ball_properties);
+
+	PhysBody* ball;
+	p2List<PhysBody*> balls;
+	Ball* ball_properties;
+	p2List<Ball*> balls_properties;
 
 public:
 

@@ -9,25 +9,7 @@
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	
-	ball_anim.PushBack({ 159, 926, 15, 15 });
-	ball_anim.PushBack({ 176, 926, 15, 15 });
-	ball_anim.PushBack({ 193, 926, 15, 15 });
-	ball_anim.PushBack({ 210, 926, 15, 15 });
-	ball_anim.PushBack({ 227, 926, 15, 15 });
-	ball_anim.PushBack({ 244, 926, 15, 15 });
-	ball_anim.PushBack({ 261, 926, 15, 15 });
-	ball_anim.PushBack({ 278, 926, 15, 15 });
-	ball_anim.PushBack({ 295, 926, 15, 15 });
-	ball_anim.PushBack({ 312, 926, 15, 15 });
-	ball_anim.PushBack({ 329, 926, 15, 15 });
-	ball_anim.PushBack({ 346, 926, 15, 15 });
-	ball_anim.PushBack({ 363, 926, 15, 15 });
-	ball_anim.PushBack({ 380, 926, 15, 15 });
-	ball_anim.PushBack({ 397, 926, 15, 15 });
-	ball_anim.PushBack({ 414, 926, 15, 15 });
 
-	ball_anim.speed = 0.05f;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -53,7 +35,7 @@ bool ModulePlayer::Start()
 
 	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
 	menu = App->textures->Load("Assets/Sprites/Menu&more.png");
-	pokeball = App->textures->Load("Assets/Sprites/Pokeball&more.png");
+	pokeball1 = App->textures->Load("Assets/Sprites/Pokeball&more.png");
 
 	// Create flippers
 
@@ -73,11 +55,14 @@ bool ModulePlayer::Start()
 	flippers[0] = App->physics->CreateChain(100, 100, GeneralSpritesheet, 18);
 	PhysBody* revoluteJoint = App->physics->CreateCircle(102, 102, 25);
 
-
 	b2RevoluteJointDef jointDef = App->physics->CreateRevoluteJoint(flippers[0]->body, revoluteJoint->body);
 
 	float lowerAngle = -10;
 	float upperAngle = 90;
+
+	ball_sprite = &b1;
+
+
 
 	//jointDef.lowerAngle = DEGTORAD * lowerAngle * b2_pi;
 	//jointDef.upperAngle = DEGTORAD * upperAngle * b2_pi;
@@ -93,51 +78,56 @@ bool ModulePlayer::CleanUp()
 
 	App->textures->Unload(general);
 	App->textures->Unload(menu);
-	App->textures->Unload(pokeball);
+	App->textures->Unload(pokeball1);
 
 	return true;
 }
+
+//current_animation = &ball_anim;
+//r = &current_animation->GetCurrentFrame();
 
 // Update: draw background
 update_status ModulePlayer::Update()
 {
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
-		// Create ball
+		// Create class PhysBody ball
 		float diameter = 15.0f;
 
 		balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), diameter));
 		balls.getLast()->data->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
 
 		balls.getLast()->data->listener = this; //?????
+
+		// Create struct Ball ball
+		ball_properties = new Ball();
+
+		ball_properties->current_sprite = &b1;
+		balls_properties.add(ball_properties);
 	}
 
 	// All draw functions ------------------------------------------------------
 	p2List_item<PhysBody*>* b = balls.getFirst();
-
-	current_animation = &ball_anim;
-	r = &current_animation->GetCurrentFrame();
+	p2List_item<Ball*>* bp = balls_properties.getFirst();
 
 	// Blit bullet position
-	while (b != NULL)
+	while (b != NULL && bp != NULL)
 	{
 		int x, y;
 		b->data->GetPosition(x, y);
 		float angle = b->data->GetRotation();
 
-		// Blit bullet sprites
-		App->renderer->Blit(pokeball, x, y, r, 1.0f, b->data->GetRotation());
+		// Get sprite for the ball
+		GetBallSprites(angle, bp->data);
 
-		//if (angle % )
-
+		// Blit bullet sprite
+		if (angle < 0)
+			App->renderer->Blit(pokeball1, x, y, bp->data->current_sprite);
+		else
+			App->renderer->Blit(pokeball1, x, y, bp->data->current_sprite, 1.0f, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
 
 		b = b->next;
+		bp = bp->next;
 	}
-
-	//float ball_angle = b->data->GetRotation();
-
-	//if (ball_angle > 348.75 && ball_angle < 11.25) {
-
-	//}
 
 
 	int x, y;
@@ -147,5 +137,86 @@ update_status ModulePlayer::Update()
 	return UPDATE_CONTINUE;
 }
 
+//Get ball sprites
+void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
+	
+	int direction = 1;
+	int loops = ball_properties->loops;
+	int max_angle = ball_properties->max_angle;
+	SDL_Rect* sprite = &b1;
 
+	if (angle < 0)
+		direction = -1;
 
+	if (direction * angle - (360 * loops) > 348.75f || direction * angle - (360 * loops) <= 11.25f) {
+		sprite = &b1;
+		LOG("CASE1");
+	}
+	else if (direction * angle - (360 * loops) > 11.25f && direction * angle - (360 * loops) <= 33.75f) {
+		sprite = &b2;
+		LOG("CASE2");
+	}
+	else if (direction * angle - (360 * loops) > 33.75f && direction * angle - (360 * loops) <= 56.25f) {
+		sprite = &b3;
+		LOG("CASE3");
+	}
+	else if (direction * angle - (360 * loops) > 56.25f && direction * angle - (360 * loops) <= 78.75f) {
+		sprite = &b4;
+		LOG("CASE4");
+	}
+	else if (direction * angle - (360 * loops) > 78.75f && direction * angle - (360 * loops) <= 101.25f) {
+		sprite = &b5;
+		LOG("CASE5");
+	}
+	else if (direction * angle - (360 * loops) > 101.25f && direction * angle - (360 * loops) <= 123.75f) {
+		sprite = &b6;
+		LOG("CASE6");
+	}
+	else if (direction * angle - (360 * loops) > 123.75f && direction * angle - (360 * loops) <= 146.25f) {
+		sprite = &b7;
+		LOG("CASE7");
+	}
+	else if (direction * angle - (360 * loops) > 146.25f && direction * angle - (360 * loops) <= 168.75f) {
+		sprite = &b8;
+		LOG("CASE8");
+	}
+	else if (direction * angle - (360 * loops) > 168.75f && direction * angle - (360 * loops) <= 191.25f) {
+		sprite = &b9;
+		LOG("CASE9");
+	}
+	else if (direction * angle - (360 * loops) > 191.25f && direction * angle - (360 * loops) <= 213.75f) {
+		sprite = &b10;
+		LOG("CASE10");
+	}
+	else if (direction * angle - (360 * loops) > 213.75f && direction * angle - (360 * loops) <= 236.25f) {
+		sprite = &b11;
+		LOG("CASE11");
+	}
+	else if (direction * angle - (360 * loops) > 236.25f && direction * angle - (360 * loops) <= 258.75f) {
+		sprite = &b12;
+		LOG("CASE12");
+	}
+	else if (direction * angle - (360 * loops) > 258.75f && direction * angle - (360 * loops) <= 281.25f) {
+		sprite = &b13;
+		LOG("CASE13");
+	}
+	else if (direction * angle - (360 * loops) > 281.25f && direction * angle - (360 * loops) <= 303.75f) {
+		sprite = &b14;
+		LOG("CASE14");
+	}
+	else if (direction * angle - (360 * loops) > 303.75f && direction * angle - (360 * loops) <= 326.25f) {
+		sprite = &b15;
+		LOG("CASE15");
+	}
+	else if (direction * angle - (360 * loops) > 326.25f && direction * angle - (360 * loops) <= 348.75f) {
+		sprite = &b16;
+		LOG("CASE16");
+	}
+
+	ball_properties->current_sprite = sprite;
+
+	if (direction * angle >= max_angle) {
+		ball_properties->loops += 1;
+		ball_properties->max_angle += 360;
+	}
+}
