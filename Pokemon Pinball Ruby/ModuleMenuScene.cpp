@@ -9,16 +9,31 @@
 
 ModuleMenuScene::ModuleMenuScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = box = rick = NULL;
-	general = NULL;
-	ray_on = false;
-	sensed = false;
+	menuBg.x = 20;
+	menuBg.y = 7;
+	menuBg.w = 257;
+	menuBg.h = 257;
 
-	background.x = 533;
-	background.y = 3;
-	background.w = 257;
-	background.h = 425;
+	subMenu.x = 284;
+	subMenu.y = 132;
+	subMenu.w = 96;
+	subMenu.h = 83;
 
+	pressStart.PushBack({319, 19, 84, 8});
+	pressStart.PushBack({319, 29, 84, 8});
+	pressStart.speed = 0.02f;
+
+	flipper.PushBack({ 406, 24, 13, 8 });
+	flipper.PushBack({ 406, 24, 13, 8 });
+	flipper.PushBack({ 406, 24, 13, 8 });
+	flipper.PushBack({ 406, 24, 13, 8 });
+	flipper.PushBack({ 421, 24, 13, 8 });
+	flipper.PushBack({ 436, 24, 13, 8 });
+	flipper.PushBack({ 436, 24, 13, 8 });
+	flipper.PushBack({ 436, 24, 13, 8 });
+	flipper.PushBack({ 436, 24, 13, 8 });
+	flipper.PushBack({ 421, 24, 13, 8 });
+	flipper.speed = 0.1f;
 }
 
 ModuleMenuScene::~ModuleMenuScene()
@@ -32,12 +47,7 @@ bool ModuleMenuScene::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	/*
-	TODOS
-	-Muchos edges.
-	-Crear bonus (cuando pasa la bola, se tienen que activar.Tipo sensores : isSensor = true), bouncers(cuerpos estáticos).
-	-Que llame a una función de AddBody de ModulePhysics.
-	*/
+	menu = App->textures->Load("Assets/Sprites/Menu&more.png");
 
 	return ret;
 }
@@ -46,7 +56,7 @@ bool ModuleMenuScene::Start()
 bool ModuleMenuScene::CleanUp()
 {
 	LOG("Unloading Intro scene");
-	
+	App->textures->Unload(menu);
 
 	return true;
 }
@@ -54,28 +64,23 @@ bool ModuleMenuScene::CleanUp()
 // Update: draw background
 update_status ModuleMenuScene::Update()
 {	
+	App->renderer->Blit(menu, 0, 0, &menuBg);
+
+	current_animation = &pressStart;
+	r = &current_animation->GetCurrentFrame();
+	App->renderer->Blit(menu, 103 - 20, 155, r);
+
+	current_animation = &flipper;
+	r = &current_animation->GetCurrentFrame();
+	App->renderer->Blit(menu, 103 - 40, 155, r);
+	App->renderer->Blit(menu, 103 + 40 + 42 - 13, 155, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+		
+
+	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
+		subMenuCheck = true;
+
+	if(subMenuCheck)
+		App->renderer->Blit(menu, 0, 0, &subMenu);
 
 	return UPDATE_CONTINUE;
 }
-
-
-
-
-/*
-Module Physics
-Class PhysBody:
-- Con GetUserData y SetUserData podemos acceder a nuestro cuerpo con punteros.
-- AddBody: con parámetros de densidad, restitución, masa, etc.Para que los objetos reboten más o menos.
-·Bouncers : mucha restitución.
-·Bola : mucha densidad, poca restitución.
-- b2ContactListener
-- b2Body*; = puntero al b2Body
-- Module* listener; //qué módulo está interesado para detectar una colisión. Cada módulo debe tener un OnCollision()
-
--NO HACE FALTA CREAR CUERPOS CINEMÁTICOS.
-
-Detección de colisiones y gestión de las mismas:
--Detectar cuando la bola cae más abajo del pinball. Detección con un sensor muy grande.
--SetListener al world. BeginContact. Para los sensores no nos llama al BeginContact: solución: a cada vuelta, iterar por todos los contactos del b2World y si alguno
-de los contactos es una colisión, gestionar dicha colisión.
-*/
