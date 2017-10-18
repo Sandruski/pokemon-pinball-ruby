@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "ModulePlayer.h"
 #include "ModuleInput.h"
-#include "ModulePhysics.h"
 #include "ModuleRender.h"
 #include "ModuleSceneIntro.h"
 
@@ -38,35 +37,44 @@ bool ModulePlayer::Start()
 
 	// Create flippers
 
-	// Pivot 0, 0
-	int GeneralSpritesheet[18] = {
-		7, 1155,
-		14, 1159,
-		29, 1169,
-		28, 1173,
-		25, 1174,
-		11, 1169,
-		0, 1164,
-		0, 1156,
-		6, 1154
+	int GeneralSpritesheet[24] = {
+		402 - 402, 536 - 532,
+		404 - 402, 533 - 532,
+		413 - 402, 533 - 532,
+		425 - 402, 534 - 532,
+		430 - 402, 534 - 532,
+		433 - 402, 536 - 532,
+		432 - 402, 540 - 532,
+		429 - 402, 541 - 532,
+		424 - 402, 542 - 532,
+		414 - 402, 543 - 532,
+		405 - 402, 543 - 532,
+		403 - 402, 541 - 532
 	};
 
-	flippers[0] = App->physics->CreateChain(100, 100, GeneralSpritesheet, 18, b2_dynamicBody);
-	PhysBody* revoluteJoint = App->physics->CreateCircle(102, 102, 25);
+	//flippers[0] = App->physics->CreateChain(30, 30, GeneralSpritesheet, 24);
+	//flippers[1] = App->physics->CreateChain(100, 100, GeneralSpritesheet, 22, b2_dynamicBody);
 
-	b2RevoluteJointDef jointDef = App->physics->CreateRevoluteJoint(flippers[0]->body, revoluteJoint->body);
+	flippers[0] = App->physics->CreateRectangle(30, 30, 20, 20);
+	revoluteJoint = App->physics->CreateCircle(30, 30, 6, b2_staticBody);
 
-	float lowerAngle = -10;
-	float upperAngle = 90;
+	b2RevoluteJointDef jointDef;
+	jointDef.bodyA = flippers[0]->body;
+	jointDef.bodyB = revoluteJoint->body;
+	jointDef.collideConnected = false;
 
-	ball_sprite = &b1;
+	b2Vec2 setA = flippers[0]->body->GetLocalCenter();
+	b2Vec2 setB = revoluteJoint->body->GetLocalCenter();
 
+	jointDef.localAnchorA.Set(setA.x, setA.y);
+	jointDef.localAnchorB.Set(setB.x, setB.y);
 
+	jointDef.maxMotorTorque = 10.0f; 
+	jointDef.motorSpeed = 0.0f; 
+	jointDef.enableMotor = true;
 
-	//jointDef.lowerAngle = DEGTORAD * lowerAngle * b2_pi;
-	//jointDef.upperAngle = DEGTORAD * upperAngle * b2_pi;
-	//
-
+	flipper1RevoluteJoint = (b2RevoluteJoint*)App->physics->world->CreateJoint(&jointDef);
+	//App->physics->CreateRevoluteJoint(revoluteJoint->body, flippers[0]->body)
 	return true;
 }
 
@@ -94,6 +102,9 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
+	flipper1RevoluteJoint->SetMotorSpeed(cosf(0.5f * 1));
+	
+	// Create bullet
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
 		// Create class PhysBody ball
 		float diameter = 15.0f;
@@ -133,10 +144,9 @@ update_status ModulePlayer::Update()
 	}
 
 	// Blit flippers
-	int x, y;
-	flippers[0]->GetPosition(x, y);
-	App->renderer->Blit(App->scene_intro->general, x, y, &l_f1, 1.0f, flippers[0]->GetRotation());
-
+	//int x, y;
+	//flippers[0]->GetPosition(x, y);
+	//App->renderer->Blit(App->scene_intro->general, x, y, &f1, 1.0f, flippers[0]->GetRotation());
 	return UPDATE_CONTINUE;
 }
 

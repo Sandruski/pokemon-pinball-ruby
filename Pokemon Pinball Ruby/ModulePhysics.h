@@ -42,10 +42,10 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	PhysBody* CreateCircle(int x, int y, int diameter);
+	PhysBody* CreateCircle(int x, int y, int diameter, b2BodyType type = b2_dynamicBody);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
-	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType value);
+	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType type = b2_dynamicBody);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

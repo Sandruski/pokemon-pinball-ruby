@@ -57,10 +57,10 @@ update_status ModulePhysics::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int diameter)
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int diameter, b2BodyType type)
 {
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	body.type = type;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
@@ -68,8 +68,8 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int diameter)
 	b2CircleShape shape;
 	shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
 	b2FixtureDef fixture;
-	fixture.shape = &shape;
 	fixture.density = 1.0f;
+	fixture.shape = &shape;
 
 	b->CreateFixture(&fixture);
 
@@ -153,6 +153,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, b2Body
 	shape.CreateLoop(p, size / 2);
 
 	b2FixtureDef fixture;
+	fixture.density = 1.0f;
 	fixture.shape = &shape;
 
 	b->CreateFixture(&fixture);
@@ -305,7 +306,7 @@ update_status ModulePhysics::PostUpdate()
 	// target position and draw a red line between both anchor points
 	
 	// Draw mouse joint
-	/*
+	
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && mouse_joint != nullptr) {
 
 		b2Vec2 anchorA = mouse_joint->GetBodyB()->GetPosition();
@@ -315,10 +316,10 @@ update_status ModulePhysics::PostUpdate()
 
 		App->renderer->DrawLine(METERS_TO_PIXELS(anchorA.x), METERS_TO_PIXELS(anchorA.y), METERS_TO_PIXELS(anchorB.x), METERS_TO_PIXELS(anchorB.y), 255, 0, 0);
 	}
-	*/
+	
 
 	// Draw distance joint
-	/*
+	
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && distance_joint != nullptr) {
 
 		b2Vec2 anchorA = distance_joint->GetBodyA()->GetPosition();
@@ -326,10 +327,10 @@ update_status ModulePhysics::PostUpdate()
 
 		App->renderer->DrawLine(METERS_TO_PIXELS(anchorA.x), METERS_TO_PIXELS(anchorA.y), METERS_TO_PIXELS(anchorB.x), METERS_TO_PIXELS(anchorB.y), 255, 0, 0);
 	}
-	*/
+	
 
 	// TODO 4: If the player releases the mouse button, destroy the joint
-	/*
+	
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP) {
 
 		if (mouse_joint != nullptr) {
@@ -353,15 +354,30 @@ update_status ModulePhysics::PostUpdate()
 		}
 		
 	}
-	*/
+	
 
 	return UPDATE_CONTINUE;
 }
 
 // Create a Revolute Joint
 b2RevoluteJointDef ModulePhysics::CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB) {
+	
 	b2RevoluteJointDef jointDef;
-	jointDef.Initialize(bodyA, bodyB, bodyA->GetWorldCenter());
+	jointDef.bodyA = bodyA;
+	jointDef.bodyB = bodyB;
+	jointDef.collideConnected = false;
+
+	b2Vec2 setA = bodyA->GetLocalCenter();
+	b2Vec2 setB = { 0.12f, 0.12f };
+
+	jointDef.localAnchorA.Set(setA.x, setA.y);
+	jointDef.localAnchorB.Set(setB.x, setB.y);
+
+	//jointDef.enableLimit = true;
+	//jointDef.lowerAngle = -45 * DEGTORAD;
+	//jointDef.upperAngle = 45 * DEGTORAD;
+	//jointDef.referenceAngle
+	
 	return jointDef;
 }
 
