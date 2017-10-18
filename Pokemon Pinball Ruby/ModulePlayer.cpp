@@ -52,7 +52,7 @@ bool ModulePlayer::Start()
 		6, 1154
 	};
 
-	flippers[0] = App->physics->CreateChain(100, 100, GeneralSpritesheet, 18);
+	flippers[0] = App->physics->CreateChain(100, 100, GeneralSpritesheet, 18, b2_dynamicBody);
 	PhysBody* revoluteJoint = App->physics->CreateCircle(102, 102, 25);
 
 	b2RevoluteJointDef jointDef = App->physics->CreateRevoluteJoint(flippers[0]->body, revoluteJoint->body);
