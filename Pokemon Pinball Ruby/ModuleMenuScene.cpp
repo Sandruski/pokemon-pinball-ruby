@@ -64,16 +64,16 @@ bool ModuleMenuScene::CleanUp()
 // Update: draw background
 update_status ModuleMenuScene::Update()
 {	
-	App->renderer->Blit(menu, 0, 0, &menuBg);
+	//App->renderer->Blit(menu, 0, 0, &menuBg);
 
 	current_animation = &pressStart;
 	r = &current_animation->GetCurrentFrame();
-	App->renderer->Blit(menu, 103 - 20, 155, r);
+	//App->renderer->Blit(menu, 103 - 20, 155, r);
 
 	current_animation = &flipper;
 	r = &current_animation->GetCurrentFrame();
-	App->renderer->Blit(menu, 103 - 40, 155, r);
-	App->renderer->Blit(menu, 103 + 40 + 42 - 13, 155, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+	//App->renderer->Blit(menu, 103 - 40, 155, r);
+	//App->renderer->Blit(menu, 103 + 40 + 42 - 13, 155, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
 		
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
