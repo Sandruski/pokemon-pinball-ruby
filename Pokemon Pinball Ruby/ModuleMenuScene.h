@@ -6,17 +6,15 @@
 
 class PhysBody;
 
-class ModuleSceneIntro : public Module
+class ModuleMenuScene : public Module
 {
 public:
-	ModuleSceneIntro(Application* app, bool start_enabled = true);
-	~ModuleSceneIntro();
+	ModuleMenuScene(Application* app, bool start_enabled = true);
+	~ModuleMenuScene();
 
 	bool Start();
 	update_status Update();
 	bool CleanUp();
-	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
-	int* chainpoints();
 
 public:
 	p2List<PhysBody*> circles;
@@ -39,3 +37,4 @@ private:
 	SDL_Texture* general;
 	SDL_Rect background;
 };
+

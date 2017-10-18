@@ -10,8 +10,15 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	circle = box = rick = NULL;
+	general = NULL;
 	ray_on = false;
 	sensed = false;
+
+	background.x = 533;
+	background.y = 3;
+	background.w = 257;
+	background.h = 425;
+
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -32,12 +39,68 @@ bool ModuleSceneIntro::Start()
 	-Que llame a una función de AddBody de ModulePhysics.
 	*/
 
-	circle = App->textures->Load("pinball/wheel.png"); 
-	box = App->textures->Load("pinball/crate.png");
-	rick = App->textures->Load("pinball/rick_head.png");
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	int GeneralSpritesheet[112] = {
+		573 - 533, 400,
+		556 - 533, 400,
+		556 - 533, 323,
+		560 - 533, 318,
+		567 - 533, 316,
+		577 - 533, 316,
+		579 - 533, 313,
+		579 - 533, 288,
+		569 - 533, 277,
+		557 - 533, 255,
+		547 - 533, 229,
+		545 - 533, 198,
+		547 - 533, 159,
+		556 - 533, 127,
+		568 - 533, 104,
+		588 - 533, 88,
+		609 - 533, 76,
+		632 - 533, 70,
+		659 - 533, 69,
+		684 - 533, 73,
+		702 - 533, 80,
+		720 - 533, 88,
+		736 - 533, 99,
+		750 - 533, 112,
+		760 - 533, 122,
+		769 - 533, 138,
+		777 - 533, 158,
+		780 - 533, 175,
+		782 - 533, 192,
+		784 - 533, 410,
+		768 - 533, 410,
+		768 - 533, 194,
+		764 - 533, 165,
+		758 - 533, 147,
+		753 - 533, 143,
+		752 - 533, 148,
+		755 - 533, 156,
+		758 - 533, 175,
+		760 - 533, 193,
+		759 - 533, 219,
+		750 - 533, 250,
+		738 - 533, 273,
+		725 - 533, 288,
+		725 - 533, 312,
+		729 - 533, 316,
+		741 - 533, 319,
+		748 - 533, 325,
+		750 - 533, 335,
+		750 - 533, 400,
+		733 - 533, 400,
+		732 - 533, 388,
+		675 - 533, 420,
+		675 - 533, 426,
+		631 - 533, 426,
+		632 - 533, 421,
+		572 - 533, 386
+	};
 
-	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
+	walls = App->physics->CreateChain(0, 0, GeneralSpritesheet, 112, b2_staticBody);
+
+	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
 
 	return ret;
 }
@@ -46,6 +109,7 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+	App->textures->Unload(general);
 
 	return true;
 }
@@ -53,12 +117,6 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-	{
-		ray_on = !ray_on;
-		ray.x = App->input->GetMouseX();
-		ray.y = App->input->GetMouseY();
-	}
 
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
@@ -66,133 +124,77 @@ update_status ModuleSceneIntro::Update()
 		circles.getLast()->data->listener = this;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-	{
-		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), 100, 50));
-	}
-
-	if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-	{
-		// Pivot 0, 0
-		int rick_head[64] = {
-			14, 36,
-			42, 40,
-			40, 0,
-			75, 30,
-			88, 4,
-			94, 39,
-			111, 36,
-			104, 58,
-			107, 62,
-			117, 67,
-			109, 73,
-			110, 85,
-			106, 91,
-			109, 99,
-			103, 104,
-			100, 115,
-			106, 121,
-			103, 125,
-			98, 126,
-			95, 137,
-			83, 147,
-			67, 147,
-			53, 140,
-			46, 132,
-			34, 136,
-			38, 126,
-			23, 123,
-			30, 114,
-			10, 102,
-			29, 90,
-			0, 75,
-			30, 62
-		};
-
-		ricks.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), rick_head, 64));
-	}
-
-	// Prepare for raycast ------------------------------------------------------
-	
-	iPoint mouse;
-	mouse.x = App->input->GetMouseX();
-	mouse.y = App->input->GetMouseY();
-	int ray_hit = ray.DistanceTo(mouse);
-
-	fVector normal(0.0f, 0.0f);
-
-	// All draw functions ------------------------------------------------------
-	p2List_item<PhysBody*>* c = circles.getFirst();
-
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}
-
-	c = boxes.getFirst();
-
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(box, x, y, NULL, 1.0f, c->data->GetRotation());
-		if(ray_on)
-		{
-			int hit = c->data->RayCast(ray.x, ray.y, mouse.x, mouse.y, normal.x, normal.y);
-			if(hit >= 0)
-				ray_hit = hit;
-		}
-		c = c->next;
-	}
-
-	c = ricks.getFirst();
-
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(rick, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}
-
-	// ray -----------------
-	if(ray_on == true)
-	{
-		fVector destination(mouse.x-ray.x, mouse.y-ray.y);
-		destination.Normalize();
-		destination *= ray_hit;
-
-		App->renderer->DrawLine(ray.x, ray.y, ray.x + destination.x, ray.y + destination.y, 255, 255, 255);
-
-		if(normal.x != 0.0f)
-			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
-	}
+	App->renderer->Blit(general, 0, 0, &background);
 
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	int x, y;
+}
 
-	App->audio->PlayFx(bonus_fx);
+int* ModuleSceneIntro::chainpoints() {
 
-	/*
-	if(bodyA)
-	{
-		bodyA->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}
+	int GeneralSpritesheet[112] = {
+		573, 400,
+		556, 400,
+		556, 323,
+		560, 318,
+		567, 316,
+		577, 316,
+		579, 313,
+		579, 288,
+		569, 277,
+		557, 255,
+		547, 229,
+		545, 198,
+		547, 159,
+		556, 127,
+		568, 104,
+		588, 88,
+		609, 76,
+		632, 70,
+		659, 69,
+		684, 73,
+		702, 80,
+		720, 88,
+		736, 99,
+		750, 112,
+		760, 122,
+		769, 138,
+		777, 158,
+		780, 175,
+		782, 192,
+		784, 410,
+		768, 410,
+		768, 194,
+		764, 165,
+		758, 147,
+		753, 143,
+		752, 148,
+		755, 156,
+		758, 175,
+		760, 193,
+		759, 219,
+		750, 250,
+		738, 273,
+		725, 288,
+		725, 312,
+		729, 316,
+		741, 319,
+		748, 325,
+		750, 335,
+		750, 400,
+		733, 400,
+		732, 388,
+		675, 420,
+		675, 426,
+		631, 426,
+		632, 421,
+		572, 386
+	};
 
-	if(bodyB)
-	{
-		bodyB->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}*/
+	return GeneralSpritesheet;
 }
 
 /*
