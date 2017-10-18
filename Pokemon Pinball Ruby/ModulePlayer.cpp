@@ -117,14 +117,28 @@ update_status ModulePlayer::Update()
 	current_animation = &ball_anim;
 	r = &current_animation->GetCurrentFrame();
 
+	// Blit bullet position
 	while (b != NULL)
 	{
 		int x, y;
 		b->data->GetPosition(x, y);
+		float angle = b->data->GetRotation();
+
+		// Blit bullet sprites
 		App->renderer->Blit(pokeball, x, y, r, 1.0f, b->data->GetRotation());
-		
+
+		//if (angle % )
+
+
 		b = b->next;
 	}
+
+	//float ball_angle = b->data->GetRotation();
+
+	//if (ball_angle > 348.75 && ball_angle < 11.25) {
+
+	//}
+
 
 	int x, y;
 	flippers[0]->GetPosition(x, y);
