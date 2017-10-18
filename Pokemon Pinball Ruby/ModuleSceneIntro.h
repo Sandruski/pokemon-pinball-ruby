@@ -35,7 +35,8 @@ public:
 
 	PhysBody* walls;
 
-private:
 	SDL_Texture* general;
+
+private:
 	SDL_Rect background;
 };

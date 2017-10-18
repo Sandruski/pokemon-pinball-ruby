@@ -1,10 +1,32 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (2D Physics - class 4.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  ModulePlayer.cpp
-c:\users\guillemcm3\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(96): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  ModuleRender.cpp
+  Generating Code...
+  Compiling...
+  log.cpp
+  ModuleWindow.cpp
+  ModuleTextures.cpp
+  ModuleSceneIntro.cpp
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
+  ModulePlayer.cpp
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(101): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
+  ModulePhysics.cpp
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(79): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(103): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(104): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(147): warning C4018: '<': signed/unsigned mismatch
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(426): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(427): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(433): warning C4244: 'return': conversion from 'float32' to 'int', possible loss of data
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\cmath(113): warning C4577: 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
   ModuleMenuScene.cpp
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
+  ModuleInput.cpp
+  ModuleAudio.cpp
+  Main.cpp
+  Application.cpp
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
   Generating Code...
-  LINK : C:\Users\guillemcm3\Desktop\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe not found or not built by the last incremental link; performing full link
-  SDL Game.vcxproj -> C:\Users\guillemcm3\Desktop\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
-  SDL Game.vcxproj -> C:\Users\guillemcm3\Desktop\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)
+c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulesceneintro.cpp(197): warning C4172: returning address of local variable or temporary: GeneralSpritesheet
+  SDL Game.vcxproj -> C:\Users\sandraag3\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
+  SDL Game.vcxproj -> C:\Users\sandraag3\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)

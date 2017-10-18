@@ -4,6 +4,7 @@
 #include "ModuleInput.h"
 #include "ModulePhysics.h"
 #include "ModuleRender.h"
+#include "ModuleSceneIntro.h"
 
 #include "Box2D/Box2D/Box2D.h"
 
@@ -33,9 +34,7 @@ bool ModulePlayer::Start()
 	LOG("Loading ball");
 	LOG("Loading flippers");
 
-	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
-	menu = App->textures->Load("Assets/Sprites/Menu&more.png");
-	pokeball1 = App->textures->Load("Assets/Sprites/Pokeball&more.png");
+	pokeball = App->textures->Load("Assets/Sprites/Pokeball&more.png");
 
 	// Create flippers
 
@@ -76,9 +75,15 @@ bool ModulePlayer::CleanUp()
 {
 	LOG("Unloading player");
 
-	App->textures->Unload(general);
-	App->textures->Unload(menu);
-	App->textures->Unload(pokeball1);
+	App->textures->Unload(pokeball);
+
+	if (balls.getFirst() != NULL) {
+		balls.clear();
+	}
+
+	if (balls_properties.getFirst() != NULL) {
+		balls_properties.clear();
+	}
 
 	return true;
 }
@@ -100,8 +105,6 @@ update_status ModulePlayer::Update()
 
 		// Create struct Ball ball
 		ball_properties = new Ball();
-
-		ball_properties->current_sprite = &b1;
 		balls_properties.add(ball_properties);
 	}
 
@@ -109,7 +112,7 @@ update_status ModulePlayer::Update()
 	p2List_item<PhysBody*>* b = balls.getFirst();
 	p2List_item<Ball*>* bp = balls_properties.getFirst();
 
-	// Blit bullet position
+	// Blit bullet
 	while (b != NULL && bp != NULL)
 	{
 		int x, y;
@@ -121,23 +124,23 @@ update_status ModulePlayer::Update()
 
 		// Blit bullet sprite
 		if (angle < 0)
-			App->renderer->Blit(pokeball1, x, y, bp->data->current_sprite);
+			App->renderer->Blit(pokeball, x, y, bp->data->current_sprite);
 		else
-			App->renderer->Blit(pokeball1, x, y, bp->data->current_sprite, 1.0f, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+			App->renderer->Blit(pokeball, x, y, bp->data->current_sprite, 1.0f, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
 
 		b = b->next;
 		bp = bp->next;
 	}
 
-
+	// Blit flippers
 	int x, y;
 	flippers[0]->GetPosition(x, y);
-	App->renderer->Blit(general, x, y, &l_f1, 1.0f, flippers[0]->GetRotation());
+	App->renderer->Blit(App->scene_intro->general, x, y, &l_f1, 1.0f, flippers[0]->GetRotation());
 
 	return UPDATE_CONTINUE;
 }
 
-//Get ball sprites
+// Get ball sprites
 void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 	
 	int direction = 1;

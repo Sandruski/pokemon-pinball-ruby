@@ -33,9 +33,7 @@ public:
 
 private:
 
-	SDL_Texture* general;
-	SDL_Texture* menu;
-	SDL_Texture* pokeball1;
+	SDL_Texture* pokeball;
 
 
 
