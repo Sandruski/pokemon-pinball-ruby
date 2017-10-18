@@ -11,13 +11,18 @@ ModuleMenuScene::ModuleMenuScene(Application* app, bool start_enabled) : Module(
 {
 	menuBg.x = 20;
 	menuBg.y = 7;
-	menuBg.w = 257;
-	menuBg.h = 257;
+	menuBg.w = 256;
+	menuBg.h = 160;
 
 	subMenu.x = 284;
 	subMenu.y = 132;
 	subMenu.w = 96;
 	subMenu.h = 83;
+
+	mapSelector.x = 18;
+	mapSelector.y = 270;
+	mapSelector.w = 240;
+	mapSelector.h = 160;
 
 	pressStart.PushBack({319, 19, 84, 8});
 	pressStart.PushBack({319, 29, 84, 8});
@@ -49,6 +54,7 @@ bool ModuleMenuScene::Start()
 
 	menu = App->textures->Load("Assets/Sprites/Menu&more.png");
 
+	menuEnum = menu_;
 	return ret;
 }
 
@@ -64,23 +70,60 @@ bool ModuleMenuScene::CleanUp()
 // Update: draw background
 update_status ModuleMenuScene::Update()
 {	
-	//App->renderer->Blit(menu, 0, 0, &menuBg);
 
-	current_animation = &pressStart;
-	r = &current_animation->GetCurrentFrame();
-	//App->renderer->Blit(menu, 103 - 20, 155, r);
+	switch (menuEnum)
+	{
+	case menu_:
+		App->renderer->Blit(menu, 0, 0, &menuBg);
 
-	current_animation = &flipper;
-	r = &current_animation->GetCurrentFrame();
-	//App->renderer->Blit(menu, 103 - 40, 155, r);
-	//App->renderer->Blit(menu, 103 + 40 + 42 - 13, 155, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
-		
+		current_animation = &pressStart;
+		r = &current_animation->GetCurrentFrame();
+		App->renderer->Blit(menu, 256 / 2 - 84 / 2, 145, r);
 
-	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-		subMenuCheck = true;
+		current_animation = &flipper;
+		r = &current_animation->GetCurrentFrame();
+		App->renderer->Blit(menu, (256 / 2 - 84 / 2) - 20, 145, r);
+		App->renderer->Blit(menu, (256 / 2 - 84 / 2) + 84 + 13, 145, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
+			menuEnum = subMenu_;
+			break;
+		}
+		break;
 
-	if(subMenuCheck)
-		App->renderer->Blit(menu, 0, 0, &subMenu);
+	case subMenu_:
+		App->renderer->Blit(menu, 0, 0, &menuBg);
+
+		App->renderer->Blit(menu, 256 / 2 - 96 / 2, 160 / 2 - 83 / 2, &subMenu);
+		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
+			menuEnum = mapSelector_;
+			break;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			menuEnum = menu_;
+			break;
+		}
+		break;
+
+	case mapSelector_:
+		App->renderer->Blit(menu, 0, 0, &mapSelector);
+
+		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
+			menuEnum = null_;
+			break;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			menuEnum = subMenu_;
+			break;
+		}
+		break;
+
+	case null_:
+		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			menuEnum = mapSelector_;
+			break;
+		}
+		break;
+	}
 
 	return UPDATE_CONTINUE;
 }

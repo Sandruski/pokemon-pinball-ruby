@@ -7,6 +7,13 @@
 
 class PhysBody;
 
+enum menuStates {
+	null_,
+	menu_,
+	subMenu_,
+	mapSelector_,
+};
+
 class ModuleMenuScene : public Module
 {
 public:
@@ -21,11 +28,11 @@ private:
 	SDL_Texture* menu;
 	SDL_Rect* r;
 
-	SDL_Rect menuBg, subMenu;
+	SDL_Rect menuBg, subMenu, mapSelector;
 	Animation* current_animation;
 	Animation pressStart, flipper;
 	int positionFlipper1, positionFlipper2;
 
-	bool subMenuCheck;
+	menuStates menuEnum;
 };
 
