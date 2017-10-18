@@ -16,7 +16,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
-	int* chainpoints();
+	void chainpoints();
 
 public:
 	p2List<PhysBody*> circles;
@@ -32,7 +32,6 @@ public:
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
-
 	PhysBody* walls;
 
 	SDL_Texture* general;
