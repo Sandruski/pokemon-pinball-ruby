@@ -22,7 +22,7 @@ bool ModulePlayer::Start()
 	TODOS:
 	-Crear flippers(revolute joints), bola(HACER QUE bullet = true, para que chequee las colisiones más rápido.Solo usar esta función para la bola) (cuerpos dinámicos)
 	·Función para los flippers: b2Body::ApplyAngularInputs(). TIENE QUE SER UN IMPULSO MUY FUERTE. Con 2 teclas.
-	
+
 	-Final de partida y puntuación. Que aparezca la score.
 
 	-Taco que empuja la bola: crear objete con un muelle (con un joint). Hacer función de b2Body::ApplyForceToCenter (es una función del b2Body): se la puede llamar varias veces
@@ -37,25 +37,41 @@ bool ModulePlayer::Start()
 
 	// Create flippers
 
-	int GeneralSpritesheet[24] = {
-		402 - 402, 536 - 532,
-		404 - 402, 533 - 532,
-		413 - 402, 533 - 532,
-		425 - 402, 534 - 532,
-		430 - 402, 534 - 532,
-		433 - 402, 536 - 532,
-		432 - 402, 540 - 532,
-		429 - 402, 541 - 532,
-		424 - 402, 542 - 532,
-		414 - 402, 543 - 532,
-		405 - 402, 543 - 532,
-		403 - 402, 541 - 532
-	};
+	b2Vec2 flipper_vertices[8];
+	flipper_vertices[0].Set(412 - 402, 543 - 532);
+	flipper_vertices[1].Set(423 - 402, 542 - 532);
+	flipper_vertices[2].Set(432 - 402, 540 - 532);
+	flipper_vertices[3].Set(431 - 402, 535 - 532);
+	flipper_vertices[4].Set(421 - 402, 534 - 532);
+	flipper_vertices[5].Set(406 - 402, 533 - 532);
+	flipper_vertices[6].Set(402 - 402, 537 - 532);
+	flipper_vertices[7].Set(405 - 402, 543 - 532);
 
-	//flippers[0] = App->physics->CreateChain(30, 30, GeneralSpritesheet, 24);
-	//flippers[1] = App->physics->CreateChain(100, 100, GeneralSpritesheet, 22, b2_dynamicBody);
+	for (int i = 0; i < 8; i++) {
+		flipper_vertices[i].x = PIXEL_TO_METERS(flipper_vertices[i].x);
+		flipper_vertices[i].y = PIXEL_TO_METERS(flipper_vertices[i].y);
+	}
 
-	flippers[0] = App->physics->CreateRectangle(30, 30, 20, 20);
+	//Flipper
+	b2BodyDef body;
+	body.type = b2_dynamicBody;
+	body.position.Set(0, 0);
+
+	b2Body* b = App->physics->world->CreateBody(&body);
+	b2PolygonShape flipper;
+	flipper.Set(flipper_vertices, 8);
+
+	b2FixtureDef fixture;
+	fixture.density = 1.0f;
+	fixture.shape = &flipper;
+
+	b->CreateFixture(&fixture);
+
+	flippers[0] = new PhysBody();
+	flippers[0]->body = b;
+	b->SetUserData(flippers[0]);
+	//
+
 	revoluteJoint = App->physics->CreateCircle(30, 30, 6, b2_staticBody);
 
 	b2RevoluteJointDef jointDef;
@@ -63,18 +79,26 @@ bool ModulePlayer::Start()
 	jointDef.bodyB = revoluteJoint->body;
 	jointDef.collideConnected = false;
 
-	b2Vec2 setA = flippers[0]->body->GetLocalCenter();
+	b2Vec2 setA = { 0.13f, 0.12f };
 	b2Vec2 setB = revoluteJoint->body->GetLocalCenter();
 
 	jointDef.localAnchorA.Set(setA.x, setA.y);
 	jointDef.localAnchorB.Set(setB.x, setB.y);
 
+	jointDef.enableLimit = true;
+	jointDef.lowerAngle = -45 * DEGTORAD;
+	jointDef.upperAngle = 45 * DEGTORAD;
+
+	/*
+	//Motor
+	jointDef.enableMotor = true;
 	jointDef.maxMotorTorque = 10.0f; 
 	jointDef.motorSpeed = 0.0f; 
-	jointDef.enableMotor = true;
+	*/
 
 	flipper1RevoluteJoint = (b2RevoluteJoint*)App->physics->world->CreateJoint(&jointDef);
-	//App->physics->CreateRevoluteJoint(revoluteJoint->body, flippers[0]->body)
+	App->physics->CreateRevoluteJoint(revoluteJoint->body, flippers[0]->body);
+	
 	return true;
 }
 
@@ -102,12 +126,16 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	flipper1RevoluteJoint->SetMotorSpeed(cosf(0.5f * 1));
+	//For motors
+	//flipper1RevoluteJoint->SetMotorSpeed(cosf(0.5f * 1));
 	
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		flipper1RevoluteJoint->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
+		//flipper1RevoluteJoint->GetBodyB()->ApplyAngularImpulse(-70.0f, true);
 	// Create bullet
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
 		// Create class PhysBody ball
-		float diameter = 15.0f;
+		float diameter = 13.0f;
 
 		balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), diameter));
 		balls.getLast()->data->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
@@ -144,9 +172,11 @@ update_status ModulePlayer::Update()
 	}
 
 	// Blit flippers
-	//int x, y;
-	//flippers[0]->GetPosition(x, y);
-	//App->renderer->Blit(App->scene_intro->general, x, y, &f1, 1.0f, flippers[0]->GetRotation());
+	//b2Vec2 a = flipper1RevoluteJoint->GetBodyB()->GetPosition();
+	//float b = flipper1RevoluteJoint->GetBodyB()->GetAngle();
+
+	//App->renderer->Blit(App->scene_intro->general, a.x, a.y, &f1, 1.0f);
+	
 	return UPDATE_CONTINUE;
 }
 
