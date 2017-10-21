@@ -12,6 +12,13 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	rotating_pokemons.PushBack({ 171, 777, 25, 20 });
 	rotating_pokemons.PushBack({ 198, 775, 23, 22 });
 	rotating_pokemons.speed = 0.02f;
+
+	red_spring.PushBack({ 92, 815, 20, 35 });
+	red_spring.PushBack({ 114, 815, 20, 35 });
+	red_spring.PushBack({ 136, 815, 20, 35 });
+
+	grey_spring.PushBack({ 4, 812, 20, 38 });
+	grey_spring.PushBack({ 26, 810, 20, 40 });
 }
 
 ModulePlayer::~ModulePlayer()
@@ -66,9 +73,6 @@ bool ModulePlayer::Start()
 	flipper_sprite[1] = &r_f1; //Right
 
 	b2Filter f;
-	f.categoryBits = NEUTRAL;
-	flipperCircles[0]->body->GetFixtureList()->SetFilterData(f);
-	flipperCircles[1]->body->GetFixtureList()->SetFilterData(f);
 
 	f.categoryBits = FLIPPER;
 	f.maskBits = BALL;
@@ -76,21 +80,27 @@ bool ModulePlayer::Start()
 	flippers[1]->body->GetFixtureList()->SetFilterData(f);
 
 	//Create rotating pokémons
-	rotatingPokemons[0] = App->physics->CreateCircle(100, 30, 50, b2_staticBody);
-	rotatingPokemons[1] = App->physics->CreateCircle(0, 0, 20, b2_dynamicBody);
-	rotatingPokemons[2] = App->physics->CreateCircle(0, 0, 20, b2_dynamicBody);
-	rotatingPokemons[3] = App->physics->CreateCircle(0, 0, 20, b2_dynamicBody);
+	rotatingPokemons[0] = App->physics->CreateCircle(147, 146, 40, b2_staticBody);
+	rotatingPokemons[1] = App->physics->CreateCircle(0, 0, 15, b2_dynamicBody);
+	rotatingPokemons[2] = App->physics->CreateCircle(0, 0, 15, b2_dynamicBody);
+	rotatingPokemons[3] = App->physics->CreateCircle(0, 0, 15, b2_dynamicBody);
 
 	rotatingPokemons[1]->body->SetLinearVelocity({ 0,0 });
 	rotatingPokemons[2]->body->SetLinearVelocity({ 0,0 });
 	rotatingPokemons[3]->body->SetLinearVelocity({ 0,0 });
-	rotatingPokemons[1]->body->GetFixtureList()->SetRestitution(2.0f);
-	rotatingPokemons[2]->body->GetFixtureList()->SetRestitution(2.0f);
-	rotatingPokemons[3]->body->GetFixtureList()->SetRestitution(2.0f);
+	rotatingPokemons[1]->body->GetFixtureList()->SetRestitution(3.0f);
+	rotatingPokemons[2]->body->GetFixtureList()->SetRestitution(3.0f);
+	rotatingPokemons[3]->body->GetFixtureList()->SetRestitution(3.0f);
 
-	pokemonsRevoluteJoint[0] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[1]->body, { PIXEL_TO_METERS(25 * cosf(190 * DEGTORAD)), PIXEL_TO_METERS(25 * sinf(190 * DEGTORAD)) }); //Up
-	pokemonsRevoluteJoint[1] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[2]->body, { PIXEL_TO_METERS(25 * cosf(-40 * DEGTORAD)), PIXEL_TO_METERS(25 * sinf(-40 * DEGTORAD)) }); //Left
-	pokemonsRevoluteJoint[2] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[3]->body, { PIXEL_TO_METERS(25 * cosf(-130 * DEGTORAD)), PIXEL_TO_METERS(25 * sinf(-130 * DEGTORAD)) }); //Right
+	pokemonsRevoluteJoint[0] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[1]->body, { PIXEL_TO_METERS(20 * cosf(25 * DEGTORAD)), PIXEL_TO_METERS(20 * sinf(25 * DEGTORAD)) }); //Up
+	pokemonsRevoluteJoint[1] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[2]->body, { PIXEL_TO_METERS(20 * cosf(-50 * DEGTORAD)), PIXEL_TO_METERS(20 * sinf(-50 * DEGTORAD)) }); //Left
+	pokemonsRevoluteJoint[2] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[3]->body, { PIXEL_TO_METERS(20 * cosf(-130 * DEGTORAD)), PIXEL_TO_METERS(20 * sinf(-130 * DEGTORAD)) }); //Right
+	
+	f.categoryBits = WALL;
+	f.maskBits = BALL;
+	rotatingPokemons[1]->body->GetFixtureList()->SetFilterData(f);
+	rotatingPokemons[2]->body->GetFixtureList()->SetFilterData(f);
+	rotatingPokemons[3]->body->GetFixtureList()->SetFilterData(f);
 
 	current_rotating_pokemons = &rotating_pokemons;
 
@@ -124,10 +134,12 @@ update_status ModulePlayer::Update()
 	pokemonsRevoluteJoint[2]->SetMotorSpeed(cosf(0.5f * 2));
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
-		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
+		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.3f, true);
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
-		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
+		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.3f, true);
+	//FLIPPERS HAVE TO STAY UP WHEN PRESSED
 	
+
 	// Create bullet
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
 		// Create class PhysBody ball
@@ -135,12 +147,13 @@ update_status ModulePlayer::Update()
 
 		balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), diameter));
 		balls.getLast()->data->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
+		balls.getLast()->data->body->GetFixtureList()->SetDensity(0.7f);
 
 		balls.getLast()->data->listener = this; //?????
 
 		b2Filter f;
 		f.categoryBits = BALL;
-		f.maskBits = FLIPPER;
+		f.maskBits = FLIPPER | WALL;
 
 		balls.getLast()->data->body->GetFixtureList()->SetFilterData(f);
 

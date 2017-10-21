@@ -310,22 +310,34 @@ bool ModuleSceneIntro::Start()
 		586 - 533, 113
 	};
 
+	b2Filter f;
+	f.categoryBits = WALL;
+	f.maskBits = BALL;
+
 	//App->physics->CreateChain(0, 0, GeneralSpritesheet0, 14, b2_staticBody);
-	App->physics->CreateChain(0, 0, GeneralSpritesheet1, 150, b2_staticBody);
-	App->physics->CreateChain(0, 0, GeneralSpritesheet2, 14, b2_staticBody);
-	App->physics->CreateChain(0, 0, GeneralSpritesheet3, 30, b2_staticBody);
-	App->physics->CreateChain(0, 0, GeneralSpritesheet4, 58, b2_staticBody);
-	App->physics->CreateChain(0, 0, GeneralSpritesheet5, 58, b2_staticBody);
-	App->physics->CreateChain(0, 0, GeneralSpritesheet6, 28, b2_staticBody);
-	App->physics->CreateChain(0, 0, GeneralSpritesheet7, 58, b2_staticBody);
-	App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
+	PhysBody* p = App->physics->CreateChain(0, 0, GeneralSpritesheet1, 150, b2_staticBody);
+	p->body->GetFixtureList()->SetFilterData(f);
+	p = App->physics->CreateChain(0, 0, GeneralSpritesheet2, 14, b2_staticBody);
+	p->body->GetFixtureList()->SetFilterData(f);
+	p = App->physics->CreateChain(0, 0, GeneralSpritesheet3, 30, b2_staticBody);
+	p->body->GetFixtureList()->SetFilterData(f);
+	p = App->physics->CreateChain(0, 0, GeneralSpritesheet4, 58, b2_staticBody);
+	p->body->GetFixtureList()->SetFilterData(f);
+	p = App->physics->CreateChain(0, 0, GeneralSpritesheet5, 58, b2_staticBody);
+	p->body->GetFixtureList()->SetFilterData(f);
+	p = App->physics->CreateChain(0, 0, GeneralSpritesheet6, 28, b2_staticBody);
+	p->body->GetFixtureList()->SetFilterData(f);
+	p = App->physics->CreateChain(0, 0, GeneralSpritesheet7, 58, b2_staticBody);
+	p->body->GetFixtureList()->SetFilterData(f);
+	p = App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
 
 	//Setting... triangles(?)
 	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 14, b2_staticBody);
 	trianglebody2 = App->physics->CreateChain(0, 0, triangle2, 14, b2_staticBody);
 	trianglebody1->body->GetFixtureList()->SetRestitution(3.0f);
 	trianglebody2->body->GetFixtureList()->SetRestitution(3.0f);
-
+	trianglebody1->body->GetFixtureList()->SetFilterData(f);
+	trianglebody2->body->GetFixtureList()->SetFilterData(f);
 
 	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
 
@@ -334,6 +346,8 @@ bool ModuleSceneIntro::Start()
 	sensorPikachu = App->physics->CreateRectangleSensor(33, 380, 10, 10);
 	sensor->listener = this;
 	sensorPikachu->listener = this;
+	sensor->body->GetFixtureList()->SetFilterData(f);
+	sensorPikachu->body->GetFixtureList()->SetFilterData(f);
 	
 	return ret;
 }
@@ -371,7 +385,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			//sensed = true;
 		}
 
-		if (bodyB->body == item->data->body && bodyA->body == sensorPikachu->body)
+		if (bodyB->body == item->data->body && bodyA->body == sensorPikachu->body || bodyA->body == item->data->body && bodyB->body == sensorPikachu->body)
 		{
 			item->data->body->ApplyForceToCenter({ 0, -50 }, true);
 			//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
