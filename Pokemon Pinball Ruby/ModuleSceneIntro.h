@@ -4,6 +4,7 @@
 #include "p2Point.h"
 #include "Globals.h"
 
+
 class PhysBody;
 
 class ModuleSceneIntro : public Module
@@ -19,23 +20,18 @@ public:
 	void chainpoints();
 
 public:
-	p2List<PhysBody*> circles;
-	p2List<PhysBody*> boxes;
-	p2List<PhysBody*> ricks;
 
-	PhysBody* sensor;
-	bool sensed;
-
-	SDL_Texture* circle;
-	SDL_Texture* box;
-	SDL_Texture* rick;
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
 	PhysBody* walls;
 
 	SDL_Texture* general;
+	
 
 private:
+	p2List_item<PhysBody*>* item;
 	SDL_Rect background;
+	PhysBody* sensor;
+	bool sensed;
 };

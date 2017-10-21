@@ -6,10 +6,10 @@
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
+#include "ModulePlayer.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = box = rick = NULL;
 	general = NULL;
 	ray_on = false;
 	sensed = false;
@@ -292,7 +292,15 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, GeneralSpritesheet7, 58, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
 
+	
+
 	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
+
+
+	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
+	sensor->listener = this;
+
+	
 
 	return ret;
 }
@@ -310,11 +318,6 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 
-	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
-		circles.getLast()->data->listener = this;
-	}
 
 	App->renderer->Blit(general, 0, 0, &background);
 
@@ -323,6 +326,12 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
+	item = App->player->balls.getFirst();
+		if (bodyB->body == item->data->body && bodyA->body == sensor->body)
+		{
+			item->data->body->DestroyFixture(item->data->body->GetFixtureList());
+			//sensed = true;
+		}
 }
 
 void ModuleSceneIntro::chainpoints() {
