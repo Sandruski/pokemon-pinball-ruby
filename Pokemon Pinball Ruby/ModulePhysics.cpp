@@ -192,7 +192,7 @@ PhysBody* ModulePhysics::CreateFlipper(b2Vec2 flipper_vertices[], int size, floa
 	return pbody;
 }
 
-b2RevoluteJoint* ModulePhysics::CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA, float upperAngle, float lowerAngle) {
+b2RevoluteJoint* ModulePhysics::CreateFlipperRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA, float upperAngle, float lowerAngle) {
 
 	b2RevoluteJointDef jointDef;
 	jointDef.bodyA = bodyA;
@@ -215,6 +215,29 @@ b2RevoluteJoint* ModulePhysics::CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB
 	jointDef.maxMotorTorque = 10.0f;
 	jointDef.motorSpeed = 0.0f;
 	*/
+
+	b2RevoluteJoint* revoluteJoint = (b2RevoluteJoint*)world->CreateJoint(&jointDef);
+
+	return revoluteJoint;
+}
+
+b2RevoluteJoint* ModulePhysics::CreatePokemonRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyB) {
+
+	b2RevoluteJointDef jointDef;
+	jointDef.bodyA = bodyA;
+	jointDef.bodyB = bodyB;
+	jointDef.collideConnected = false;
+
+	b2Vec2 setA = bodyA->GetLocalCenter();
+	b2Vec2 setB = setBodyB;
+
+	jointDef.localAnchorA.Set(setA.x, setA.y);
+	jointDef.localAnchorB.Set(setB.x, setB.y);
+
+	//Motor
+	jointDef.enableMotor = true;
+	jointDef.maxMotorTorque = 10.0f;
+	jointDef.motorSpeed = 0.0f;
 
 	b2RevoluteJoint* revoluteJoint = (b2RevoluteJoint*)world->CreateJoint(&jointDef);
 

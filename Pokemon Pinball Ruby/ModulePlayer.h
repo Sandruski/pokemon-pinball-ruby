@@ -79,9 +79,19 @@ private:
 	SDL_Rect r_f6 = { 203, 1316, 31, 26 };
 
 	//Spring
+	//Red part
 	SDL_Rect s1 = { 92, 815, 20, 35 };
 	SDL_Rect s2 = { 114, 815, 20, 35 };
 	SDL_Rect s3 = { 136, 815, 20, 35 };
+	//Grey part
+	SDL_Rect s4 = { 4, 812, 20, 38 };
+	SDL_Rect s5 = { 26, 810, 20, 40 };
+	SDL_Rect s6 = { 48, 813, 20, 37 };
+	SDL_Rect s7 = { 70, 815, 20, 35 };
+
+	Animation rotating_pokemons;
+	Animation* current_rotating_pokemons;
+	SDL_Rect* r;
 
 	//Get sprites
 	void GetBallSprites(float angle, Ball* ball_properties); //Ball
@@ -94,11 +104,14 @@ private:
 	b2RevoluteJoint* flipperRevoluteJoints[2];
 	SDL_Rect* flipper_sprite[2];
 
-	PhysBody* ball;
-	p2List<PhysBody*> balls;
+	PhysBody* rotatingPokemons[4];
+	b2RevoluteJoint* pokemonsRevoluteJoint[3];
+
 	Ball* ball_properties;
 	p2List<Ball*> balls_properties;
 
 public:
+	PhysBody* ball;
+	p2List<PhysBody*> balls;
 
 };

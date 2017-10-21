@@ -49,7 +49,8 @@ public:
 	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType type = b2_dynamicBody);
 	PhysBody* CreateFlipper(b2Vec2 flipper_vertices[], int size, float angle);
 	//Joints
-	b2RevoluteJoint* CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA, float upperAngle, float lowerAngle);
+	b2RevoluteJoint* CreateFlipperRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA, float upperAngle, float lowerAngle);
+	b2RevoluteJoint* CreatePokemonRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

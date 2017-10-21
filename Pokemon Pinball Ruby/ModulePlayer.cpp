@@ -9,7 +9,9 @@
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-
+	rotating_pokemons.PushBack({ 171, 777, 25, 20 });
+	rotating_pokemons.PushBack({ 198, 775, 23, 22 });
+	rotating_pokemons.speed = 0.02f;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -36,7 +38,6 @@ bool ModulePlayer::Start()
 	pokeball = App->textures->Load("Assets/Sprites/Pokeball&more.png");
 
 	// Create flippers
-
 	b2Vec2 flipper_vertices[8];
 	flipper_vertices[0].Set(10, 11);
 	flipper_vertices[1].Set(21, 10);
@@ -58,8 +59,8 @@ bool ModulePlayer::Start()
 	flipperCircles[0] = App->physics->CreateCircle(90, 392, 6, b2_staticBody); //Left circle
 	flipperCircles[1] = App->physics->CreateCircle(151, 392, 6, b2_staticBody); //Right circle
 
-	flipperRevoluteJoints[0] = App->physics->CreateRevoluteJoint(flippers[0]->body, flipperCircles[0]->body, { 0.13f,0.12f }, 20, -32); //Left flipper revolute joint
-	flipperRevoluteJoints[1] = App->physics->CreateRevoluteJoint(flippers[1]->body, flipperCircles[1]->body, { 0.13f,0.12f }, -150, -192); //Right flipper revolute joint
+	flipperRevoluteJoints[0] = App->physics->CreateFlipperRevoluteJoint(flippers[0]->body, flipperCircles[0]->body, { 0.13f,0.12f }, 20, -32); //Left flipper revolute joint
+	flipperRevoluteJoints[1] = App->physics->CreateFlipperRevoluteJoint(flippers[1]->body, flipperCircles[1]->body, { 0.13f,0.12f }, -150, -192); //Right flipper revolute joint
 
 	flipper_sprite[0] = &l_f1; //Left
 	flipper_sprite[1] = &r_f1; //Right
@@ -73,6 +74,25 @@ bool ModulePlayer::Start()
 	f.maskBits = BALL;
 	flippers[0]->body->GetFixtureList()->SetFilterData(f);
 	flippers[1]->body->GetFixtureList()->SetFilterData(f);
+
+	//Create rotating pokémons
+	rotatingPokemons[0] = App->physics->CreateCircle(100, 30, 50, b2_staticBody);
+	rotatingPokemons[1] = App->physics->CreateCircle(0, 0, 20, b2_dynamicBody);
+	rotatingPokemons[2] = App->physics->CreateCircle(0, 0, 20, b2_dynamicBody);
+	rotatingPokemons[3] = App->physics->CreateCircle(0, 0, 20, b2_dynamicBody);
+
+	rotatingPokemons[1]->body->SetLinearVelocity({ 0,0 });
+	rotatingPokemons[2]->body->SetLinearVelocity({ 0,0 });
+	rotatingPokemons[3]->body->SetLinearVelocity({ 0,0 });
+	rotatingPokemons[1]->body->GetFixtureList()->SetRestitution(2.0f);
+	rotatingPokemons[2]->body->GetFixtureList()->SetRestitution(2.0f);
+	rotatingPokemons[3]->body->GetFixtureList()->SetRestitution(2.0f);
+
+	pokemonsRevoluteJoint[0] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[1]->body, { PIXEL_TO_METERS(25 * cosf(190 * DEGTORAD)), PIXEL_TO_METERS(25 * sinf(190 * DEGTORAD)) }); //Up
+	pokemonsRevoluteJoint[1] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[2]->body, { PIXEL_TO_METERS(25 * cosf(-40 * DEGTORAD)), PIXEL_TO_METERS(25 * sinf(-40 * DEGTORAD)) }); //Left
+	pokemonsRevoluteJoint[2] = App->physics->CreatePokemonRevoluteJoint(rotatingPokemons[0]->body, rotatingPokemons[3]->body, { PIXEL_TO_METERS(25 * cosf(-130 * DEGTORAD)), PIXEL_TO_METERS(25 * sinf(-130 * DEGTORAD)) }); //Right
+
+	current_rotating_pokemons = &rotating_pokemons;
 
 	return true;
 }
@@ -95,14 +115,13 @@ bool ModulePlayer::CleanUp()
 	return true;
 }
 
-//current_animation = &ball_anim;
-//r = &current_animation->GetCurrentFrame();
-
 // Update: draw background
 update_status ModulePlayer::Update()
 {
 	//For motors
-	//flipper1RevoluteJoint->SetMotorSpeed(cosf(0.5f * 1));
+	pokemonsRevoluteJoint[0]->SetMotorSpeed(cosf(0.5f * 2));
+	pokemonsRevoluteJoint[1]->SetMotorSpeed(cosf(0.5f * 2));
+	pokemonsRevoluteJoint[2]->SetMotorSpeed(cosf(0.5f * 2));
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
 		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
@@ -155,31 +174,33 @@ update_status ModulePlayer::Update()
 	}
 
 	// Blit flippers
-
 	// Left
 	b2Vec2 pos_l = flipperRevoluteJoints[0]->GetAnchorB();
 	pos_l -= { 0.13f, 0.12f };
-
 	double angle_l = flippers[0]->GetRotation();
 
 	// Get sprite for the flipper
 	GetFlipperSprites(angle_l, flipper_sprite[0], true);
-
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_l.x), METERS_TO_PIXELS(pos_l.y) - 4, flipper_sprite[0]);
 
 	// Right
 	b2Vec2 pos_r = flipperRevoluteJoints[1]->GetAnchorB();
 	pos_r -= { 0.13f, 0.12f };
-
 	double angle_r = flippers[1]->GetRotation();
-
-	LOG("ANGLE: %f", angle_r);
 
 	// Get sprite for the flipper
 	GetFlipperSprites(angle_r, flipper_sprite[1], false);
-
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_r.x) - 18, METERS_TO_PIXELS(pos_r.y) - 4, flipper_sprite[1]);
 	
+	// Blit rotating pokemons
+	r = &current_rotating_pokemons->GetCurrentFrame();
+	b2Vec2 pos_p1 = rotatingPokemons[1]->body->GetPosition();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r);
+	pos_p1 = rotatingPokemons[2]->body->GetPosition();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r);
+	pos_p1 = rotatingPokemons[3]->body->GetPosition();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r);
+
 	return UPDATE_CONTINUE;
 }
 
