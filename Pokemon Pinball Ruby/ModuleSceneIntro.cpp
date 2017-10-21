@@ -19,6 +19,14 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	background.w = 257;
 	background.h = 425;
 
+	Pikachu.PushBack({ 110, 1264, 25, 24 });
+	Pikachu.PushBack({ 137, 1264, 23, 24 });
+	Pikachu.PushBack({ 162, 1265, 23, 23 });
+	//Pikachu.PushBack({ 319, 1264, 84, 8 });
+	//Pikachu.PushBack({ 319, 1264, 84, 8 });
+	//Pikachu.PushBack({ 319, 1264, 84, 8 });
+	//Pikachu.PushBack({ 319, 1264, 84, 8 });
+
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -323,10 +331,10 @@ bool ModuleSceneIntro::Start()
 
 	//sensor to destroy the ball
 	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
+	sensorPikachu = App->physics->CreateRectangleSensor(33, 380, 10, 10);
 	sensor->listener = this;
-
+	sensorPikachu->listener = this;
 	
-
 	return ret;
 }
 
@@ -342,7 +350,11 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) {
 
+		//sensorPikachu->body->SetTransform(positionPikachu, 0);
+
+	}
 
 	App->renderer->Blit(general, 0, 0, &background);
 
@@ -356,6 +368,13 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		if (bodyB->body == item->data->body && bodyA->body == sensor->body)
 		{
 		//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
+			//sensed = true;
+		}
+
+		if (bodyB->body == item->data->body && bodyA->body == sensorPikachu->body)
+		{
+			item->data->body->ApplyForceToCenter({ 0, -50 }, true);
+			//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
 			//sensed = true;
 		}
 

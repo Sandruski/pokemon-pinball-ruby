@@ -3,7 +3,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "Globals.h"
-
+#include "Animation.h"
 
 class PhysBody;
 
@@ -27,13 +27,17 @@ public:
 	PhysBody* walls;
 
 	SDL_Texture* general;
-	
+
 
 private:
 	p2List_item<PhysBody*>* item;
 	SDL_Rect background;
 	PhysBody* sensor;
+	PhysBody* sensorPikachu;
 	bool sensed;
 	PhysBody* trianglebody1;
 	PhysBody* trianglebody2;
+	Animation Pikachu;
+	//b2Vec2 positionPikachu;
+
 };
