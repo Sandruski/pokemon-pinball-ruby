@@ -3,6 +3,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "Globals.h"
+#include "Animation.h"
 
 class PhysBody;
 
@@ -19,16 +20,7 @@ public:
 	void chainpoints();
 
 public:
-	p2List<PhysBody*> circles;
-	p2List<PhysBody*> boxes;
-	p2List<PhysBody*> ricks;
 
-	PhysBody* sensor;
-	bool sensed;
-
-	SDL_Texture* circle;
-	SDL_Texture* box;
-	SDL_Texture* rick;
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
@@ -36,6 +28,16 @@ public:
 
 	SDL_Texture* general;
 
+
 private:
+	p2List_item<PhysBody*>* item;
 	SDL_Rect background;
+	PhysBody* sensor;
+	PhysBody* sensorPikachu;
+	bool sensed;
+	PhysBody* trianglebody1;
+	PhysBody* trianglebody2;
+	Animation Pikachu;
+	//b2Vec2 positionPikachu;
+
 };

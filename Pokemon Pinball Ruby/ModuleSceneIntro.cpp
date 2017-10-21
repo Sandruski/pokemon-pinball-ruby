@@ -6,10 +6,10 @@
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
+#include "ModulePlayer.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = box = rick = NULL;
 	general = NULL;
 	ray_on = false;
 	sensed = false;
@@ -18,6 +18,14 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	background.y = 3;
 	background.w = 257;
 	background.h = 425;
+
+	Pikachu.PushBack({ 110, 1264, 25, 24 });
+	Pikachu.PushBack({ 137, 1264, 23, 24 });
+	Pikachu.PushBack({ 162, 1265, 23, 23 });
+	//Pikachu.PushBack({ 319, 1264, 84, 8 });
+	//Pikachu.PushBack({ 319, 1264, 84, 8 });
+	//Pikachu.PushBack({ 319, 1264, 84, 8 });
+	//Pikachu.PushBack({ 319, 1264, 84, 8 });
 
 }
 
@@ -38,6 +46,26 @@ bool ModuleSceneIntro::Start()
 	-Crear bonus (cuando pasa la bola, se tienen que activar.Tipo sensores : isSensor = true), bouncers(cuerpos estáticos).
 	-Que llame a una función de AddBody de ModulePhysics.
 	*/
+
+	int triangle[14] = {
+		599 - 533, 337,
+		599 - 533, 356,
+		616 - 533, 367,
+		619 - 533, 366,
+		620 - 533, 362,
+		604 - 533, 339,
+		601 - 533, 336
+	};
+
+	int triangle2[14] = {
+		705 - 533, 338,
+		705 - 533, 355,
+		691 - 533, 364,
+		687 - 533, 366,
+		686 - 533, 362,
+		702 - 533, 337,
+		705 - 533, 336
+	};
 
 	int GeneralSpritesheet0[14] = {
 		679 - 533, 94,
@@ -282,7 +310,7 @@ bool ModuleSceneIntro::Start()
 		586 - 533, 113
 	};
 
-	App->physics->CreateChain(0, 0, GeneralSpritesheet0, 14, b2_staticBody);
+	//App->physics->CreateChain(0, 0, GeneralSpritesheet0, 14, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet1, 150, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet2, 14, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet3, 30, b2_staticBody);
@@ -292,8 +320,21 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, GeneralSpritesheet7, 58, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
 
+	//Setting... triangles(?)
+	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 14, b2_staticBody);
+	trianglebody2 = App->physics->CreateChain(0, 0, triangle2, 14, b2_staticBody);
+	trianglebody1->body->GetFixtureList()->SetRestitution(3.0f);
+	trianglebody2->body->GetFixtureList()->SetRestitution(3.0f);
+
+
 	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
 
+	//sensor to destroy the ball
+	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
+	sensorPikachu = App->physics->CreateRectangleSensor(33, 380, 10, 10);
+	sensor->listener = this;
+	sensorPikachu->listener = this;
+	
 	return ret;
 }
 
@@ -309,11 +350,10 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) {
 
-	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
-		circles.getLast()->data->listener = this;
+		//sensorPikachu->body->SetTransform(positionPikachu, 0);
+
 	}
 
 	App->renderer->Blit(general, 0, 0, &background);
@@ -323,6 +363,21 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
+	item = App->player->balls.getFirst();
+	//THIS IS NOT WORKING AS EXPECTED
+		if (bodyB->body == item->data->body && bodyA->body == sensor->body)
+		{
+		//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
+			//sensed = true;
+		}
+
+		if (bodyB->body == item->data->body && bodyA->body == sensorPikachu->body)
+		{
+			item->data->body->ApplyForceToCenter({ 0, -50 }, true);
+			//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
+			//sensed = true;
+		}
+
 }
 
 void ModuleSceneIntro::chainpoints() {
