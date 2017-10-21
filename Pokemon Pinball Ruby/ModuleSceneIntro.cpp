@@ -39,6 +39,26 @@ bool ModuleSceneIntro::Start()
 	-Que llame a una función de AddBody de ModulePhysics.
 	*/
 
+	int triangle[14] = {
+		599 - 533, 337,
+		599 - 533, 356,
+		616 - 533, 367,
+		619 - 533, 366,
+		620 - 533, 362,
+		604 - 533, 339,
+		601 - 533, 336
+	};
+
+	int triangle2[14] = {
+		705 - 533, 338,
+		705 - 533, 355,
+		691 - 533, 364,
+		687 - 533, 366,
+		686 - 533, 362,
+		702 - 533, 337,
+		705 - 533, 336
+	};
+
 	int GeneralSpritesheet0[14] = {
 		679 - 533, 94,
 		682 - 533, 93,
@@ -282,7 +302,7 @@ bool ModuleSceneIntro::Start()
 		586 - 533, 113
 	};
 
-	App->physics->CreateChain(0, 0, GeneralSpritesheet0, 14, b2_staticBody);
+	//App->physics->CreateChain(0, 0, GeneralSpritesheet0, 14, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet1, 150, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet2, 14, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet3, 30, b2_staticBody);
@@ -292,11 +312,16 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, GeneralSpritesheet7, 58, b2_staticBody);
 	App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
 
-	
+	//Setting... triangles(?)
+	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 14, b2_staticBody);
+	trianglebody2 = App->physics->CreateChain(0, 0, triangle2, 14, b2_staticBody);
+	trianglebody1->body->GetFixtureList()->SetRestitution(3.0f);
+	trianglebody2->body->GetFixtureList()->SetRestitution(3.0f);
+
 
 	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
 
-
+	//sensor to destroy the ball
 	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
 	sensor->listener = this;
 
@@ -327,11 +352,13 @@ update_status ModuleSceneIntro::Update()
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	item = App->player->balls.getFirst();
+	//THIS IS NOT WORKING AS EXPECTED
 		if (bodyB->body == item->data->body && bodyA->body == sensor->body)
 		{
-			item->data->body->DestroyFixture(item->data->body->GetFixtureList());
+		//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
 			//sensed = true;
 		}
+
 }
 
 void ModuleSceneIntro::chainpoints() {

@@ -34,4 +34,6 @@ private:
 	SDL_Rect background;
 	PhysBody* sensor;
 	bool sensed;
+	PhysBody* trianglebody1;
+	PhysBody* trianglebody2;
 };
