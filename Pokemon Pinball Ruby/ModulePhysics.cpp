@@ -38,7 +38,7 @@ bool ModulePhysics::Start()
 	return true;
 }
 
-// 
+//
 update_status ModulePhysics::PreUpdate()
 {
 	world->Step(1.0f / 60.0f, 6, 2);
@@ -166,6 +166,59 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, b2Body
 	pbody->width = pbody->height = 0;
 
 	return pbody;
+}
+
+PhysBody* ModulePhysics::CreateFlipper(b2Vec2 flipper_vertices[], int size, float angle) {
+	b2BodyDef body;
+	body.type = b2_dynamicBody;
+	body.position.Set(0, 0);
+	body.angle = angle * DEGTORAD;
+
+	b2Body* b = App->physics->world->CreateBody(&body);
+	b2PolygonShape flipper;
+	flipper.Set(flipper_vertices, size);
+
+	b2FixtureDef fixture;
+	fixture.density = 1.0f;
+	fixture.shape = &flipper;
+
+	b->CreateFixture(&fixture);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->SetUserData(pbody);
+	pbody->width = pbody->height = 0;
+
+	return pbody;
+}
+
+b2RevoluteJoint* ModulePhysics::CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA, float upperAngle, float lowerAngle) {
+
+	b2RevoluteJointDef jointDef;
+	jointDef.bodyA = bodyA;
+	jointDef.bodyB = bodyB;
+	jointDef.collideConnected = false;
+
+	b2Vec2 setA = setBodyA;
+	b2Vec2 setB = bodyB->GetLocalCenter();
+
+	jointDef.localAnchorA.Set(setA.x, setA.y);
+	jointDef.localAnchorB.Set(setB.x, setB.y);
+
+	jointDef.enableLimit = true;
+	jointDef.upperAngle = upperAngle * DEGTORAD;
+	jointDef.lowerAngle = lowerAngle * DEGTORAD;
+
+	/*
+	//Motor
+	jointDef.enableMotor = true;
+	jointDef.maxMotorTorque = 10.0f;
+	jointDef.motorSpeed = 0.0f;
+	*/
+
+	b2RevoluteJoint* revoluteJoint = (b2RevoluteJoint*)world->CreateJoint(&jointDef);
+
+	return revoluteJoint;
 }
 
 // 
@@ -357,28 +410,6 @@ update_status ModulePhysics::PostUpdate()
 	
 
 	return UPDATE_CONTINUE;
-}
-
-// Create a Revolute Joint
-b2RevoluteJointDef ModulePhysics::CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB) {
-	
-	b2RevoluteJointDef jointDef;
-	jointDef.bodyA = bodyA;
-	jointDef.bodyB = bodyB;
-	jointDef.collideConnected = false;
-
-	b2Vec2 setA = bodyA->GetLocalCenter();
-	b2Vec2 setB = { 0.12f, 0.12f };
-
-	jointDef.localAnchorA.Set(setA.x, setA.y);
-	jointDef.localAnchorB.Set(setB.x, setB.y);
-
-	//jointDef.enableLimit = true;
-	//jointDef.lowerAngle = -45 * DEGTORAD;
-	//jointDef.upperAngle = 45 * DEGTORAD;
-	//jointDef.referenceAngle
-	
-	return jointDef;
 }
 
 // Called before quitting

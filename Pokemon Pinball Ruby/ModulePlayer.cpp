@@ -38,67 +38,42 @@ bool ModulePlayer::Start()
 	// Create flippers
 
 	b2Vec2 flipper_vertices[8];
-	flipper_vertices[0].Set(412 - 402, 543 - 532);
-	flipper_vertices[1].Set(423 - 402, 542 - 532);
-	flipper_vertices[2].Set(432 - 402, 540 - 532);
-	flipper_vertices[3].Set(431 - 402, 535 - 532);
-	flipper_vertices[4].Set(421 - 402, 534 - 532);
-	flipper_vertices[5].Set(406 - 402, 533 - 532);
-	flipper_vertices[6].Set(402 - 402, 537 - 532);
-	flipper_vertices[7].Set(405 - 402, 543 - 532);
+	flipper_vertices[0].Set(10, 11);
+	flipper_vertices[1].Set(21, 10);
+	flipper_vertices[2].Set(30, 8);
+	flipper_vertices[3].Set(29, 3);
+	flipper_vertices[4].Set(19, 2);
+	flipper_vertices[5].Set(4, 1);
+	flipper_vertices[6].Set(0, 5);
+	flipper_vertices[7].Set(3, 11);
 
 	for (int i = 0; i < 8; i++) {
 		flipper_vertices[i].x = PIXEL_TO_METERS(flipper_vertices[i].x);
 		flipper_vertices[i].y = PIXEL_TO_METERS(flipper_vertices[i].y);
 	}
 
-	//Flipper
-	b2BodyDef body;
-	body.type = b2_dynamicBody;
-	body.position.Set(0, 0);
+	flippers[0] = App->physics->CreateFlipper(flipper_vertices, 8, 32); //Left flipper 45
+	flippers[1] = App->physics->CreateFlipper(flipper_vertices, 8, 192); //Right flipper 205
 
-	b2Body* b = App->physics->world->CreateBody(&body);
-	b2PolygonShape flipper;
-	flipper.Set(flipper_vertices, 8);
+	flipperCircles[0] = App->physics->CreateCircle(90, 392, 6, b2_staticBody); //Left circle
+	flipperCircles[1] = App->physics->CreateCircle(151, 392, 6, b2_staticBody); //Right circle
 
-	b2FixtureDef fixture;
-	fixture.density = 1.0f;
-	fixture.shape = &flipper;
+	flipperRevoluteJoints[0] = App->physics->CreateRevoluteJoint(flippers[0]->body, flipperCircles[0]->body, { 0.13f,0.12f }, 20, -32); //Left flipper revolute joint
+	flipperRevoluteJoints[1] = App->physics->CreateRevoluteJoint(flippers[1]->body, flipperCircles[1]->body, { 0.13f,0.12f }, -150, -192); //Right flipper revolute joint
 
-	b->CreateFixture(&fixture);
+	flipper_sprite[0] = &l_f1; //Left
+	flipper_sprite[1] = &r_f1; //Right
 
-	flippers[0] = new PhysBody();
-	flippers[0]->body = b;
-	b->SetUserData(flippers[0]);
-	//
+	b2Filter f;
+	f.categoryBits = NEUTRAL;
+	flipperCircles[0]->body->GetFixtureList()->SetFilterData(f);
+	flipperCircles[1]->body->GetFixtureList()->SetFilterData(f);
 
-	revoluteJoint = App->physics->CreateCircle(30, 30, 6, b2_staticBody);
+	f.categoryBits = FLIPPER;
+	f.maskBits = BALL;
+	flippers[0]->body->GetFixtureList()->SetFilterData(f);
+	flippers[1]->body->GetFixtureList()->SetFilterData(f);
 
-	b2RevoluteJointDef jointDef;
-	jointDef.bodyA = flippers[0]->body;
-	jointDef.bodyB = revoluteJoint->body;
-	jointDef.collideConnected = false;
-
-	b2Vec2 setA = { 0.13f, 0.12f };
-	b2Vec2 setB = revoluteJoint->body->GetLocalCenter();
-
-	jointDef.localAnchorA.Set(setA.x, setA.y);
-	jointDef.localAnchorB.Set(setB.x, setB.y);
-
-	jointDef.enableLimit = true;
-	jointDef.lowerAngle = -45 * DEGTORAD;
-	jointDef.upperAngle = 45 * DEGTORAD;
-
-	/*
-	//Motor
-	jointDef.enableMotor = true;
-	jointDef.maxMotorTorque = 10.0f; 
-	jointDef.motorSpeed = 0.0f; 
-	*/
-
-	flipper1RevoluteJoint = (b2RevoluteJoint*)App->physics->world->CreateJoint(&jointDef);
-	App->physics->CreateRevoluteJoint(revoluteJoint->body, flippers[0]->body);
-	
 	return true;
 }
 
@@ -128,10 +103,12 @@ update_status ModulePlayer::Update()
 {
 	//For motors
 	//flipper1RevoluteJoint->SetMotorSpeed(cosf(0.5f * 1));
+
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
+		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
 	
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		flipper1RevoluteJoint->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
-		//flipper1RevoluteJoint->GetBodyB()->ApplyAngularImpulse(-70.0f, true);
 	// Create bullet
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
 		// Create class PhysBody ball
@@ -141,6 +118,12 @@ update_status ModulePlayer::Update()
 		balls.getLast()->data->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
 
 		balls.getLast()->data->listener = this; //?????
+
+		b2Filter f;
+		f.categoryBits = BALL;
+		f.maskBits = FLIPPER;
+
+		balls.getLast()->data->body->GetFixtureList()->SetFilterData(f);
 
 		// Create struct Ball ball
 		ball_properties = new Ball();
@@ -172,13 +155,85 @@ update_status ModulePlayer::Update()
 	}
 
 	// Blit flippers
-	//b2Vec2 a = flipper1RevoluteJoint->GetBodyB()->GetPosition();
-	//float b = flipper1RevoluteJoint->GetBodyB()->GetAngle();
 
-	//App->renderer->Blit(App->scene_intro->general, a.x, a.y, &f1, 1.0f);
+	// Left
+	b2Vec2 pos_l = flipperRevoluteJoints[0]->GetAnchorB();
+	pos_l -= { 0.13f, 0.12f };
+
+	double angle_l = flippers[0]->GetRotation();
+
+	// Get sprite for the flipper
+	GetFlipperSprites(angle_l, flipper_sprite[0], true);
+
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_l.x), METERS_TO_PIXELS(pos_l.y) - 4, flipper_sprite[0]);
+
+	// Right
+	b2Vec2 pos_r = flipperRevoluteJoints[1]->GetAnchorB();
+	pos_r -= { 0.13f, 0.12f };
+
+	double angle_r = flippers[1]->GetRotation();
+
+	LOG("ANGLE: %f", angle_r);
+
+	// Get sprite for the flipper
+	GetFlipperSprites(angle_r, flipper_sprite[1], false);
+
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_r.x) - 18, METERS_TO_PIXELS(pos_r.y) - 4, flipper_sprite[1]);
 	
 	return UPDATE_CONTINUE;
 }
+
+// Get flipper sprites
+void ModulePlayer::GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, bool left) {
+
+	SDL_Rect* sprite = &l_f1;
+
+	if (left) {
+
+		if (angle > 32.0f) {
+			sprite = &l_f1;
+		}
+		else if (angle <= 32.0f && angle > 22.0f) {
+			sprite = &l_f2;
+		}
+		else if (angle <= 22.0f && angle > 11.0f) {
+			sprite = &l_f3;
+		}
+		else if (angle <= 11.0f && angle > -5.0f) {
+			sprite = &l_f4;
+		}
+		else if (angle <= -5.0f && angle > -10.0f) {
+			sprite = &l_f5;
+		}
+		else if (angle <= -10.0f) {
+			sprite = &l_f6;
+		}
+	}
+	else {
+
+		if (angle < 150.0f) {
+			sprite = &r_f1;
+		}
+		else if (angle >= 150.0f && angle < 160.0f) {
+			sprite = &r_f2;
+		}
+		else if (angle >= 160.0f && angle < 170.0f) {
+			sprite = &r_f3;
+		}
+		else if (angle >= 170.0f && angle < 186.0f) {
+			sprite = &r_f4;
+		}
+		else if (angle >= 186.0f && angle < 191.0f) {
+			sprite = &r_f5;
+		}
+		else if (angle >= 191.0f) {
+			sprite = &r_f6;
+		}
+	}
+
+	flipper_sprite = sprite;
+}
+
 
 // Get ball sprites
 void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
@@ -193,67 +248,51 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 
 	if (direction * angle - (360 * loops) > 348.75f || direction * angle - (360 * loops) <= 11.25f) {
 		sprite = &b1;
-		LOG("CASE1");
 	}
 	else if (direction * angle - (360 * loops) > 11.25f && direction * angle - (360 * loops) <= 33.75f) {
 		sprite = &b2;
-		LOG("CASE2");
 	}
 	else if (direction * angle - (360 * loops) > 33.75f && direction * angle - (360 * loops) <= 56.25f) {
 		sprite = &b3;
-		LOG("CASE3");
 	}
 	else if (direction * angle - (360 * loops) > 56.25f && direction * angle - (360 * loops) <= 78.75f) {
 		sprite = &b4;
-		LOG("CASE4");
 	}
 	else if (direction * angle - (360 * loops) > 78.75f && direction * angle - (360 * loops) <= 101.25f) {
 		sprite = &b5;
-		LOG("CASE5");
 	}
 	else if (direction * angle - (360 * loops) > 101.25f && direction * angle - (360 * loops) <= 123.75f) {
 		sprite = &b6;
-		LOG("CASE6");
 	}
 	else if (direction * angle - (360 * loops) > 123.75f && direction * angle - (360 * loops) <= 146.25f) {
 		sprite = &b7;
-		LOG("CASE7");
 	}
 	else if (direction * angle - (360 * loops) > 146.25f && direction * angle - (360 * loops) <= 168.75f) {
 		sprite = &b8;
-		LOG("CASE8");
 	}
 	else if (direction * angle - (360 * loops) > 168.75f && direction * angle - (360 * loops) <= 191.25f) {
 		sprite = &b9;
-		LOG("CASE9");
 	}
 	else if (direction * angle - (360 * loops) > 191.25f && direction * angle - (360 * loops) <= 213.75f) {
 		sprite = &b10;
-		LOG("CASE10");
 	}
 	else if (direction * angle - (360 * loops) > 213.75f && direction * angle - (360 * loops) <= 236.25f) {
 		sprite = &b11;
-		LOG("CASE11");
 	}
 	else if (direction * angle - (360 * loops) > 236.25f && direction * angle - (360 * loops) <= 258.75f) {
 		sprite = &b12;
-		LOG("CASE12");
 	}
 	else if (direction * angle - (360 * loops) > 258.75f && direction * angle - (360 * loops) <= 281.25f) {
 		sprite = &b13;
-		LOG("CASE13");
 	}
 	else if (direction * angle - (360 * loops) > 281.25f && direction * angle - (360 * loops) <= 303.75f) {
 		sprite = &b14;
-		LOG("CASE14");
 	}
 	else if (direction * angle - (360 * loops) > 303.75f && direction * angle - (360 * loops) <= 326.25f) {
 		sprite = &b15;
-		LOG("CASE15");
 	}
 	else if (direction * angle - (360 * loops) > 326.25f && direction * angle - (360 * loops) <= 348.75f) {
 		sprite = &b16;
-		LOG("CASE16");
 	}
 
 	ball_properties->current_sprite = sprite;

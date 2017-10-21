@@ -42,16 +42,17 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	//PhysBody
 	PhysBody* CreateCircle(int x, int y, int diameter, b2BodyType type = b2_dynamicBody);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType type = b2_dynamicBody);
+	PhysBody* CreateFlipper(b2Vec2 flipper_vertices[], int size, float angle);
+	//Joints
+	b2RevoluteJoint* CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA, float upperAngle, float lowerAngle);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
-
-	// Create a Revolute Joint
-	b2RevoluteJointDef CreateRevoluteJoint(b2Body* bodyA, b2Body* bodyB);
 
 private:
 	bool debug;

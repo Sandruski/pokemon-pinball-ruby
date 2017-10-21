@@ -6,6 +6,14 @@
 #include "Animation.h"
 #include "ModulePhysics.h"
 
+enum map_stuff {
+	NEUTRAL = 0x0001,
+	FLIPPER = 0x0002,
+	WALL = 0x0004,
+	BALL = 0x0008,
+	//ENEMY_AIRCRAFT = 0x0010,
+};
+
 enum ball_type {
 	pokeball,
 	superball,
@@ -55,25 +63,36 @@ private:
 	SDL_Rect b16 = { 414, 926, 15, 15 };
 
 	//Flipper (left)
-	SDL_Rect f1 = { 306, 527, 29, 26 };
-	SDL_Rect f2 = { 337, 527, 29, 26 };
-	SDL_Rect f3 = { 369, 527, 29, 26 };
-	SDL_Rect f4 = { 402, 527, 29, 26 };
-	SDL_Rect f5 = { 435, 527, 29, 26 };
-	SDL_Rect f6 = { 467, 527, 29, 26 };
+	SDL_Rect l_f1 = { 0, 1316, 31, 26 };
+	SDL_Rect l_f2 = { 31, 1316, 31, 26 };
+	SDL_Rect l_f3 = { 63, 1316, 31, 26 };
+	SDL_Rect l_f4 = { 96, 1316, 31, 26 };
+	SDL_Rect l_f5 = { 129, 1316, 31, 26 };
+	SDL_Rect l_f6 = { 161, 1316, 31, 26 };
+
+	//Flipper (right)
+	SDL_Rect r_f1 = { 425, 1316, 31, 26 };
+	SDL_Rect r_f2 = { 384, 1316, 31, 26 };
+	SDL_Rect r_f3 = { 343, 1316, 31, 26 };
+	SDL_Rect r_f4 = { 300, 1316, 31, 26 };
+	SDL_Rect r_f5 = { 249, 1316, 31, 26 };
+	SDL_Rect r_f6 = { 203, 1316, 31, 26 };
 
 	//Spring
 	SDL_Rect s1 = { 92, 815, 20, 35 };
 	SDL_Rect s2 = { 114, 815, 20, 35 };
 	SDL_Rect s3 = { 136, 815, 20, 35 };
 
-	//Get ball sprites
-	void GetBallSprites(float angle, Ball* ball_properties);
+	//Get sprites
+	void GetBallSprites(float angle, Ball* ball_properties); //Ball
+	void GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, bool left); //Flipper
+
 
 	//Flippers
 	PhysBody* flippers[2];
-	PhysBody* revoluteJoint;
-	b2RevoluteJoint* flipper1RevoluteJoint;
+	PhysBody* flipperCircles[2];
+	b2RevoluteJoint* flipperRevoluteJoints[2];
+	SDL_Rect* flipper_sprite[2];
 
 	PhysBody* ball;
 	p2List<PhysBody*> balls;
