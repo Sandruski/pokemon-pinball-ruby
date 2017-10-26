@@ -19,13 +19,21 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	background.w = 257;
 	background.h = 425;
 
-	Pikachu.PushBack({ 110, 1264, 25, 24 });
-	Pikachu.PushBack({ 137, 1264, 23, 24 });
-	Pikachu.PushBack({ 162, 1265, 23, 23 });
-	//Pikachu.PushBack({ 319, 1264, 84, 8 });
-	//Pikachu.PushBack({ 319, 1264, 84, 8 });
-	//Pikachu.PushBack({ 319, 1264, 84, 8 });
-	//Pikachu.PushBack({ 319, 1264, 84, 8 });
+	pikachu.PushBack({ 64, 1280, 25, 24 });
+	pikachu.PushBack({ 726 - 2, 1228, 23, 24 });
+	pikachu.speed = 0.05f;
+
+	impactTrueno.PushBack({ 162, 1265, 23, 23 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.PushBack({ 319, 1264, 84, 8 });
+	impactTrueno.speed = 0.05f;
 
 }
 
@@ -35,6 +43,9 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
+
+	time = 0;
+
 	LOG("Loading Intro assets");
 	bool ret = true;
 
@@ -343,7 +354,7 @@ bool ModuleSceneIntro::Start()
 
 	//sensor to destroy the ball
 	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
-	sensorPikachu = App->physics->CreateRectangleSensor(33, 380, 10, 10);
+	sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
 	sensor->listener = this;
 	sensorPikachu->listener = this;
 	sensor->body->GetFixtureList()->SetFilterData(f);
@@ -365,12 +376,28 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) {
-
 		//sensorPikachu->body->SetTransform(positionPikachu, 0);
+	}
 
+	if (checkTime && time < 60) {
+		item->data->body->SetLinearVelocity({0,0});
+	
+		time++;
+	}
+	else if (checkTime && time >= 60) {
+	//	item->data->body->SetGravityScale(1);
+		item->data->body->ApplyForceToCenter({ 0, -50 }, true);
+		time = 0;
+		checkTime = false;
 	}
 
 	App->renderer->Blit(general, 0, 0, &background);
+
+	current_anim = &pikachu;
+	r = &current_anim->GetCurrentFrame();
+	int x, y;
+	sensorPikachu->GetPosition(x, y);
+	App->renderer->Blit(general, x - 2, y + 20, r);
 
 	return UPDATE_CONTINUE;
 }
@@ -387,9 +414,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 		if (bodyB->body == item->data->body && bodyA->body == sensorPikachu->body || bodyA->body == item->data->body && bodyB->body == sensorPikachu->body)
 		{
-			item->data->body->ApplyForceToCenter({ 0, -50 }, true);
-			//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
-			//sensed = true;
+			checkTime = true;
 		}
 
 }

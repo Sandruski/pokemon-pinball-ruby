@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "Animation.h"
 
+#include "Box2D/Box2D/Box2D.h"
+
 class PhysBody;
 
 class ModuleSceneIntro : public Module
@@ -25,7 +27,8 @@ public:
 	p2Point<int> ray;
 	bool ray_on;
 	PhysBody* walls;
-
+	SDL_Rect* r;
+	Animation* current_anim;
 	SDL_Texture* general;
 
 
@@ -37,7 +40,11 @@ private:
 	bool sensed;
 	PhysBody* trianglebody1;
 	PhysBody* trianglebody2;
-	Animation Pikachu;
-	//b2Vec2 positionPikachu;
+	Animation pikachu, impactTrueno;
+
+	b2Vec2 ballSpeed;
+	float time;
+	bool checkTime;
+
 
 };
