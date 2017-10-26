@@ -44,13 +44,15 @@ public:
 
 	//PhysBody
 	PhysBody* CreateCircle(int x, int y, int diameter, b2BodyType type = b2_dynamicBody);
-	PhysBody* CreateRectangle(int x, int y, int width, int height);
+	PhysBody* CreateRectangle(int x, int y, int width, int height, b2BodyType type = b2_dynamicBody);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType type = b2_dynamicBody);
 	PhysBody* CreateFlipper(b2Vec2 flipper_vertices[], int size, float angle);
 	//Joints
 	b2RevoluteJoint* CreateFlipperRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA, float upperAngle, float lowerAngle);
 	b2RevoluteJoint* CreatePokemonRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA);
+	b2DistanceJoint* CreateSpringDistanceJoint(b2Body* bodyA, b2Body* bodyB);
+	b2PrismaticJoint* CreateSpringPrismaticJoint(b2Body* bodyA, b2Body* bodyB);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

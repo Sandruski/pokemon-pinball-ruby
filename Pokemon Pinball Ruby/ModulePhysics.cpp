@@ -81,10 +81,10 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int diameter, b2BodyType typ
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, b2BodyType type)
 {
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	body.type = type;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
@@ -243,6 +243,34 @@ b2RevoluteJoint* ModulePhysics::CreatePokemonRevoluteJoint(b2Body* bodyA, b2Body
 
 	return revoluteJoint;
 }
+
+b2DistanceJoint* ModulePhysics::CreateSpringDistanceJoint(b2Body* bodyA, b2Body* bodyB) {
+
+	b2DistanceJointDef jointDef;
+
+	jointDef.Initialize(bodyA, bodyB, bodyA->GetWorldCenter(), bodyB->GetWorldCenter());
+	jointDef.collideConnected = true;
+	
+	//Spring
+	jointDef.dampingRatio = 0.5f;
+	jointDef.frequencyHz = 4.0f;
+
+	b2DistanceJoint* distanceJoint = (b2DistanceJoint*)world->CreateJoint(&jointDef);
+
+	return distanceJoint;
+}
+
+b2PrismaticJoint* ModulePhysics::CreateSpringPrismaticJoint(b2Body* bodyA, b2Body* bodyB) {
+	b2PrismaticJointDef jointDef;
+	b2Vec2 worldAxis(0.0f, 1.0f);
+
+	jointDef.Initialize(bodyA, bodyB, bodyA->GetWorldCenter(), worldAxis);
+	jointDef.collideConnected = true;
+
+	/*
+	jointDef.lowerTranslation = -5.0f;
+	jointDef.upperTranslation = 2.5f;
+	jointDef.enableLimit = true;	*/	b2PrismaticJoint* prismaticJoint = (b2PrismaticJoint*)world->CreateJoint(&jointDef);	return prismaticJoint;}
 
 // 
 update_status ModulePhysics::PostUpdate()

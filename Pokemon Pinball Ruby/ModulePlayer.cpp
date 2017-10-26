@@ -16,9 +16,11 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	red_spring.PushBack({ 92, 815, 20, 35 });
 	red_spring.PushBack({ 114, 815, 20, 35 });
 	red_spring.PushBack({ 136, 815, 20, 35 });
+	red_spring.speed = 0.02f;
 
 	grey_spring.PushBack({ 4, 812, 20, 38 });
 	grey_spring.PushBack({ 26, 810, 20, 40 });
+	grey_spring.speed = 0.04f;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -104,6 +106,35 @@ bool ModulePlayer::Start()
 
 	current_rotating_pokemons = &rotating_pokemons;
 
+	//Create ball
+	float diameter = 13.0f;
+
+	ball = App->physics->CreateCircle(242, 360, diameter);
+	ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
+	ball->body->GetFixtureList()->SetDensity(0.7f);
+
+	ball->listener = this;
+
+	f.categoryBits = BALL;
+	f.maskBits = FLIPPER | WALL;
+	ball->body->GetFixtureList()->SetFilterData(f);
+
+	ball_properties = new Ball();
+
+	//Create spring
+	PhysBody* spring_anchor = App->physics->CreateRectangle(243, 402, 10, 10, b2_staticBody);
+	PhysBody* spring = App->physics->CreateRectangle(243, 382, 10, 10);
+	
+	f.categoryBits = FLIPPER;
+	f.maskBits = BALL | WALL | FLIPPER;
+	spring->body->GetFixtureList()->SetFilterData(f);
+	spring_anchor->body->GetFixtureList()->SetFilterData(f);
+
+	springDistanceJoint = App->physics->CreateSpringDistanceJoint(spring->body, spring_anchor->body);
+	springPrismaticJoint = App->physics->CreateSpringPrismaticJoint(spring->body, spring_anchor->body);
+
+	current_spring = &grey_spring;
+
 	return true;
 }
 
@@ -114,13 +145,14 @@ bool ModulePlayer::CleanUp()
 
 	App->textures->Unload(pokeball);
 
-	if (balls.getFirst() != NULL) {
-		balls.clear();
+	if (ball != nullptr) {
+		App->physics->world->DestroyBody(ball->body);
 	}
 
-	if (balls_properties.getFirst() != NULL) {
-		balls_properties.clear();
+	if (ball_properties != nullptr) {
+		delete ball_properties;
 	}
+	ball_properties = nullptr;
 
 	return true;
 }
@@ -133,58 +165,71 @@ update_status ModulePlayer::Update()
 	pokemonsRevoluteJoint[1]->SetMotorSpeed(cosf(0.5f * 2));
 	pokemonsRevoluteJoint[2]->SetMotorSpeed(cosf(0.5f * 2));
 
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
-		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.3f, true);
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
-		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.3f, true);
-	//FLIPPERS HAVE TO STAY UP WHEN PRESSED
-	
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
 
 	// Create bullet
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
+
+		// Destroy last ball (in case it exists)
+		if (ball != nullptr) {
+			App->physics->world->DestroyBody(ball->body);
+
+			if (ball_properties != nullptr) {
+				delete ball_properties;
+			}
+			ball_properties = nullptr;
+		}
+
 		// Create class PhysBody ball
-		float diameter = 13.0f;
+		float diameter = 14.0f;
 
-		balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), diameter));
-		balls.getLast()->data->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
-		balls.getLast()->data->body->GetFixtureList()->SetDensity(0.7f);
+		ball = App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), diameter);
+		ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
+		ball->body->GetFixtureList()->SetDensity(0.7f);
 
-		balls.getLast()->data->listener = this; //?????
+		ball->listener = this;
 
 		b2Filter f;
 		f.categoryBits = BALL;
 		f.maskBits = FLIPPER | WALL;
-
-		balls.getLast()->data->body->GetFixtureList()->SetFilterData(f);
+		ball->body->GetFixtureList()->SetFilterData(f);
 
 		// Create struct Ball ball
 		ball_properties = new Ball();
-		balls_properties.add(ball_properties);
+	}
+
+	// Update spring (distance joint)
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
+		impulse.y += 0.5f;
+		springDistanceJoint->GetBodyA()->ApplyForce(impulse, { 0, 0 }, true);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
+		impulse.y += 50.0f; //minimum impulse
+		springDistanceJoint->GetBodyA()->ApplyForce(-impulse, { 0, 0 }, true);
+		impulse = { 0,0 };
 	}
 
 	// All draw functions ------------------------------------------------------
-	p2List_item<PhysBody*>* b = balls.getFirst();
-	p2List_item<Ball*>* bp = balls_properties.getFirst();
 
-	// Blit bullet
-	while (b != NULL && bp != NULL)
-	{
+	// Blit ball
+	if (ball != nullptr) {
 		int x, y;
-		b->data->GetPosition(x, y);
-		float angle = b->data->GetRotation();
+		ball->GetPosition(x, y);
+		float angle = ball->GetRotation();
 
 		// Get sprite for the ball
-		GetBallSprites(angle, bp->data);
+		GetBallSprites(angle, ball_properties);
 
 		// Blit bullet sprite
 		if (angle < 0)
-			App->renderer->Blit(pokeball, x, y, bp->data->current_sprite);
+			App->renderer->Blit(pokeball, x, y, ball_properties->current_sprite);
 		else
-			App->renderer->Blit(pokeball, x, y, bp->data->current_sprite, 1.0f, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
-
-		b = b->next;
-		bp = bp->next;
+			App->renderer->Blit(pokeball, x, y, ball_properties->current_sprite, 1.0f, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
 	}
+	//
 
 	// Blit flippers
 	// Left
@@ -204,7 +249,8 @@ update_status ModulePlayer::Update()
 	// Get sprite for the flipper
 	GetFlipperSprites(angle_r, flipper_sprite[1], false);
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_r.x) - 18, METERS_TO_PIXELS(pos_r.y) - 4, flipper_sprite[1]);
-	
+	//
+
 	// Blit rotating pokemons
 	r = &current_rotating_pokemons->GetCurrentFrame();
 	b2Vec2 pos_p1 = rotatingPokemons[1]->body->GetPosition();
@@ -213,6 +259,12 @@ update_status ModulePlayer::Update()
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r);
 	pos_p1 = rotatingPokemons[3]->body->GetPosition();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r);
+	//
+
+	// Blit spring
+	r = &current_spring->GetCurrentFrame();
+	b2Vec2 pos_spring = springDistanceJoint->GetBodyB()->GetPosition();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_spring.x), METERS_TO_PIXELS(pos_spring.y) - 12, r);
 
 	return UPDATE_CONTINUE;
 }
@@ -223,46 +275,20 @@ void ModulePlayer::GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, boo
 	SDL_Rect* sprite = &l_f1;
 
 	if (left) {
-
-		if (angle > 32.0f) {
-			sprite = &l_f1;
-		}
-		else if (angle <= 32.0f && angle > 22.0f) {
-			sprite = &l_f2;
-		}
-		else if (angle <= 22.0f && angle > 11.0f) {
-			sprite = &l_f3;
-		}
-		else if (angle <= 11.0f && angle > -5.0f) {
-			sprite = &l_f4;
-		}
-		else if (angle <= -5.0f && angle > -10.0f) {
-			sprite = &l_f5;
-		}
-		else if (angle <= -10.0f) {
-			sprite = &l_f6;
-		}
+		if		(angle > 32.0f)						{ sprite = &l_f1; }
+		else if (angle <= 32.0f && angle > 22.0f)	{ sprite = &l_f2; }
+		else if (angle <= 22.0f && angle > 11.0f)	{ sprite = &l_f3; }
+		else if (angle <= 11.0f && angle > -5.0f)	{ sprite = &l_f4; }
+		else if (angle <= -5.0f && angle > -10.0f)	{ sprite = &l_f5; }
+		else if (angle <= -10.0f)					{ sprite = &l_f6; }
 	}
 	else {
-
-		if (angle < 150.0f) {
-			sprite = &r_f1;
-		}
-		else if (angle >= 150.0f && angle < 160.0f) {
-			sprite = &r_f2;
-		}
-		else if (angle >= 160.0f && angle < 170.0f) {
-			sprite = &r_f3;
-		}
-		else if (angle >= 170.0f && angle < 186.0f) {
-			sprite = &r_f4;
-		}
-		else if (angle >= 186.0f && angle < 191.0f) {
-			sprite = &r_f5;
-		}
-		else if (angle >= 191.0f) {
-			sprite = &r_f6;
-		}
+		if (angle < 150.0f)							{ sprite = &r_f1; }
+		else if (angle >= 150.0f && angle < 160.0f) { sprite = &r_f2; }
+		else if (angle >= 160.0f && angle < 170.0f) { sprite = &r_f3; }
+		else if (angle >= 170.0f && angle < 186.0f) { sprite = &r_f4; }		
+		else if (angle >= 186.0f && angle < 191.0f) { sprite = &r_f5; }
+		else if (angle >= 191.0f)					{ sprite = &r_f6; }
 	}
 
 	flipper_sprite = sprite;
@@ -280,54 +306,22 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 	if (angle < 0)
 		direction = -1;
 
-	if (direction * angle - (360 * loops) > 348.75f || direction * angle - (360 * loops) <= 11.25f) {
-		sprite = &b1;
-	}
-	else if (direction * angle - (360 * loops) > 11.25f && direction * angle - (360 * loops) <= 33.75f) {
-		sprite = &b2;
-	}
-	else if (direction * angle - (360 * loops) > 33.75f && direction * angle - (360 * loops) <= 56.25f) {
-		sprite = &b3;
-	}
-	else if (direction * angle - (360 * loops) > 56.25f && direction * angle - (360 * loops) <= 78.75f) {
-		sprite = &b4;
-	}
-	else if (direction * angle - (360 * loops) > 78.75f && direction * angle - (360 * loops) <= 101.25f) {
-		sprite = &b5;
-	}
-	else if (direction * angle - (360 * loops) > 101.25f && direction * angle - (360 * loops) <= 123.75f) {
-		sprite = &b6;
-	}
-	else if (direction * angle - (360 * loops) > 123.75f && direction * angle - (360 * loops) <= 146.25f) {
-		sprite = &b7;
-	}
-	else if (direction * angle - (360 * loops) > 146.25f && direction * angle - (360 * loops) <= 168.75f) {
-		sprite = &b8;
-	}
-	else if (direction * angle - (360 * loops) > 168.75f && direction * angle - (360 * loops) <= 191.25f) {
-		sprite = &b9;
-	}
-	else if (direction * angle - (360 * loops) > 191.25f && direction * angle - (360 * loops) <= 213.75f) {
-		sprite = &b10;
-	}
-	else if (direction * angle - (360 * loops) > 213.75f && direction * angle - (360 * loops) <= 236.25f) {
-		sprite = &b11;
-	}
-	else if (direction * angle - (360 * loops) > 236.25f && direction * angle - (360 * loops) <= 258.75f) {
-		sprite = &b12;
-	}
-	else if (direction * angle - (360 * loops) > 258.75f && direction * angle - (360 * loops) <= 281.25f) {
-		sprite = &b13;
-	}
-	else if (direction * angle - (360 * loops) > 281.25f && direction * angle - (360 * loops) <= 303.75f) {
-		sprite = &b14;
-	}
-	else if (direction * angle - (360 * loops) > 303.75f && direction * angle - (360 * loops) <= 326.25f) {
-		sprite = &b15;
-	}
-	else if (direction * angle - (360 * loops) > 326.25f && direction * angle - (360 * loops) <= 348.75f) {
-		sprite = &b16;
-	}
+	if		(direction * angle - (360 * loops) > 348.75f || direction * angle - (360 * loops) <= 11.25f)	{ sprite = &b1; }
+	else if (direction * angle - (360 * loops) > 11.25f && direction * angle - (360 * loops) <= 33.75f)		{ sprite = &b2; }
+	else if (direction * angle - (360 * loops) > 33.75f && direction * angle - (360 * loops) <= 56.25f)		{ sprite = &b3; }
+	else if (direction * angle - (360 * loops) > 56.25f && direction * angle - (360 * loops) <= 78.75f)		{ sprite = &b4; }
+	else if (direction * angle - (360 * loops) > 78.75f && direction * angle - (360 * loops) <= 101.25f)	{ sprite = &b5; }
+	else if (direction * angle - (360 * loops) > 101.25f && direction * angle - (360 * loops) <= 123.75f)	{ sprite = &b6; }
+	else if (direction * angle - (360 * loops) > 123.75f && direction * angle - (360 * loops) <= 146.25f)	{ sprite = &b7; }
+	else if (direction * angle - (360 * loops) > 146.25f && direction * angle - (360 * loops) <= 168.75f)	{ sprite = &b8; }
+	else if (direction * angle - (360 * loops) > 168.75f && direction * angle - (360 * loops) <= 191.25f)	{ sprite = &b9; }
+	else if (direction * angle - (360 * loops) > 191.25f && direction * angle - (360 * loops) <= 213.75f)	{ sprite = &b10; }
+	else if (direction * angle - (360 * loops) > 213.75f && direction * angle - (360 * loops) <= 236.25f)	{ sprite = &b11; }
+	else if (direction * angle - (360 * loops) > 236.25f && direction * angle - (360 * loops) <= 258.75f)	{ sprite = &b12; }
+	else if (direction * angle - (360 * loops) > 258.75f && direction * angle - (360 * loops) <= 281.25f)	{ sprite = &b13; }
+	else if (direction * angle - (360 * loops) > 281.25f && direction * angle - (360 * loops) <= 303.75f)	{ sprite = &b14; }
+	else if (direction * angle - (360 * loops) > 303.75f && direction * angle - (360 * loops) <= 326.25f)	{ sprite = &b15; }
+	else if (direction * angle - (360 * loops) > 326.25f && direction * angle - (360 * loops) <= 348.75f)	{ sprite = &b16; }
 
 	ball_properties->current_sprite = sprite;
 
