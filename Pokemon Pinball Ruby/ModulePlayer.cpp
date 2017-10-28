@@ -13,14 +13,26 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	rotating_pokemons.PushBack({ 198, 775, 23, 22 });
 	rotating_pokemons.speed = 0.02f;
 
-	red_spring.PushBack({ 92, 815, 20, 35 });
-	red_spring.PushBack({ 114, 815, 20, 35 });
-	red_spring.PushBack({ 136, 815, 20, 35 });
-	red_spring.speed = 0.02f;
+	red_spring.PushBack({ 92, 810, 20, 40 });
+	red_spring.PushBack({ 114, 810, 20, 40 });
+	red_spring.PushBack({ 136, 810, 20, 40 });
+	red_spring.speed = 0.3f;
 
-	grey_spring.PushBack({ 4, 812, 20, 38 });
+	grey_spring.PushBack({ 4, 810, 20, 40 });
 	grey_spring.PushBack({ 26, 810, 20, 40 });
-	grey_spring.speed = 0.04f;
+	grey_spring.speed = 0.06f;
+
+	start_spring.PushBack({ 48, 810, 20, 40 });
+	start_spring.PushBack({ 70, 810, 20, 40 });
+	start_spring.speed = 0.2f;
+	start_spring.loop = false;
+
+	end_spring.PushBack({ 70, 810, 20, 40 });
+	end_spring.PushBack({ 48, 810, 20, 40 });
+	end_spring.PushBack({ 4, 810, 20, 40 });
+	end_spring.PushBack({ 26, 810, 20, 40 });
+	end_spring.speed = 0.3f;
+	end_spring.loop = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -122,8 +134,8 @@ bool ModulePlayer::Start()
 	ball_properties = new Ball();
 
 	//Create spring
-	PhysBody* spring_anchor = App->physics->CreateRectangle(243, 402, 10, 10, b2_staticBody);
-	PhysBody* spring = App->physics->CreateRectangle(243, 382, 10, 10);
+	PhysBody* spring_anchor = App->physics->CreateRectangle(243, 392, 10, 10, b2_staticBody);
+	PhysBody* spring = App->physics->CreateRectangle(243, 375, 10, 10);
 	
 	f.categoryBits = FLIPPER;
 	f.maskBits = BALL | WALL | FLIPPER;
@@ -167,6 +179,7 @@ update_status ModulePlayer::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
+	
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
 
@@ -184,7 +197,7 @@ update_status ModulePlayer::Update()
 		}
 
 		// Create class PhysBody ball
-		float diameter = 14.0f;
+		float diameter = 13.0f;
 
 		ball = App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), diameter);
 		ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
@@ -203,13 +216,37 @@ update_status ModulePlayer::Update()
 
 	// Update spring (distance joint)
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-		impulse.y += 0.5f;
+		// Animation change
+		if (start_spring.Finished()) {
+			current_spring = &red_spring;
+		}
+		else
+			current_spring = &start_spring;
+		//
+
+		if (impulse.y < 10.0f)
+			impulse.y += 0.5f;
+
 		springDistanceJoint->GetBodyA()->ApplyForce(impulse, { 0, 0 }, true);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
-		impulse.y += 50.0f; //minimum impulse
+		// Animation change
+		current_spring = &end_spring;
+
+		start_spring.Reset();
+		red_spring.Reset();
+		grey_spring.Reset();
+		//
+
+		impulse.y += 60.0f; //minimum impulse
 		springDistanceJoint->GetBodyA()->ApplyForce(-impulse, { 0, 0 }, true);
 		impulse = { 0,0 };
+	}
+
+	// Spring animation change
+	if (end_spring.Finished()) {
+		current_spring = &grey_spring;
+		end_spring.Reset();
 	}
 
 	// All draw functions ------------------------------------------------------
@@ -252,19 +289,26 @@ update_status ModulePlayer::Update()
 	//
 
 	// Blit rotating pokemons
-	r = &current_rotating_pokemons->GetCurrentFrame();
+	r_p = &current_rotating_pokemons->GetCurrentFrame();
 	b2Vec2 pos_p1 = rotatingPokemons[1]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_p);
 	pos_p1 = rotatingPokemons[2]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_p);
 	pos_p1 = rotatingPokemons[3]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_p);
 	//
 
 	// Blit spring
-	r = &current_spring->GetCurrentFrame();
+	r_s = &current_spring->GetCurrentFrame();
 	b2Vec2 pos_spring = springDistanceJoint->GetBodyB()->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_spring.x), METERS_TO_PIXELS(pos_spring.y) - 12, r);
+	App->renderer->Blit(App->scene_intro->general, 233, 370, r_s);
+
+	// Change spring position
+	if (r_s->x == 4)
+		springDistanceJoint->GetBodyA()->ApplyForce({ 0, 0.0f }, { 0, 0 }, true);
+	else if (r_s->x == 26)
+		springDistanceJoint->GetBodyA()->ApplyForce({ 0, -0.4f }, { 0, 0 }, true);
+	//
 
 	return UPDATE_CONTINUE;
 }

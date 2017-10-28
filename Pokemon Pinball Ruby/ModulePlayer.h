@@ -78,12 +78,8 @@ private:
 	SDL_Rect r_f5 = { 249, 1316, 31, 26 };
 	SDL_Rect r_f6 = { 203, 1316, 31, 26 };
 
-	//Spring
-	//Grey part
-	SDL_Rect g1 = { 48, 813, 20, 37 };
-	SDL_Rect g2 = { 70, 815, 20, 35 };
-
-	SDL_Rect* r;
+	SDL_Rect* r_p;
+	SDL_Rect* r_s;
 
 	//Get sprites
 	void GetBallSprites(float angle, Ball* ball_properties); //Ball
@@ -109,6 +105,8 @@ private:
 	b2Vec2 impulse = { 0,0 };
 	Animation grey_spring;
 	Animation red_spring;
+	Animation start_spring;
+	Animation end_spring;
 	Animation* current_spring;
 
 public:
