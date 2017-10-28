@@ -511,32 +511,33 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 
 	//THIS IS NOT WORKING AS EXPECTED
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
-		{
-		//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
-			//sensed = true;
-		}
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
+	{
+		//App->physics->world->DestroyBody(App->player->ball->body);
+		//sensed = true;
+	}
 
-		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorPikachu->body)
+	//if (App->player->ball != nullptr) {
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
 		{
 			checkTime = true;
 		}
 
-		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorEvo->body)
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEvo->body)
 		{
 			Evo = true;
 		}
 
-		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorEVo->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorEVo->body)
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVo->body)
 		{
 			EVo = true;
 		}
 
-		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorEVO->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorEVO->body)
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVO->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVO->body)
 		{
 			EVO = true;
 		}
-
+	//}
 }
 
 void ModuleSceneIntro::chainpoints() {

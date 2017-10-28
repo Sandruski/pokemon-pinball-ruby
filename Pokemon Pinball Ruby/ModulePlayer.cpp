@@ -232,6 +232,7 @@ update_status ModulePlayer::Update()
 	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
 		// Animation change
 		current_spring = &end_spring;
+		spring_anim = true;
 
 		start_spring.Reset();
 		red_spring.Reset();
@@ -244,9 +245,10 @@ update_status ModulePlayer::Update()
 	}
 
 	// Spring animation change
-	if (end_spring.Finished()) {
+	if (end_spring.Finished() && spring_anim) {
 		current_spring = &grey_spring;
 		end_spring.Reset();
+		spring_anim = false;
 	}
 
 	// All draw functions ------------------------------------------------------

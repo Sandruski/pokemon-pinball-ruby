@@ -108,6 +108,7 @@ private:
 	Animation start_spring;
 	Animation end_spring;
 	Animation* current_spring;
+	bool spring_anim;
 
 public:
 	PhysBody* ball;
