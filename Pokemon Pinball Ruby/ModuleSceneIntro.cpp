@@ -19,6 +19,21 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	background.w = 257;
 	background.h = 425;
 
+	rEvo.x = 268;
+	rEvo.y = 247;
+	rEvo.w = 14;
+	rEvo.h = 19;
+
+	rEVo.x = 284;
+	rEVo.y = 247;
+	rEVo.w = 14;
+	rEVo.h = 19;
+
+	rEVO.x = 300;
+	rEVO.y = 247;
+	rEVO.w = 14;
+	rEVO.h = 19;
+
 	pikachu.PushBack({ 64, 1280, 25, 24 });
 	pikachu.PushBack({ 726 - 2, 1228, 23, 24 });
 	pikachu.speed = 0.05f;
@@ -391,10 +406,19 @@ bool ModuleSceneIntro::Start()
 	//sensor to destroy the ball
 	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
 	sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
+	sensorEvo = App->physics->CreateRectangleSensor(40, 260, 4, 4);
+	sensorEVo = App->physics->CreateRectangleSensor(50, 277, 4, 4);
+	sensorEVO = App->physics->CreateRectangleSensor(60, 290, 4, 4);
 	sensor->listener = this;
 	sensorPikachu->listener = this;
+	sensorEvo->listener = this;
+	sensorEVo->listener = this;
+	sensorEVO->listener = this;
 	sensor->body->GetFixtureList()->SetFilterData(f);
 	sensorPikachu->body->GetFixtureList()->SetFilterData(f);
+	sensorEvo->body->GetFixtureList()->SetFilterData(f);
+	sensorEVo->body->GetFixtureList()->SetFilterData(f);
+	sensorEVO->body->GetFixtureList()->SetFilterData(f);
 	
 	return ret;
 }
@@ -428,6 +452,34 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	App->renderer->Blit(general, 0, 0, &background);
+
+	if (Evo && timeEvo < 45) {
+		App->renderer->Blit(general, 33, 249, &rEvo);
+		timeEvo++;
+		if (timeEvo >= 45) {
+			timeEvo = 0;
+			Evo = false;
+		}
+	}
+
+	if (EVo && timeEVo < 45) {
+		App->renderer->Blit(general, 43, 265, &rEVo);
+		timeEVo++;
+		if (timeEVo >= 45) {
+			timeEVo = 0;
+			EVo = false;
+		}
+	}
+
+	if (EVO && timeEVO < 45) {
+		App->renderer->Blit(general, 53, 281, &rEVO);
+		timeEVO++;
+		if (timeEVO >= 45) {
+			timeEVO = 0;
+			EVO = false;
+		}
+	}
+
 
 	current_anim = &pikachu;
 	r = &current_anim->GetCurrentFrame();
@@ -468,6 +520,21 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorPikachu->body)
 		{
 			checkTime = true;
+		}
+
+		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorEvo->body)
+		{
+			Evo = true;
+		}
+
+		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorEVo->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorEVo->body)
+		{
+			EVo = true;
+		}
+
+		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorEVO->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorEVO->body)
+		{
+			EVO = true;
 		}
 
 }
