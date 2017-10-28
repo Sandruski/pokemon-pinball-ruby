@@ -40,7 +40,7 @@ private:
 	bool sensed;
 	PhysBody* trianglebody1;
 	PhysBody* trianglebody2;
-	Animation pikachu, impactTrueno;
+	Animation pikachu, impactTrueno, slime, mPokemon;
 
 	b2Vec2 ballSpeed;
 	float time;

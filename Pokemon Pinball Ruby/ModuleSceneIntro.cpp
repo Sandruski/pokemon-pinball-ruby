@@ -35,6 +35,35 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	impactTrueno.PushBack({ 319, 1264, 84, 8 });
 	impactTrueno.speed = 0.05f;
 
+	mPokemon.PushBack({ 345, 990, 28, 34 });
+	mPokemon.PushBack({ 375, 990, 30, 34 });
+	mPokemon.speed = 0.05f;
+
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+	slime.PushBack({ 211, 1002, 31, 22 });
+	slime.PushBack({ 244, 1002, 31, 22 });
+	slime.PushBack({ 278, 1002, 31, 22 });
+	slime.PushBack({ 312, 1002, 31, 22 });
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 162, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+	slime.PushBack({ 186, 1002, 23, 22 });
+
+	slime.speed = 0.25f;
+
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -380,13 +409,13 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (checkTime && time < 60) {
-		item->data->body->SetLinearVelocity({0,0});
+		App->player->ball->body->SetLinearVelocity({0,0});
 	
 		time++;
 	}
 	else if (checkTime && time >= 60) {
 	//	item->data->body->SetGravityScale(1);
-		item->data->body->ApplyForceToCenter({ 0, -50 }, true);
+		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
 		time = 0;
 		checkTime = false;
 	}
@@ -399,20 +428,27 @@ update_status ModuleSceneIntro::Update()
 	sensorPikachu->GetPosition(x, y);
 	App->renderer->Blit(general, x - 2, y + 20, r);
 
+	current_anim = &mPokemon;
+	r = &current_anim->GetCurrentFrame();
+	App->renderer->Blit(general, 195, 275, r);
+	current_anim = &slime;
+	r = &current_anim->GetCurrentFrame();
+	App->renderer->Blit(general, 20, 280, r);
+
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	item = App->player->balls.getFirst();
+
 	//THIS IS NOT WORKING AS EXPECTED
-		if (bodyB->body == item->data->body && bodyA->body == sensor->body)
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
 		{
 		//	item->data->body->DestroyFixture(item->data->body->GetFixtureList());
 			//sensed = true;
 		}
 
-		if (bodyB->body == item->data->body && bodyA->body == sensorPikachu->body || bodyA->body == item->data->body && bodyB->body == sensorPikachu->body)
+		if (bodyB->body == App->player->ball->body  && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body  && bodyB->body == sensorPikachu->body)
 		{
 			checkTime = true;
 		}
