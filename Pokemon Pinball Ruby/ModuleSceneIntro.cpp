@@ -61,8 +61,15 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	slime.PushBack({ 186, 1002, 23, 22 });
 	slime.PushBack({ 186, 1002, 23, 22 });
 	slime.PushBack({ 186, 1002, 23, 22 });
-
 	slime.speed = 0.25f;
+
+	chikorita.PushBack({ 224, 1035, 19, 43 });
+	chikorita.PushBack({ 245, 1035, 19, 43 });
+	chikorita.speed = 0.075f;
+
+	topo.PushBack({ 120, 1003, 19, 24 });
+	topo.PushBack({ 141, 1003, 19, 24 });
+	topo.speed = 0.10f;
 
 }
 
@@ -428,12 +435,22 @@ update_status ModuleSceneIntro::Update()
 	sensorPikachu->GetPosition(x, y);
 	App->renderer->Blit(general, x - 2, y + 20, r);
 
+	//mPokemon
 	current_anim = &mPokemon;
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 195, 275, r);
+	//slime
 	current_anim = &slime;
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 20, 280, r);
+	//topo
+	current_anim = &topo;
+	r = &current_anim->GetCurrentFrame();
+	App->renderer->Blit(general, 173, 290, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+	//Chikorita
+	current_anim = &chikorita;
+	r = &current_anim->GetCurrentFrame();
+	App->renderer->Blit(general, 55, 220, r);
 
 	return UPDATE_CONTINUE;
 }
