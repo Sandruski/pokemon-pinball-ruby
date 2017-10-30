@@ -18,6 +18,11 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	background.w = 257;
 	background.h = 425;
 
+	rBall.x = 470;
+	rBall.y = 252;
+	rBall.w = 12;
+	rBall.h = 12;
+
 	rEvo.x = 268;
 	rEvo.y = 247;
 	rEvo.w = 14;
@@ -62,6 +67,10 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	rGET.y = 248;
 	rGET.w = 14;
 	rGET.h = 19;
+
+	latiosSave.PushBack({ 484, 245, 43, 25 });
+	latiosSave.PushBack({ 0, 0, 0, 0 });
+	latiosSave.speed = 0.075f;
 
 	pikachu.PushBack({ 64, 1280, 25, 24 });
 	pikachu.PushBack({ 726 - 2, 1228, 23, 24 });
@@ -583,6 +592,25 @@ update_status ModuleSceneIntro::Update()
 			GET = false;
 		}
 	}
+
+	if (App->player->life == 3) {
+		current_anim = &latiosSave;
+		r = &current_anim->GetCurrentFrame();
+		App->renderer->Blit(general, 101, 353, r);
+		App->renderer->Blit(general, 98, 330, &rBall);
+		App->renderer->Blit(general, 114, 330, &rBall);
+		App->renderer->Blit(general, 130, 330, &rBall);
+	}
+	else if (App->player->life == 2) {
+		current_anim = &latiosSave;
+		r = &current_anim->GetCurrentFrame();
+		App->renderer->Blit(general, 101, 353, r);
+		App->renderer->Blit(general, 98, 330, &rBall);
+		App->renderer->Blit(general, 114, 330, &rBall);
+	}
+	else
+		App->renderer->Blit(general, 98, 330, &rBall);
+
 
 	current_anim = &pikachu;
 	r = &current_anim->GetCurrentFrame();

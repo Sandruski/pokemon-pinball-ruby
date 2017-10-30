@@ -35,7 +35,7 @@ public:
 
 private:
 	p2List_item<PhysBody*>* item;
-	SDL_Rect background, rEvo, rEVo, rEVO, rLs10, rLS10, rLS10T, rGet, rGEt, rGET;
+	SDL_Rect background, rEvo, rEVo, rEVO, rLs10, rLS10, rLS10T, rGet, rGEt, rGET, rBall;
 	PhysBody* sensor;
 	PhysBody* sensorPikachu;
 	PhysBody* sensorEvo;
@@ -50,7 +50,7 @@ private:
 
 	PhysBody* trianglebody1;
 	PhysBody* trianglebody2;
-	Animation pikachu, impactTrueno, slime, mPokemon, chikorita, topo;
+	Animation pikachu, impactTrueno, slime, mPokemon, chikorita, topo, latiosSave;
 
 	b2Vec2 ballSpeed;
 	float time, timeEvo, timeEVo, timeEVO;
