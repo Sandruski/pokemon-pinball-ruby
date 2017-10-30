@@ -13,8 +13,6 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	rotating_pokemons.PushBack({ 198, 775, 23, 22 });
 	rotating_pokemons.speed = 0.02f;
 
-
-
 	red_spring.PushBack({ 92, 810, 20, 40 });
 	red_spring.PushBack({ 114, 810, 20, 40 });
 	red_spring.PushBack({ 136, 810, 20, 40 });
@@ -49,6 +47,7 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 
 	go_back_shark.PushBack({ 146, 932, 36, 42 });
 	go_back_shark.speed = 0.1f;
+	go_back_shark.loop = false;
 
 	spit_shark.PushBack({ 146, 932, 36, 42 });
 	spit_shark.PushBack({ 184, 932, 36, 42 });
@@ -60,6 +59,7 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	//Cave
 	idle_cave.PushBack({ 184, 867, 41, 44 });
 	idle_cave.speed = 0.1f;
+	idle_cave.loop = false;
 
 	to_red_cave.PushBack({ 227, 867, 41, 44 });
 	to_red_cave.PushBack({ 270, 867, 47, 44 });
@@ -85,6 +85,7 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	//Egg
 	idle_egg.PushBack({ 327, 1438, 16, 19 });
 	idle_egg.speed = 0.1f;
+	idle_egg.loop = false;
 
 	jump_egg.PushBack({ 327, 1438, 16, 23 });
 	jump_egg.PushBack({ 327, 1438, 16, 27 });
@@ -106,6 +107,24 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	break_egg.PushBack({ 466, 1438, 19, 19 });
 	break_egg.speed = 0.1f;
 	break_egg.loop = false;
+
+	//Pokemon cave
+	idle_pokemon_cave.PushBack({ 36, 873, 30, 38 });
+	idle_pokemon_cave.PushBack({ 68, 873, 30, 38 });
+	idle_pokemon_cave.PushBack({ 100, 873, 30, 38 });
+	idle_pokemon_cave.PushBack({ 132, 873, 30, 38 });
+	idle_pokemon_cave.speed = 0.1f;
+
+	enter_pokemon_cave.PushBack({ 164, 892, 18, 19 });
+	enter_pokemon_cave.PushBack({ 164, 890, 18, 21 });
+	enter_pokemon_cave.PushBack({ 164, 888, 18, 23 });
+	enter_pokemon_cave.PushBack({ 164, 886, 18, 25 });
+	enter_pokemon_cave.speed = 0.1f;
+	enter_pokemon_cave.loop = false;
+
+	in_pokemon_cave.PushBack({ 164, 892, 18, 19 });
+	in_pokemon_cave.speed = 0.1f;
+	in_pokemon_cave.loop = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -193,7 +212,6 @@ bool ModulePlayer::Start()
 
 	//Create ball
 	float diameter = 13.0f;
-
 	ball = App->physics->CreateCircle(242, 360, diameter);
 	ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
 	ball->body->GetFixtureList()->SetDensity(0.7f);
@@ -219,6 +237,48 @@ bool ModulePlayer::Start()
 	springPrismaticJoint = App->physics->CreateSpringPrismaticJoint(spring->body, spring_anchor->body);
 
 	current_spring = &grey_spring;
+
+	//Create shark
+	diameter = 19.0f;
+	shark = App->physics->CreateCircle(198, 206, diameter, b2_staticBody);
+	shark->body->GetFixtureList()->SetSensor(true);
+	//ball->body->GetFixtureList()->SetDensity(0.7f);
+
+	shark->listener = this;
+
+	f.categoryBits = NEUTRAL;
+	f.maskBits = BALL;
+	shark->body->GetFixtureList()->SetFilterData(f);
+
+	current_shark = &idle_shark;
+
+	//Create cave
+	cave = App->physics->CreateRectangleSensor(90, 140, 30, 30);
+	//ball->body->GetFixtureList()->SetDensity(0.7f);
+
+	cave->listener = this;
+
+	f.categoryBits = NEUTRAL;
+	f.maskBits = BALL;
+	cave->body->GetFixtureList()->SetFilterData(f);
+
+	current_cave = &idle_cave;
+
+	//Create pokémon that lives in the cave
+	diameter = 22.0f;
+	pokemon_cave = App->physics->CreateCircle(92, 180, diameter, b2_staticBody);
+	pokemon_cave->body->GetFixtureList()->SetSensor(true);
+	//ball->body->GetFixtureList()->SetDensity(0.7f);
+
+	pokemon_cave->listener = this;
+
+	f.categoryBits = NEUTRAL;
+	f.maskBits = BALL;
+	cave->body->GetFixtureList()->SetFilterData(f);
+
+	current_pokemon_cave = &idle_pokemon_cave;
+
+	current_egg = &idle_egg;
 
 	return true;
 }
@@ -364,26 +424,48 @@ update_status ModulePlayer::Update()
 	//
 
 	// Blit rotating pokemons
-	r_p = &current_rotating_pokemons->GetCurrentFrame();
+	r_pokemons = &current_rotating_pokemons->GetCurrentFrame();
 	b2Vec2 pos_p1 = rotatingPokemons[1]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_p);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons);
 	pos_p1 = rotatingPokemons[2]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_p);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons);
 	pos_p1 = rotatingPokemons[3]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_p);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons);
 	//
 
 	// Blit spring
-	r_s = &current_spring->GetCurrentFrame();
+	r_spring = &current_spring->GetCurrentFrame();
 	b2Vec2 pos_spring = springDistanceJoint->GetBodyB()->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, 233, 370, r_s);
+	App->renderer->Blit(App->scene_intro->general, 233, 370, r_spring);
 
 	// Change spring position
-	if (r_s->x == 4)
+	if (r_spring->x == 4)
 		springDistanceJoint->GetBodyA()->ApplyForce({ 0, 0.0f }, { 0, 0 }, true);
-	else if (r_s->x == 26)
+	else if (r_spring->x == 26)
 		springDistanceJoint->GetBodyA()->ApplyForce({ 0, -0.4f }, { 0, 0 }, true);
 	//
+
+	//Blit shark
+	r_shark = &current_shark->GetCurrentFrame();
+	b2Vec2 pos_shark = shark->body->GetPosition();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18, METERS_TO_PIXELS(pos_shark.y) - 34, r_shark);
+
+
+	//
+
+	//Blit cave
+	r_cave = &current_cave->GetCurrentFrame();
+	b2Vec2 pos_cave = cave->body->GetPosition();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 22, METERS_TO_PIXELS(pos_cave.y) - 36, r_cave);
+
+	//Blit egg
+	r_egg = &current_egg->GetCurrentFrame();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10, METERS_TO_PIXELS(pos_cave.y) - 41, r_egg);
+
+	//Blit pokemon cave
+	r_pokemon_cave = &current_pokemon_cave->GetCurrentFrame();
+	b2Vec2 pos_pokemon_cave = pokemon_cave->body->GetPosition();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_pokemon_cave.x) - 17 - 2, METERS_TO_PIXELS(pos_pokemon_cave.y) - 15 - 15, r_pokemon_cave);
 
 	return UPDATE_CONTINUE;
 }

@@ -445,6 +445,7 @@ bool ModuleSceneIntro::Start()
 	sensorGet = App->physics->CreateRectangleSensor(200, 260, 4, 4);
 	sensorGEt = App->physics->CreateRectangleSensor(190, 275, 4, 4);
 	sensorGET = App->physics->CreateRectangleSensor(181, 291, 4, 4);
+
 	sensor->listener = this;
 	sensorPikachu->listener = this;
 	sensorEvo->listener = this;
@@ -456,6 +457,7 @@ bool ModuleSceneIntro::Start()
 	sensorGet->listener = this;
 	sensorGEt->listener = this;
 	sensorGET->listener = this;
+
 	sensor->body->GetFixtureList()->SetFilterData(f);
 	sensorPikachu->body->GetFixtureList()->SetFilterData(f);
 	sensorEvo->body->GetFixtureList()->SetFilterData(f);
@@ -619,10 +621,10 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
 	{
 		//App->physics->world->DestroyBody(App->player->ball->body);
-		//sensed = true;
+		sensed = true;
 	}
-
-	//if (App->player->ball != nullptr) {
+	else {
+		//if (App->player->ball != nullptr) {
 		if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
 		{
 			checkTime = true;
@@ -671,6 +673,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		{
 			GET = true;
 		}
+	}
 
 	//}
 }

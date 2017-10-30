@@ -78,12 +78,16 @@ private:
 	SDL_Rect r_f5 = { 249, 1316, 31, 26 };
 	SDL_Rect r_f6 = { 203, 1316, 31, 26 };
 
-	SDL_Rect* r_p;
-	SDL_Rect* r_s;
+	SDL_Rect* r_pokemons;
+	SDL_Rect* r_spring;
+	SDL_Rect* r_shark;
+	SDL_Rect* r_cave;
+	SDL_Rect* r_pokemon_cave;
+	SDL_Rect* r_egg;
 
 	//Rotating pokemons hit
 	SDL_Rect rp_1 = { 223, 772, 28, 25 };
-	SDL_Rect rp_1 = { 253, 772, 28, 25 };
+	SDL_Rect rp_2 = { 253, 772, 28, 25 };
 
 	//Get sprites
 	void GetBallSprites(float angle, Ball* ball_properties); //Ball
@@ -120,17 +124,29 @@ private:
 	Animation eat_shark;
 	Animation go_back_shark;
 	Animation spit_shark;
+	PhysBody* shark;
+	Animation* current_shark;
 
-	//Cave
+	//Cave (+ egg, + pokémon)
 	Animation idle_cave;
 	Animation to_red_cave;
 	Animation red_cave;
 	Animation to_idle_cave;
 
-	//Egg
 	Animation idle_egg;
 	Animation jump_egg;
 	Animation break_egg;
+
+	Animation idle_pokemon_cave;
+	Animation enter_pokemon_cave;
+	Animation in_pokemon_cave;
+
+	Animation* current_cave;
+	Animation* current_pokemon_cave;
+	Animation* current_egg;
+
+	PhysBody* pokemon_cave;
+	PhysBody* cave;
 
 public:
 	PhysBody* ball;
