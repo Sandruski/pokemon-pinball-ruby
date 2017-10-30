@@ -150,6 +150,12 @@ bool ModulePlayer::Start()
 
 	pokeball = App->textures->Load("Assets/Sprites/Pokeball&more.png");
 
+	// Ball (player) general parameters
+	start_ball.x = 242;
+	start_ball.y = 355;
+	ball_diameter = 13.0f;
+	life = 3;
+
 	// Create flippers
 	b2Vec2 flipper_vertices[8];
 	flipper_vertices[0].Set(10, 11);
@@ -185,7 +191,7 @@ bool ModulePlayer::Start()
 	flippers[0]->body->GetFixtureList()->SetFilterData(f);
 	flippers[1]->body->GetFixtureList()->SetFilterData(f);
 
-	//Create rotating pokémons
+	// Create rotating pokémons
 	rotatingPokemons[0] = App->physics->CreateCircle(147, 146, 40, b2_staticBody);
 	rotatingPokemons[1] = App->physics->CreateCircle(0, 0, 15, b2_dynamicBody);
 	rotatingPokemons[2] = App->physics->CreateCircle(0, 0, 15, b2_dynamicBody);
@@ -210,21 +216,10 @@ bool ModulePlayer::Start()
 
 	current_rotating_pokemons = &rotating_pokemons;
 
-	//Create ball
-	float diameter = 13.0f;
-	ball = App->physics->CreateCircle(242, 360, diameter);
-	ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
-	ball->body->GetFixtureList()->SetDensity(0.7f);
+	// Create ball
+	CreateBall(ball_diameter, start_ball.x, start_ball.y);
 
-	ball->listener = this;
-
-	f.categoryBits = BALL;
-	f.maskBits = FLIPPER | WALL;
-	ball->body->GetFixtureList()->SetFilterData(f);
-
-	ball_properties = new Ball();
-
-	//Create spring
+	// Create spring
 	PhysBody* spring_anchor = App->physics->CreateRectangle(243, 392, 10, 10, b2_staticBody);
 	PhysBody* spring = App->physics->CreateRectangle(243, 375, 10, 10);
 	
@@ -238,8 +233,8 @@ bool ModulePlayer::Start()
 
 	current_spring = &grey_spring;
 
-	//Create shark
-	diameter = 19.0f;
+	// Create shark
+	float diameter = 19.0f;
 	shark = App->physics->CreateCircle(198, 206, diameter, b2_staticBody);
 	shark->body->GetFixtureList()->SetSensor(true);
 	//ball->body->GetFixtureList()->SetDensity(0.7f);
@@ -252,7 +247,7 @@ bool ModulePlayer::Start()
 
 	current_shark = &idle_shark;
 
-	//Create cave
+	// Create cave
 	cave = App->physics->CreateRectangleSensor(90, 140, 30, 30);
 	//ball->body->GetFixtureList()->SetDensity(0.7f);
 
@@ -264,7 +259,7 @@ bool ModulePlayer::Start()
 
 	current_cave = &idle_cave;
 
-	//Create pokémon that lives in the cave
+	// Create pokémon that lives in the cave
 	diameter = 22.0f;
 	pokemon_cave = App->physics->CreateCircle(92, 180, diameter, b2_staticBody);
 	pokemon_cave->body->GetFixtureList()->SetSensor(true);
@@ -305,49 +300,26 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	//For motors
+	// Update Rotating pokémons (as motors)
 	pokemonsRevoluteJoint[0]->SetMotorSpeed(cosf(0.5f * 2));
 	pokemonsRevoluteJoint[1]->SetMotorSpeed(cosf(0.5f * 2));
 	pokemonsRevoluteJoint[2]->SetMotorSpeed(cosf(0.5f * 2));
 
+	// Update Flippers
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
-	
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
 
-	// Create bullet
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
+	// Create ball
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		CreateBall(ball_diameter, App->input->GetMouseX(), App->input->GetMouseY());
 
-		// Destroy last ball (in case it exists)
-		if (ball != nullptr) {
-			App->physics->world->DestroyBody(ball->body);
+	// Destroy ball
+	if (App->scene_intro->destroy_ball && ball != nullptr)
+		DestroyBall();
 
-			if (ball_properties != nullptr) {
-				delete ball_properties;
-			}
-			ball_properties = nullptr;
-		}
-
-		// Create class PhysBody ball
-		float diameter = 13.0f;
-
-		ball = App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), diameter);
-		ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
-		ball->body->GetFixtureList()->SetDensity(0.7f);
-
-		ball->listener = this;
-
-		b2Filter f;
-		f.categoryBits = BALL;
-		f.maskBits = FLIPPER | WALL;
-		ball->body->GetFixtureList()->SetFilterData(f);
-
-		// Create struct Ball ball
-		ball_properties = new Ball();
-	}
-
-	// Update spring (distance joint)
+	// Update Spring (distance joint)
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
 		// Animation change
 		if (start_spring.Finished()) {
@@ -445,7 +417,7 @@ update_status ModulePlayer::Update()
 		springDistanceJoint->GetBodyA()->ApplyForce({ 0, -0.4f }, { 0, 0 }, true);
 	//
 
-	//Blit shark
+	// Blit shark
 	r_shark = &current_shark->GetCurrentFrame();
 	b2Vec2 pos_shark = shark->body->GetPosition();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18, METERS_TO_PIXELS(pos_shark.y) - 34, r_shark);
@@ -453,16 +425,16 @@ update_status ModulePlayer::Update()
 
 	//
 
-	//Blit cave
+	// Blit cave
 	r_cave = &current_cave->GetCurrentFrame();
 	b2Vec2 pos_cave = cave->body->GetPosition();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 22, METERS_TO_PIXELS(pos_cave.y) - 36, r_cave);
 
-	//Blit egg
+	// Blit egg
 	r_egg = &current_egg->GetCurrentFrame();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10, METERS_TO_PIXELS(pos_cave.y) - 41, r_egg);
 
-	//Blit pokemon cave
+	// Blit pokemon cave
 	r_pokemon_cave = &current_pokemon_cave->GetCurrentFrame();
 	b2Vec2 pos_pokemon_cave = pokemon_cave->body->GetPosition();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_pokemon_cave.x) - 17 - 2, METERS_TO_PIXELS(pos_pokemon_cave.y) - 15 - 15, r_pokemon_cave);
@@ -530,4 +502,46 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 		ball_properties->loops += 1;
 		ball_properties->max_angle += 360;
 	}
+}
+
+void ModulePlayer::CreateBall(float diameter, int x, int y) {
+	// Destroy last ball (in case it exists)
+	if (ball != nullptr) {
+		App->physics->world->DestroyBody(ball->body);
+
+		if (ball_properties != nullptr) {
+			delete ball_properties;
+		}
+		ball_properties = nullptr;
+	}
+
+	// Create class PhysBody ball
+	ball = App->physics->CreateCircle(x, y, diameter);
+	ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
+	ball->body->GetFixtureList()->SetDensity(0.7f);
+
+	ball->listener = this;
+
+	b2Filter f;
+	f.categoryBits = BALL;
+	f.maskBits = FLIPPER | WALL;
+	ball->body->GetFixtureList()->SetFilterData(f);
+
+	// Create struct Ball ball
+	ball_properties = new Ball();
+}
+
+void ModulePlayer::DestroyBall() {
+	App->physics->world->DestroyBody(ball->body);
+	ball = nullptr;
+
+	if (ball_properties != nullptr) {
+		delete ball_properties;
+	}
+	ball_properties = nullptr;
+
+	if (life > 0)
+		CreateBall(ball_diameter, start_ball.x, start_ball.y);
+
+	App->scene_intro->destroy_ball = false;
 }

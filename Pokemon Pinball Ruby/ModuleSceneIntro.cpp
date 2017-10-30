@@ -12,7 +12,6 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 {
 	general = NULL;
 	ray_on = false;
-	sensed = false;
 
 	background.x = 533;
 	background.y = 3;
@@ -617,65 +616,61 @@ update_status ModuleSceneIntro::Update()
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 
-	//THIS IS NOT WORKING AS EXPECTED
+	// Hey! Destroy the ball
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
 	{
-		//App->physics->world->DestroyBody(App->player->ball->body);
-		sensed = true;
-	}
-	else {
-		//if (App->player->ball != nullptr) {
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
-		{
-			checkTime = true;
-		}
-
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEvo->body)
-		{
-			Evo = true;
-		}
-
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVo->body)
-		{
-			EVo = true;
-		}
-
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVO->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVO->body)
-		{
-			EVO = true;
-		}
-
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorLs10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLs10->body)
-		{
-			Ls10 = true;
-		}
-
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10->body)
-		{
-			LS10 = true;
-		}
-
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10T->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10T->body)
-		{
-			LS10T = true;
-		}
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorGet->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGet->body)
-		{
-			Get = true;
-		}
-
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorGEt->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGEt->body)
-		{
-			GEt = true;
-		}
-
-		if (bodyB->body == App->player->ball->body && bodyA->body == sensorGET->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGET->body)
-		{
-			GET = true;
-		}
+		destroy_ball = true;
 	}
 
-	//}
+	// Check sensors
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
+	{
+		checkTime = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEvo->body)
+	{
+		Evo = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVo->body)
+	{
+		EVo = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVO->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVO->body)
+	{
+		EVO = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLs10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLs10->body)
+	{
+		Ls10 = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10->body)
+	{
+		LS10 = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10T->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10T->body)
+	{
+		LS10T = true;
+	}
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGet->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGet->body)
+	{
+		Get = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGEt->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGEt->body)
+	{
+		GEt = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGET->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGET->body)
+	{
+		GET = true;
+	}
 }
 
 void ModuleSceneIntro::chainpoints() {

@@ -31,6 +31,7 @@ public:
 	Animation* current_anim;
 	SDL_Texture* general;
 
+	bool destroy_ball;
 
 private:
 	p2List_item<PhysBody*>* item;
@@ -46,7 +47,7 @@ private:
 	PhysBody* sensorGet;
 	PhysBody* sensorGEt;
 	PhysBody* sensorGET;
-	bool sensed;
+
 	PhysBody* trianglebody1;
 	PhysBody* trianglebody2;
 	Animation pikachu, impactTrueno, slime, mPokemon, chikorita, topo;
@@ -54,6 +55,5 @@ private:
 	b2Vec2 ballSpeed;
 	float time, timeEvo, timeEVo, timeEVO;
 	bool checkTime, Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET;
-
 
 };

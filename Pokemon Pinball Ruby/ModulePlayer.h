@@ -43,6 +43,8 @@ public:
 private:
 
 	SDL_Texture* pokeball;
+	b2Vec2 start_ball;
+	float ball_diameter;
 
 	//Ball
 	SDL_Rect b1 = { 159, 926, 15, 15 };
@@ -147,6 +149,9 @@ private:
 
 	PhysBody* pokemon_cave;
 	PhysBody* cave;
+
+	void CreateBall(float diameter, int x, int y);
+	void DestroyBall();
 
 public:
 	PhysBody* ball;

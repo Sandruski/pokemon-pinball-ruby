@@ -270,7 +270,13 @@ b2PrismaticJoint* ModulePhysics::CreateSpringPrismaticJoint(b2Body* bodyA, b2Bod
 	/*
 	jointDef.lowerTranslation = -5.0f;
 	jointDef.upperTranslation = 2.5f;
-	jointDef.enableLimit = true;	*/	b2PrismaticJoint* prismaticJoint = (b2PrismaticJoint*)world->CreateJoint(&jointDef);	return prismaticJoint;}
+	jointDef.enableLimit = true;
+	*/
+
+	b2PrismaticJoint* prismaticJoint = (b2PrismaticJoint*)world->CreateJoint(&jointDef);
+
+	return prismaticJoint;
+}
 
 // 
 update_status ModulePhysics::PostUpdate()
