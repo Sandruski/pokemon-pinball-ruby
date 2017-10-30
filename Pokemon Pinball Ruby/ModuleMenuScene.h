@@ -30,7 +30,7 @@ private:
 
 	SDL_Rect menuBg, subMenu, mapSelector;
 	Animation* current_animation;
-	Animation pressStart, flipper;
+	Animation pressStart, flipper, mapSelection;
 	int positionFlipper1, positionFlipper2;
 
 	menuStates menuEnum;

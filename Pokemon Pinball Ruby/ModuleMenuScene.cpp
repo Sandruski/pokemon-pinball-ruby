@@ -24,6 +24,10 @@ ModuleMenuScene::ModuleMenuScene(Application* app, bool start_enabled) : Module(
 	mapSelector.w = 240;
 	mapSelector.h = 160;
 
+	mapSelection.PushBack({ 18, 457, 72, 112 });
+	mapSelection.PushBack({ 0, 0, 0, 0 });
+	mapSelection.speed = 0.075f;
+
 	pressStart.PushBack({319, 19, 84, 8});
 	pressStart.PushBack({319, 29, 84, 8});
 	pressStart.speed = 0.02f;
@@ -106,6 +110,9 @@ update_status ModuleMenuScene::Update()
 
 	case mapSelector_:
 		App->renderer->Blit(menu, 0, 0, &mapSelector);
+		current_animation = &mapSelection;
+		r = &current_animation->GetCurrentFrame();
+		App->renderer->Blit(menu, 32, 32, r);
 
 		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
 			menuEnum = null_;
