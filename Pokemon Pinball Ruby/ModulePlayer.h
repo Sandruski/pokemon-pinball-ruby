@@ -81,6 +81,10 @@ private:
 	SDL_Rect* r_p;
 	SDL_Rect* r_s;
 
+	//Rotating pokemons hit
+	SDL_Rect rp_1 = { 223, 772, 28, 25 };
+	SDL_Rect rp_1 = { 253, 772, 28, 25 };
+
 	//Get sprites
 	void GetBallSprites(float angle, Ball* ball_properties); //Ball
 	void GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, bool left); //Flipper
@@ -110,7 +114,26 @@ private:
 	Animation* current_spring;
 	bool spring_anim;
 
+	//I think this should go to scene_intro...
+	//Shark
+	Animation idle_shark;
+	Animation eat_shark;
+	Animation go_back_shark;
+	Animation spit_shark;
+
+	//Cave
+	Animation idle_cave;
+	Animation to_red_cave;
+	Animation red_cave;
+	Animation to_idle_cave;
+
+	//Egg
+	Animation idle_egg;
+	Animation jump_egg;
+	Animation break_egg;
+
 public:
 	PhysBody* ball;
+	int life = 0;
 
 };

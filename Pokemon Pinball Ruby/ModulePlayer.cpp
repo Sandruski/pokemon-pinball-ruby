@@ -13,6 +13,8 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	rotating_pokemons.PushBack({ 198, 775, 23, 22 });
 	rotating_pokemons.speed = 0.02f;
 
+
+
 	red_spring.PushBack({ 92, 810, 20, 40 });
 	red_spring.PushBack({ 114, 810, 20, 40 });
 	red_spring.PushBack({ 136, 810, 20, 40 });
@@ -33,6 +35,77 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	end_spring.PushBack({ 26, 810, 20, 40 });
 	end_spring.speed = 0.3f;
 	end_spring.loop = false;
+
+	//Shark
+	idle_shark.PushBack({ 146, 932, 36, 42 });
+	idle_shark.PushBack({ 184, 932, 36, 42 });
+	idle_shark.speed = 0.05f;
+
+	eat_shark.PushBack({ 222, 932, 36, 42 });
+	eat_shark.PushBack({ 184, 932, 36, 42 });
+	eat_shark.PushBack({ 146, 932, 36, 42 });
+	eat_shark.speed = 0.1f;
+	eat_shark.loop = false;
+
+	go_back_shark.PushBack({ 146, 932, 36, 42 });
+	go_back_shark.speed = 0.1f;
+
+	spit_shark.PushBack({ 146, 932, 36, 42 });
+	spit_shark.PushBack({ 184, 932, 36, 42 });
+	spit_shark.PushBack({ 222, 932, 36, 42 });
+	spit_shark.PushBack({ 184, 932, 36, 42 });
+	spit_shark.speed = 0.1f;
+	spit_shark.loop = false;
+
+	//Cave
+	idle_cave.PushBack({ 184, 867, 41, 44 });
+	idle_cave.speed = 0.1f;
+
+	to_red_cave.PushBack({ 227, 867, 41, 44 });
+	to_red_cave.PushBack({ 270, 867, 47, 44 });
+	to_red_cave.PushBack({ 319, 867, 41, 44 });
+	to_red_cave.PushBack({ 362, 867, 41, 44 });
+	to_red_cave.speed = 0.1f;
+	to_red_cave.loop = false;
+
+	red_cave.PushBack({ 405, 867, 41, 44 });
+	red_cave.PushBack({ 362, 867, 41, 44 });
+	red_cave.PushBack({ 319, 867, 41, 44 });
+	red_cave.PushBack({ 270, 867, 47, 44 });
+	red_cave.PushBack({ 184, 867, 41, 44 });
+	red_cave.speed = 0.1f;
+
+	to_idle_cave.PushBack({ 362, 867, 41, 44 });
+	to_idle_cave.PushBack({ 319, 867, 41, 44 });
+	to_idle_cave.PushBack({ 270, 867, 47, 44 });
+	to_idle_cave.PushBack({ 227, 867, 41, 44 });
+	to_idle_cave.speed = 0.1f;
+	to_idle_cave.loop = false;
+
+	//Egg
+	idle_egg.PushBack({ 327, 1438, 16, 19 });
+	idle_egg.speed = 0.1f;
+
+	jump_egg.PushBack({ 327, 1438, 16, 23 });
+	jump_egg.PushBack({ 327, 1438, 16, 27 });
+	jump_egg.PushBack({ 327, 1438, 16, 31 });
+	jump_egg.PushBack({ 327, 1438, 16, 35 });
+
+	jump_egg.PushBack({ 327, 1438, 16, 31 });
+	jump_egg.PushBack({ 327, 1438, 16, 27 });
+	jump_egg.PushBack({ 327, 1438, 16, 23 });
+	jump_egg.PushBack({ 327, 1438, 16, 19 });
+	jump_egg.speed = 0.1f;
+	jump_egg.loop = false;
+
+	break_egg.PushBack({ 345, 1438, 16, 19 });
+	break_egg.PushBack({ 363, 1438, 16, 19 });
+	break_egg.PushBack({ 381, 1438, 16, 19 });
+	break_egg.PushBack({ 399, 1438, 18, 19 });
+	break_egg.PushBack({ 419, 1438, 45, 19 });
+	break_egg.PushBack({ 466, 1438, 19, 19 });
+	break_egg.speed = 0.1f;
+	break_egg.loop = false;
 }
 
 ModulePlayer::~ModulePlayer()
