@@ -13,6 +13,14 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	rotating_pokemons.PushBack({ 198, 775, 23, 22 });
 	rotating_pokemons.speed = 0.02f;
 
+	rotating_pokemons_hit1.PushBack({ 223, 772, 28, 25 });
+	rotating_pokemons_hit1.PushBack({ 253, 772, 28, 25 });
+	rotating_pokemons_hit1.speed = 0.02f;
+
+	rotating_pokemons_hit2.PushBack({ 253, 772, 28, 25 });
+	rotating_pokemons_hit2.PushBack({ 223, 772, 28, 25 });
+	rotating_pokemons_hit2.speed = 0.02f;
+
 	red_spring.PushBack({ 92, 810, 20, 40 });
 	red_spring.PushBack({ 114, 810, 20, 40 });
 	red_spring.PushBack({ 136, 810, 20, 40 });
@@ -156,6 +164,8 @@ bool ModulePlayer::Start()
 	ball_diameter = 13.0f;
 	life = 3;
 
+	num_cave_hits = 0;
+
 	// Create flippers
 	b2Vec2 flipper_vertices[8];
 	flipper_vertices[0].Set(10, 11);
@@ -214,7 +224,9 @@ bool ModulePlayer::Start()
 	rotatingPokemons[2]->body->GetFixtureList()->SetFilterData(f);
 	rotatingPokemons[3]->body->GetFixtureList()->SetFilterData(f);
 
-	current_rotating_pokemons = &rotating_pokemons;
+	current_rotating_pokemons1 = &rotating_pokemons;
+	current_rotating_pokemons2 = &rotating_pokemons;
+	current_rotating_pokemons3 = &rotating_pokemons;
 
 	// Create ball
 	CreateBall(ball_diameter, start_ball.x, start_ball.y);
@@ -307,9 +319,9 @@ update_status ModulePlayer::Update()
 
 	// Update Flippers
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
+		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.06f, true);
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
+		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.06f, true);
 
 	// Create ball
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
@@ -396,13 +408,44 @@ update_status ModulePlayer::Update()
 	//
 
 	// Blit rotating pokemons
-	r_pokemons = &current_rotating_pokemons->GetCurrentFrame();
+	if (p1) {
+		if (r_pokemons1->x == 171)
+			current_rotating_pokemons1 = &rotating_pokemons_hit1;
+		else if (r_pokemons1->x == 198)
+			current_rotating_pokemons1 = &rotating_pokemons_hit2;
+	}
+	else {
+		current_rotating_pokemons1 = &rotating_pokemons;
+	}
+	if (p2) {
+		if (r_pokemons2->x == 171)
+			current_rotating_pokemons2 = &rotating_pokemons_hit1;
+		else if (r_pokemons2->x == 198)
+			current_rotating_pokemons2 = &rotating_pokemons_hit2;
+	}
+	else {
+		current_rotating_pokemons2 = &rotating_pokemons;
+	}
+	if (p3) {
+		if (r_pokemons3->x == 171)
+			current_rotating_pokemons3 = &rotating_pokemons_hit1;
+		else if (r_pokemons3->x == 198)
+			current_rotating_pokemons3 = &rotating_pokemons_hit2;
+	}
+	else {
+		current_rotating_pokemons3 = &rotating_pokemons;
+	}
+
+	r_pokemons1 = &current_rotating_pokemons1->GetCurrentFrame();
+	r_pokemons2 = &current_rotating_pokemons2->GetCurrentFrame();
+	r_pokemons3 = &current_rotating_pokemons3->GetCurrentFrame();
+
 	b2Vec2 pos_p1 = rotatingPokemons[1]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons1);
 	pos_p1 = rotatingPokemons[2]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons2);
 	pos_p1 = rotatingPokemons[3]->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons3);
 	//
 
 	// Blit spring
@@ -417,12 +460,27 @@ update_status ModulePlayer::Update()
 		springDistanceJoint->GetBodyA()->ApplyForce({ 0, -0.4f }, { 0, 0 }, true);
 	//
 
+	if (shark_hit) {
+		//The shark goes back and spits out the ball
+		shark_hit = false;
+	}
+	if (pokemon_cave_hit) {
+		//Pokémon goes inside the cave
+		pokemon_cave_hit = false;
+	}
+	if (num_cave_hits == 1 && cave_hit) {
+		//The egg breaks and the player recieves some points
+		cave_hit = false;
+	}
+	if (num_cave_hits >= 2 && cave_hit) {
+		//The cave acts like the shark
+		cave_hit = false;
+	}
+
 	// Blit shark
 	r_shark = &current_shark->GetCurrentFrame();
 	b2Vec2 pos_shark = shark->body->GetPosition();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18, METERS_TO_PIXELS(pos_shark.y) - 34, r_shark);
-
-
 	//
 
 	// Blit cave
@@ -438,6 +496,8 @@ update_status ModulePlayer::Update()
 	r_pokemon_cave = &current_pokemon_cave->GetCurrentFrame();
 	b2Vec2 pos_pokemon_cave = pokemon_cave->body->GetPosition();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_pokemon_cave.x) - 17 - 2, METERS_TO_PIXELS(pos_pokemon_cave.y) - 15 - 15, r_pokemon_cave);
+
+
 
 	return UPDATE_CONTINUE;
 }
@@ -479,7 +539,7 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 	if (angle < 0)
 		direction = -1;
 
-	if		(direction * angle - (360 * loops) > 348.75f || direction * angle - (360 * loops) <= 11.25f)	{ sprite = &b1; }
+	if		(direction * angle - (360 * loops) > 348.75f && direction * angle - (360 * loops) <= 11.25f)	{ sprite = &b1; }
 	else if (direction * angle - (360 * loops) > 11.25f && direction * angle - (360 * loops) <= 33.75f)		{ sprite = &b2; }
 	else if (direction * angle - (360 * loops) > 33.75f && direction * angle - (360 * loops) <= 56.25f)		{ sprite = &b3; }
 	else if (direction * angle - (360 * loops) > 56.25f && direction * angle - (360 * loops) <= 78.75f)		{ sprite = &b4; }
@@ -518,7 +578,7 @@ void ModulePlayer::CreateBall(float diameter, int x, int y) {
 	// Create class PhysBody ball
 	ball = App->physics->CreateCircle(x, y, diameter);
 	ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
-	ball->body->GetFixtureList()->SetDensity(0.7f);
+	ball->body->GetFixtureList()->SetDensity(0.6f);
 
 	ball->listener = this;
 
@@ -544,4 +604,48 @@ void ModulePlayer::DestroyBall() {
 		CreateBall(ball_diameter, start_ball.x, start_ball.y);
 
 	App->scene_intro->destroy_ball = false;
+}
+
+void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
+{
+	// Rotating pokémons hit
+	p1 = false;
+	p2 = false;
+	p3 = false;
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[1]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[1]->body)
+	{
+		p1 = true;
+	}
+	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[2]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[2]->body)
+	{
+		p2 = true;
+	}
+	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[3]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[3]->body)
+	{
+		p3 = true;
+	}
+
+	// Cave
+	if (bodyB->body == App->player->ball->body && bodyA->body == pokemon_cave->body || bodyA->body == App->player->ball->body && bodyB->body == pokemon_cave->body) {
+		num_cave_hits++;
+		cave_hit = true;
+	}
+	// Pokémon cave
+	if (bodyB->body == App->player->ball->body && bodyA->body == cave->body || bodyA->body == App->player->ball->body && bodyB->body == cave->body) {
+		pokemon_cave_hit = true;
+	}
+	// Shark
+	if (bodyB->body == App->player->ball->body && bodyA->body == shark->body || bodyA->body == App->player->ball->body && bodyB->body == shark->body) {
+		shark_hit = true;
+	}
+}
+
+void ModulePlayer::UpdateCamera() {
+	//if (ball != nullptr) {
+		//int x, y;
+		//ball->GetPosition(x, y);
+
+
+	//}
 }

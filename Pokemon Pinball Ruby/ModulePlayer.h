@@ -80,7 +80,9 @@ private:
 	SDL_Rect r_f5 = { 249, 1316, 31, 26 };
 	SDL_Rect r_f6 = { 203, 1316, 31, 26 };
 
-	SDL_Rect* r_pokemons;
+	SDL_Rect* r_pokemons1;
+	SDL_Rect* r_pokemons2;
+	SDL_Rect* r_pokemons3;
 	SDL_Rect* r_spring;
 	SDL_Rect* r_shark;
 	SDL_Rect* r_cave;
@@ -88,8 +90,7 @@ private:
 	SDL_Rect* r_egg;
 
 	//Rotating pokemons hit
-	SDL_Rect rp_1 = { 223, 772, 28, 25 };
-	SDL_Rect rp_2 = { 253, 772, 28, 25 };
+
 
 	//Get sprites
 	void GetBallSprites(float angle, Ball* ball_properties); //Ball
@@ -105,7 +106,12 @@ private:
 	PhysBody* rotatingPokemons[4];
 	b2RevoluteJoint* pokemonsRevoluteJoint[3];
 	Animation rotating_pokemons;
-	Animation* current_rotating_pokemons;
+	Animation rotating_pokemons_hit1;
+	Animation rotating_pokemons_hit2;
+	Animation* current_rotating_pokemons1;
+	Animation* current_rotating_pokemons2;
+	Animation* current_rotating_pokemons3;
+	bool p1, p2, p3;
 
 	Ball* ball_properties;
 
@@ -150,8 +156,15 @@ private:
 	PhysBody* pokemon_cave;
 	PhysBody* cave;
 
+	int num_cave_hits = 0;
+	bool cave_hit;
+	bool pokemon_cave_hit;
+	bool shark_hit;
+
 	void CreateBall(float diameter, int x, int y);
 	void DestroyBall();
+	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+	void UpdateCamera();
 
 public:
 	PhysBody* ball;
