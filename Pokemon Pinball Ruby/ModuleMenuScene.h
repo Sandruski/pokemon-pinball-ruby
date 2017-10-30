@@ -24,6 +24,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	menuStates menuEnum;
+
 private:
 	SDL_Texture* menu;
 	SDL_Rect* r;
@@ -33,6 +35,5 @@ private:
 	Animation pressStart, flipper, mapSelection;
 	int positionFlipper1, positionFlipper2;
 
-	menuStates menuEnum;
 };
 

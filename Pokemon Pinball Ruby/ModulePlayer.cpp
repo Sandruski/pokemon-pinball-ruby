@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModulePlayer.h"
 #include "ModuleInput.h"
+#include "ModuleMenuScene.h"
 #include "ModuleRender.h"
 #include "ModuleSceneIntro.h"
 
@@ -317,48 +318,50 @@ update_status ModulePlayer::Update()
 	pokemonsRevoluteJoint[1]->SetMotorSpeed(cosf(0.5f * 2));
 	pokemonsRevoluteJoint[2]->SetMotorSpeed(cosf(0.5f * 2));
 
-	// Update Flippers
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.06f, true);
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.06f, true);
+	if (App->menu_scene->menuEnum == null_) { //player can do things
+		// Update Flippers
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+			flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.06f, true);
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+			flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.06f, true);
 
-	// Create ball
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-		CreateBall(ball_diameter, App->input->GetMouseX(), App->input->GetMouseY());
+		// Create ball
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			CreateBall(ball_diameter, App->input->GetMouseX(), App->input->GetMouseY());
 
-	// Destroy ball
-	if (App->scene_intro->destroy_ball && ball != nullptr)
-		DestroyBall();
+		// Destroy ball
+		if (App->scene_intro->destroy_ball && ball != nullptr)
+			DestroyBall();
 
-	// Update Spring (distance joint)
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-		// Animation change
-		if (start_spring.Finished()) {
-			current_spring = &red_spring;
+		// Update Spring (distance joint)
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
+			// Animation change
+			if (start_spring.Finished()) {
+				current_spring = &red_spring;
+			}
+			else
+				current_spring = &start_spring;
+			//
+
+			if (impulse.y < 10.0f)
+				impulse.y += 0.5f;
+
+			springDistanceJoint->GetBodyA()->ApplyForce(impulse, { 0, 0 }, true);
 		}
-		else
-			current_spring = &start_spring;
-		//
+		else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
+			// Animation change
+			current_spring = &end_spring;
+			spring_anim = true;
 
-		if (impulse.y < 10.0f)
-			impulse.y += 0.5f;
+			start_spring.Reset();
+			red_spring.Reset();
+			grey_spring.Reset();
+			//
 
-		springDistanceJoint->GetBodyA()->ApplyForce(impulse, { 0, 0 }, true);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
-		// Animation change
-		current_spring = &end_spring;
-		spring_anim = true;
-
-		start_spring.Reset();
-		red_spring.Reset();
-		grey_spring.Reset();
-		//
-
-		impulse.y += 60.0f; //minimum impulse
-		springDistanceJoint->GetBodyA()->ApplyForce(-impulse, { 0, 0 }, true);
-		impulse = { 0,0 };
+			impulse.y += 60.0f; //minimum impulse
+			springDistanceJoint->GetBodyA()->ApplyForce(-impulse, { 0, 0 }, true);
+			impulse = { 0,0 };
+		}
 	}
 
 	// Spring animation change

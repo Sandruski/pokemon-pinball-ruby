@@ -36,12 +36,9 @@ Application::Application()
 	AddModule(input);
 	AddModule(audio);
 	
-	// Scenes
 	AddModule(scene_intro);
-	AddModule(menu_scene);
-	
-	// Player
 	AddModule(player);
+	AddModule(menu_scene);
 }
 
 Application::~Application()
