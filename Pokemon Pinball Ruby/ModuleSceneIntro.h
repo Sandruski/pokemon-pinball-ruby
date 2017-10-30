@@ -34,12 +34,18 @@ public:
 
 private:
 	p2List_item<PhysBody*>* item;
-	SDL_Rect background, rEvo, rEVo, rEVO;
+	SDL_Rect background, rEvo, rEVo, rEVO, rLs10, rLS10, rLS10T, rGet, rGEt, rGET;
 	PhysBody* sensor;
 	PhysBody* sensorPikachu;
 	PhysBody* sensorEvo;
 	PhysBody* sensorEVo;
 	PhysBody* sensorEVO;
+	PhysBody* sensorLs10;
+	PhysBody* sensorLS10;
+	PhysBody* sensorLS10T;
+	PhysBody* sensorGet;
+	PhysBody* sensorGEt;
+	PhysBody* sensorGET;
 	bool sensed;
 	PhysBody* trianglebody1;
 	PhysBody* trianglebody2;
@@ -47,7 +53,7 @@ private:
 
 	b2Vec2 ballSpeed;
 	float time, timeEvo, timeEVo, timeEVO;
-	bool checkTime, Evo, EVo, EVO;
+	bool checkTime, Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET;
 
 
 };

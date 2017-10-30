@@ -34,6 +34,36 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	rEVO.w = 14;
 	rEVO.h = 19;
 
+	rLs10.x = 316;
+	rLs10.y = 247;
+	rLs10.w = 14;
+	rLs10.h = 19;
+
+	rLS10.x = 332;
+	rLS10.y = 247;
+	rLS10.w = 14;
+	rLS10.h = 19;
+
+	rLS10T.x = 348;
+	rLS10T.y = 247;
+	rLS10T.w = 14;
+	rLS10T.h = 19;
+
+	rGet.x = 365;
+	rGet.y = 248;
+	rGet.w = 14;
+	rGet.h = 19;
+
+	rGEt.x = 380;
+	rGEt.y = 247;
+	rGEt.w = 14;
+	rGEt.h = 19;
+
+	rGET.x = 396;
+	rGET.y = 248;
+	rGET.w = 14;
+	rGET.h = 19;
+
 	pikachu.PushBack({ 64, 1280, 25, 24 });
 	pikachu.PushBack({ 726 - 2, 1228, 23, 24 });
 	pikachu.speed = 0.05f;
@@ -409,17 +439,35 @@ bool ModuleSceneIntro::Start()
 	sensorEvo = App->physics->CreateRectangleSensor(40, 260, 4, 4);
 	sensorEVo = App->physics->CreateRectangleSensor(50, 277, 4, 4);
 	sensorEVO = App->physics->CreateRectangleSensor(60, 290, 4, 4);
+	sensorLs10 = App->physics->CreateRectangleSensor(68, 203, 4, 4);
+	sensorLS10 = App->physics->CreateRectangleSensor(73, 220, 4, 4);
+	sensorLS10T = App->physics->CreateRectangleSensor(80, 240, 4, 4);
+	sensorGet = App->physics->CreateRectangleSensor(200, 260, 4, 4);
+	sensorGEt = App->physics->CreateRectangleSensor(190, 275, 4, 4);
+	sensorGET = App->physics->CreateRectangleSensor(181, 291, 4, 4);
 	sensor->listener = this;
 	sensorPikachu->listener = this;
 	sensorEvo->listener = this;
 	sensorEVo->listener = this;
 	sensorEVO->listener = this;
+	sensorLs10->listener = this;
+	sensorLS10->listener = this;
+	sensorLS10T->listener = this;
+	sensorGet->listener = this;
+	sensorGEt->listener = this;
+	sensorGET->listener = this;
 	sensor->body->GetFixtureList()->SetFilterData(f);
 	sensorPikachu->body->GetFixtureList()->SetFilterData(f);
 	sensorEvo->body->GetFixtureList()->SetFilterData(f);
 	sensorEVo->body->GetFixtureList()->SetFilterData(f);
 	sensorEVO->body->GetFixtureList()->SetFilterData(f);
-	
+	sensorLs10->body->GetFixtureList()->SetFilterData(f);
+	sensorLS10->body->GetFixtureList()->SetFilterData(f);
+	sensorLS10T->body->GetFixtureList()->SetFilterData(f);
+	sensorGet->body->GetFixtureList()->SetFilterData(f);
+	sensorGEt->body->GetFixtureList()->SetFilterData(f);
+	sensorGET->body->GetFixtureList()->SetFilterData(f);
+
 	return ret;
 }
 
@@ -481,6 +529,60 @@ update_status ModuleSceneIntro::Update()
 	}
 
 
+	if (Ls10 && timeEvo < 45) {
+		App->renderer->Blit(general, 61, 192, &rLs10);
+		timeEvo++;
+		if (timeEvo >= 45) {
+			timeEvo = 0;
+			Ls10 = false;
+		}
+	}
+
+	if (LS10 && timeEVo < 45) {
+		App->renderer->Blit(general, 66, 210, &rLS10);
+		timeEVo++;
+		if (timeEVo >= 45) {
+			timeEVo = 0;
+			LS10 = false;
+		}
+	}
+
+	if (LS10T && timeEVO < 45) {
+		App->renderer->Blit(general, 74, 227, &rLS10T);
+		timeEVO++;
+		if (timeEVO >= 45) {
+			timeEVO = 0;
+			LS10T = false;
+		}
+	}
+
+	if (Get && timeEvo < 45) {
+		App->renderer->Blit(general, 194, 249, &rGet);
+		timeEvo++;
+		if (timeEvo >= 45) {
+			timeEvo = 0;
+			Get = false;
+		}
+	}
+
+	if (GEt && timeEVo < 45) {
+		App->renderer->Blit(general, 183, 264, &rGEt);
+		timeEVo++;
+		if (timeEVo >= 45) {
+			timeEVo = 0;
+			GEt = false;
+		}
+	}
+
+	if (GET && timeEVO < 45) {
+		App->renderer->Blit(general, 173, 281, &rGET);
+		timeEVO++;
+		if (timeEVO >= 45) {
+			timeEVO = 0;
+			GET = false;
+		}
+	}
+
 	current_anim = &pikachu;
 	r = &current_anim->GetCurrentFrame();
 	int x, y;
@@ -491,14 +593,17 @@ update_status ModuleSceneIntro::Update()
 	current_anim = &mPokemon;
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 195, 275, r);
+
 	//slime
 	current_anim = &slime;
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 20, 280, r);
+
 	//topo
 	current_anim = &topo;
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 173, 290, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+
 	//Chikorita
 	current_anim = &chikorita;
 	r = &current_anim->GetCurrentFrame();
@@ -537,6 +642,36 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		{
 			EVO = true;
 		}
+
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorLs10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLs10->body)
+		{
+			Ls10 = true;
+		}
+
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10->body)
+		{
+			LS10 = true;
+		}
+
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10T->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10T->body)
+		{
+			LS10T = true;
+		}
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorGet->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGet->body)
+		{
+			Get = true;
+		}
+
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorGEt->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGEt->body)
+		{
+			GEt = true;
+		}
+
+		if (bodyB->body == App->player->ball->body && bodyA->body == sensorGET->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGET->body)
+		{
+			GET = true;
+		}
+
 	//}
 }
 
