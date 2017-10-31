@@ -7,6 +7,7 @@
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 #include "ModulePlayer.h"
+#include "ModuleFonts.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -441,6 +442,8 @@ bool ModuleSceneIntro::Start()
 
 	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
 
+	font_score = App->fonts->Load("Assets/Sprites/Font.png", "0123456789", 1);
+
 	//sensor to destroy the ball
 	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
 	sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
@@ -485,7 +488,10 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+
 	App->textures->Unload(general);
+
+	App->fonts->UnLoad(font_score);
 
 	return true;
 }
@@ -637,6 +643,10 @@ update_status ModuleSceneIntro::Update()
 	current_anim = &chikorita;
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 55, 220, r);
+
+
+	sprintf_s(str1, "%i", App->player->points);
+	App->fonts->BlitText(35, 20, font_score, str1);
 
 	return UPDATE_CONTINUE;
 }

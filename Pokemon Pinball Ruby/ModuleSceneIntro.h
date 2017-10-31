@@ -56,4 +56,7 @@ private:
 	float time, timeEvo, timeEVo, timeEVO;
 	bool checkTime, Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET;
 
+	int font_score;
+	char str1[10];
+
 };
