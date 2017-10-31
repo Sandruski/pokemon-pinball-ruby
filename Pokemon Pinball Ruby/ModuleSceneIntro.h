@@ -19,7 +19,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
-	void chainpoints();
+
 
 public:
 
@@ -34,9 +34,10 @@ public:
 	bool destroy_ball;
 
 private:
+
 	p2List_item<PhysBody*>* item;
 	SDL_Rect background, rEvo, rEVo, rEVO, rLs10, rLS10, rLS10T, rGet, rGEt, rGET, rBall;
-	PhysBody* sensor;
+	PhysBody* sensor; 
 	PhysBody* sensorPikachu;
 	PhysBody* sensorEvo;
 	PhysBody* sensorEVo;
@@ -48,8 +49,7 @@ private:
 	PhysBody* sensorGEt;
 	PhysBody* sensorGET;
 
-	PhysBody* trianglebody1;
-	PhysBody* trianglebody2;
+
 	Animation pikachu, impactTrueno, slime, mPokemon, chikorita, topo, latiosSave;
 
 	b2Vec2 ballSpeed;
@@ -57,6 +57,11 @@ private:
 	bool checkTime, Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET;
 
 	int font_score;
-	char str1[10];
+	char str1[15];
 
+public: 
+	void SensorsForBLit();
+	void SetSensors();
+	void CreateChains() const;
+	void BlitStaticPokemonsAndLife();
 };
