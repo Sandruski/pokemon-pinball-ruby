@@ -499,11 +499,11 @@ update_status ModuleSceneIntro::Update()
 
 	if (checkTime && time < 60) {
 		App->player->ball->body->SetLinearVelocity({0,0});
-	
+		App->player->ball->body->SetGravityScale(0);
 		time++;
 	}
 	else if (checkTime && time >= 60) {
-	//	item->data->body->SetGravityScale(1);
+		App->player->ball->body->SetGravityScale(1);
 		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
 		time = 0;
 		checkTime = false;

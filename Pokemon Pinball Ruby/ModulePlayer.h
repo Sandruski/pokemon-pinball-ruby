@@ -22,12 +22,8 @@ enum ball_type {
 };
 
 struct Ball {
-
 	ball_type type = pokeball;
-
 	SDL_Rect* current_sprite;
-	int loops = 0;
-	int max_angle = 360;
 };
 
 class ModulePlayer : public Module

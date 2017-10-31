@@ -500,8 +500,6 @@ update_status ModulePlayer::Update()
 	b2Vec2 pos_pokemon_cave = pokemon_cave->body->GetPosition();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_pokemon_cave.x) - 17 - 2, METERS_TO_PIXELS(pos_pokemon_cave.y) - 15 - 15, r_pokemon_cave);
 
-
-
 	return UPDATE_CONTINUE;
 }
 
@@ -533,38 +531,28 @@ void ModulePlayer::GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, boo
 
 // Get ball sprites
 void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
-	
-	int direction = 1;
-	int loops = ball_properties->loops;
-	int max_angle = ball_properties->max_angle;
+
 	SDL_Rect* sprite = &b1;
 
-	if (angle < 0)
-		direction = -1;
-
-	if		(direction * angle - (360 * loops) > 348.75f && direction * angle - (360 * loops) <= 11.25f)	{ sprite = &b1; }
-	else if (direction * angle - (360 * loops) > 11.25f && direction * angle - (360 * loops) <= 33.75f)		{ sprite = &b2; }
-	else if (direction * angle - (360 * loops) > 33.75f && direction * angle - (360 * loops) <= 56.25f)		{ sprite = &b3; }
-	else if (direction * angle - (360 * loops) > 56.25f && direction * angle - (360 * loops) <= 78.75f)		{ sprite = &b4; }
-	else if (direction * angle - (360 * loops) > 78.75f && direction * angle - (360 * loops) <= 101.25f)	{ sprite = &b5; }
-	else if (direction * angle - (360 * loops) > 101.25f && direction * angle - (360 * loops) <= 123.75f)	{ sprite = &b6; }
-	else if (direction * angle - (360 * loops) > 123.75f && direction * angle - (360 * loops) <= 146.25f)	{ sprite = &b7; }
-	else if (direction * angle - (360 * loops) > 146.25f && direction * angle - (360 * loops) <= 168.75f)	{ sprite = &b8; }
-	else if (direction * angle - (360 * loops) > 168.75f && direction * angle - (360 * loops) <= 191.25f)	{ sprite = &b9; }
-	else if (direction * angle - (360 * loops) > 191.25f && direction * angle - (360 * loops) <= 213.75f)	{ sprite = &b10; }
-	else if (direction * angle - (360 * loops) > 213.75f && direction * angle - (360 * loops) <= 236.25f)	{ sprite = &b11; }
-	else if (direction * angle - (360 * loops) > 236.25f && direction * angle - (360 * loops) <= 258.75f)	{ sprite = &b12; }
-	else if (direction * angle - (360 * loops) > 258.75f && direction * angle - (360 * loops) <= 281.25f)	{ sprite = &b13; }
-	else if (direction * angle - (360 * loops) > 281.25f && direction * angle - (360 * loops) <= 303.75f)	{ sprite = &b14; }
-	else if (direction * angle - (360 * loops) > 303.75f && direction * angle - (360 * loops) <= 326.25f)	{ sprite = &b15; }
-	else if (direction * angle - (360 * loops) > 326.25f && direction * angle - (360 * loops) <= 348.75f)	{ sprite = &b16; }
+	if		(fmodf(angle, 360) > 348.75f || fmodf(angle, 360) <= 11.25f)	{ sprite = &b1; }
+	else if (fmodf(angle, 360) > 11.25f && fmodf(angle, 360) <= 33.75f)		{ sprite = &b2; }
+	else if (fmodf(angle, 360) > 33.75f && fmodf(angle, 360) <= 56.25f)		{ sprite = &b3; }
+	else if (fmodf(angle, 360) > 56.25f && fmodf(angle, 360) <= 78.75f)		{ sprite = &b4; }
+	else if (fmodf(angle, 360) > 78.75f && fmodf(angle, 360) <= 101.25f)	{ sprite = &b5; }
+	else if (fmodf(angle, 360) > 101.25f && fmodf(angle, 360) <= 123.75f)	{ sprite = &b6; }
+	else if (fmodf(angle, 360) > 123.75f && fmodf(angle, 360) <= 146.25f)	{ sprite = &b7; }
+	else if (fmodf(angle, 360) > 146.25f && fmodf(angle, 360) <= 168.75f)	{ sprite = &b8; }
+	else if (fmodf(angle, 360) > 168.75f && fmodf(angle, 360) <= 191.25f)	{ sprite = &b9; }
+	else if (fmodf(angle, 360) > 191.25f && fmodf(angle, 360) <= 213.75f)	{ sprite = &b10; }
+	else if (fmodf(angle, 360) > 213.75f && fmodf(angle, 360) <= 236.25f)	{ sprite = &b11; }
+	else if (fmodf(angle, 360) > 236.25f && fmodf(angle, 360) <= 258.75f)	{ sprite = &b12; }
+	else if (fmodf(angle, 360) > 258.75f && fmodf(angle, 360) <= 281.25f)	{ sprite = &b13; }
+	else if (fmodf(angle, 360) > 281.25f && fmodf(angle, 360) <= 303.75f)	{ sprite = &b14; }
+	else if (fmodf(angle, 360) > 303.75f && fmodf(angle, 360) <= 326.25f)	{ sprite = &b15; }
+	else if (fmodf(angle, 360) > 326.25f && fmodf(angle, 360) <= 348.75f)	{ sprite = &b16; }
 
 	ball_properties->current_sprite = sprite;
 
-	if (direction * angle >= max_angle) {
-		ball_properties->loops += 1;
-		ball_properties->max_angle += 360;
-	}
 }
 
 void ModulePlayer::CreateBall(float diameter, int x, int y) {
