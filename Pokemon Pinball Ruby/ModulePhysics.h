@@ -51,7 +51,7 @@ public:
 	//Joints
 	b2RevoluteJoint* CreateFlipperRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA, float upperAngle, float lowerAngle);
 	b2RevoluteJoint* CreatePokemonRevoluteJoint(b2Body* bodyA, b2Body* bodyB, b2Vec2 setBodyA);
-	b2DistanceJoint* CreateSpringDistanceJoint(b2Body* bodyA, b2Body* bodyB);
+	b2DistanceJoint* CreateDistanceJoint(b2Body* bodyA, b2Body* bodyB);
 	b2PrismaticJoint* CreateSpringPrismaticJoint(b2Body* bodyA, b2Body* bodyB);
 
 	// b2ContactListener ---

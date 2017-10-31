@@ -241,8 +241,10 @@ bool ModulePlayer::Start()
 	spring->body->GetFixtureList()->SetFilterData(f);
 	spring_anchor->body->GetFixtureList()->SetFilterData(f);
 
-	springDistanceJoint = App->physics->CreateSpringDistanceJoint(spring->body, spring_anchor->body);
+	springDistanceJoint = App->physics->CreateDistanceJoint(spring->body, spring_anchor->body);
 	springPrismaticJoint = App->physics->CreateSpringPrismaticJoint(spring->body, spring_anchor->body);
+	springDistanceJoint->SetDampingRatio(0.5f);
+	springDistanceJoint->SetFrequency(4.0f);
 
 	current_spring = &grey_spring;
 
@@ -288,6 +290,8 @@ bool ModulePlayer::Start()
 
 	current_egg = &idle_egg;
 
+	post_start = 0;
+
 	return true;
 }
 
@@ -313,6 +317,13 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
+	if (post_start == 1) {
+		App->physics->CreateDistanceJoint(rotatingPokemons[1]->body, rotatingPokemons[2]->body);
+		App->physics->CreateDistanceJoint(rotatingPokemons[2]->body, rotatingPokemons[3]->body);
+		App->physics->CreateDistanceJoint(rotatingPokemons[3]->body, rotatingPokemons[1]->body);
+		post_start = 2;
+	}
+
 	// Update Rotating pokémons (as motors)
 	pokemonsRevoluteJoint[0]->SetMotorSpeed(cosf(0.5f * 2));
 	pokemonsRevoluteJoint[1]->SetMotorSpeed(cosf(0.5f * 2));
@@ -335,6 +346,10 @@ update_status ModulePlayer::Update()
 
 		// Update Spring (distance joint)
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
+
+			if (post_start == 0)
+				post_start = 1;
+
 			// Animation change
 			if (start_spring.Finished()) {
 				current_spring = &red_spring;

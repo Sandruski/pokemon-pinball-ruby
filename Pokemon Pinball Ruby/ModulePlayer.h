@@ -37,10 +37,10 @@ public:
 	bool CleanUp();
 
 private:
-
 	SDL_Texture* pokeball;
 	b2Vec2 start_ball;
 	float ball_diameter;
+	Ball* ball_properties;
 
 	//Ball
 	SDL_Rect b1 = { 159, 926, 15, 15 };
@@ -85,13 +85,6 @@ private:
 	SDL_Rect* r_pokemon_cave;
 	SDL_Rect* r_egg;
 
-	//Rotating pokemons hit
-
-
-	//Get sprites
-	void GetBallSprites(float angle, Ball* ball_properties); //Ball
-	void GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, bool left); //Flipper
-
 	//Flippers
 	PhysBody* flippers[2];
 	PhysBody* flipperCircles[2];
@@ -108,8 +101,7 @@ private:
 	Animation* current_rotating_pokemons2;
 	Animation* current_rotating_pokemons3;
 	bool p1, p2, p3;
-
-	Ball* ball_properties;
+	uint post_start; //shhh...
 
 	//Spring
 	b2DistanceJoint* springDistanceJoint;
@@ -157,10 +149,15 @@ private:
 	bool pokemon_cave_hit;
 	bool shark_hit;
 
+private:
 	void CreateBall(float diameter, int x, int y);
 	void DestroyBall();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void UpdateCamera();
+
+	//Get sprites
+	void GetBallSprites(float angle, Ball* ball_properties); //Ball
+	void GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, bool left); //Flipper
 
 public:
 	PhysBody* ball;

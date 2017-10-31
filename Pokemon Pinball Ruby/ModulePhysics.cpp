@@ -244,7 +244,7 @@ b2RevoluteJoint* ModulePhysics::CreatePokemonRevoluteJoint(b2Body* bodyA, b2Body
 	return revoluteJoint;
 }
 
-b2DistanceJoint* ModulePhysics::CreateSpringDistanceJoint(b2Body* bodyA, b2Body* bodyB) {
+b2DistanceJoint* ModulePhysics::CreateDistanceJoint(b2Body* bodyA, b2Body* bodyB) {
 
 	b2DistanceJointDef jointDef;
 
@@ -252,8 +252,8 @@ b2DistanceJoint* ModulePhysics::CreateSpringDistanceJoint(b2Body* bodyA, b2Body*
 	jointDef.collideConnected = true;
 	
 	//Spring
-	jointDef.dampingRatio = 0.5f;
-	jointDef.frequencyHz = 4.0f;
+	//jointDef.dampingRatio = 0.5f;
+	//jointDef.frequencyHz = 4.0f;
 
 	b2DistanceJoint* distanceJoint = (b2DistanceJoint*)world->CreateJoint(&jointDef);
 
