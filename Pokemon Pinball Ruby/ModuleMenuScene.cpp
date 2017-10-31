@@ -4,6 +4,8 @@
 #include "ModuleMenuScene.h"
 #include "ModuleInput.h"
 #include "ModuleTextures.h"
+#include "ModuleFadeToBlack.h"
+#include "ModuleSceneIntro.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 
@@ -66,6 +68,8 @@ bool ModuleMenuScene::Start()
 bool ModuleMenuScene::CleanUp()
 {
 	LOG("Unloading Intro scene");
+	App->menu_scene->menuEnum = null_;
+
 	App->textures->Unload(menu);
 
 	return true;
@@ -121,7 +125,8 @@ update_status ModuleMenuScene::Update()
 		App->renderer->Blit(menu, 40, 36, r);
 
 		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
-			menuEnum = null_;
+			App->fade->FadeToBlack(this, App->scene_intro, 4.0f);
+			//menuEnum = null_;
 			break;
 		}
 		else if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {

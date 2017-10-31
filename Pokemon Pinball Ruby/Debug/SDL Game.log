@@ -1,8 +1,8 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: El directorio intermedio (Debug\) contiene archivos compartidos de otro proyecto (2D Physics - class 4.vcxproj). Esto puede dar lugar a un comportamiento incorrecto de limpieza y recompilación.
-  ModuleSceneIntro.cpp
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
   ModuleMenuScene.cpp
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+  ModuleFadeToBlack.cpp
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
   Generando código...
-  SDL Game.vcxproj -> C:\Users\kayte\Desktop\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
-  SDL Game.vcxproj -> C:\Users\kayte\Desktop\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)
+  SDL Game.vcxproj -> C:\Users\disob\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
+  SDL Game.vcxproj -> C:\Users\disob\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)
