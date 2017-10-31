@@ -164,7 +164,7 @@ bool ModulePlayer::Start()
 	start_ball.y = 355;
 	ball_diameter = 13.0f;
 	life = 3;
-
+	points = 0;
 	num_cave_hits = 0;
 
 	// Create flippers
@@ -547,27 +547,89 @@ void ModulePlayer::GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, boo
 // Get ball sprites
 void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 
-	SDL_Rect* sprite = &b1;
+	SDL_Rect* sprite = &pb1;
+	int direction = 1;
 
-	if		(fmodf(angle, 360) > 348.75f || fmodf(angle, 360) <= 11.25f)	{ sprite = &b1; }
-	else if (fmodf(angle, 360) > 11.25f && fmodf(angle, 360) <= 33.75f)		{ sprite = &b2; }
-	else if (fmodf(angle, 360) > 33.75f && fmodf(angle, 360) <= 56.25f)		{ sprite = &b3; }
-	else if (fmodf(angle, 360) > 56.25f && fmodf(angle, 360) <= 78.75f)		{ sprite = &b4; }
-	else if (fmodf(angle, 360) > 78.75f && fmodf(angle, 360) <= 101.25f)	{ sprite = &b5; }
-	else if (fmodf(angle, 360) > 101.25f && fmodf(angle, 360) <= 123.75f)	{ sprite = &b6; }
-	else if (fmodf(angle, 360) > 123.75f && fmodf(angle, 360) <= 146.25f)	{ sprite = &b7; }
-	else if (fmodf(angle, 360) > 146.25f && fmodf(angle, 360) <= 168.75f)	{ sprite = &b8; }
-	else if (fmodf(angle, 360) > 168.75f && fmodf(angle, 360) <= 191.25f)	{ sprite = &b9; }
-	else if (fmodf(angle, 360) > 191.25f && fmodf(angle, 360) <= 213.75f)	{ sprite = &b10; }
-	else if (fmodf(angle, 360) > 213.75f && fmodf(angle, 360) <= 236.25f)	{ sprite = &b11; }
-	else if (fmodf(angle, 360) > 236.25f && fmodf(angle, 360) <= 258.75f)	{ sprite = &b12; }
-	else if (fmodf(angle, 360) > 258.75f && fmodf(angle, 360) <= 281.25f)	{ sprite = &b13; }
-	else if (fmodf(angle, 360) > 281.25f && fmodf(angle, 360) <= 303.75f)	{ sprite = &b14; }
-	else if (fmodf(angle, 360) > 303.75f && fmodf(angle, 360) <= 326.25f)	{ sprite = &b15; }
-	else if (fmodf(angle, 360) > 326.25f && fmodf(angle, 360) <= 348.75f)	{ sprite = &b16; }
+	if (angle < 0)
+		direction = -1;
+
+	if (points < 500) {
+		if (direction * fmodf(angle, 360) > 348.75f || direction * fmodf(angle, 360) <= 11.25f) { sprite = &pb1; }
+		else if (direction * fmodf(angle, 360) > 11.25f && direction * fmodf(angle, 360) <= 33.75f) { sprite = &pb2; }
+		else if (direction * fmodf(angle, 360) > 33.75f && direction * fmodf(angle, 360) <= 56.25f) { sprite = &pb3; }
+		else if (direction * fmodf(angle, 360) > 56.25f && direction * fmodf(angle, 360) <= 78.75f) { sprite = &pb4; }
+		else if (direction * fmodf(angle, 360) > 78.75f && direction * fmodf(angle, 360) <= 101.25f) { sprite = &pb5; }
+		else if (direction * fmodf(angle, 360) > 101.25f && direction * fmodf(angle, 360) <= 123.75f) { sprite = &pb6; }
+		else if (direction * fmodf(angle, 360) > 123.75f && direction * fmodf(angle, 360) <= 146.25f) { sprite = &pb7; }
+		else if (direction * fmodf(angle, 360) > 146.25f && direction * fmodf(angle, 360) <= 168.75f) { sprite = &pb8; }
+		else if (direction * fmodf(angle, 360) > 168.75f && direction * fmodf(angle, 360) <= 191.25f) { sprite = &pb9; }
+		else if (direction * fmodf(angle, 360) > 191.25f && direction * fmodf(angle, 360) <= 213.75f) { sprite = &pb10; }
+		else if (direction * fmodf(angle, 360) > 213.75f && direction * fmodf(angle, 360) <= 236.25f) { sprite = &pb11; }
+		else if (direction * fmodf(angle, 360) > 236.25f && direction * fmodf(angle, 360) <= 258.75f) { sprite = &pb12; }
+		else if (direction * fmodf(angle, 360) > 258.75f && direction * fmodf(angle, 360) <= 281.25f) { sprite = &pb13; }
+		else if (direction * fmodf(angle, 360) > 281.25f && direction * fmodf(angle, 360) <= 303.75f) { sprite = &pb14; }
+		else if (direction * fmodf(angle, 360) > 303.75f && direction * fmodf(angle, 360) <= 326.25f) { sprite = &pb15; }
+		else if (direction * fmodf(angle, 360) > 326.25f && direction * fmodf(angle, 360) <= 348.75f) { sprite = &pb16; }
+	}
+	else if (points >= 500 && points < 1000) {
+		if (direction * fmodf(angle, 360) > 348.75f || direction * fmodf(angle, 360) <= 11.25f) { sprite = &sb1; }
+		else if (direction * fmodf(angle, 360) > 11.25f && direction * fmodf(angle, 360) <= 33.75f) { sprite = &sb2; }
+		else if (direction * fmodf(angle, 360) > 33.75f && direction * fmodf(angle, 360) <= 56.25f) { sprite = &sb3; }
+		else if (direction * fmodf(angle, 360) > 56.25f && direction * fmodf(angle, 360) <= 78.75f) { sprite = &sb4; }
+		else if (direction * fmodf(angle, 360) > 78.75f && direction * fmodf(angle, 360) <= 101.25f) { sprite = &sb5; }
+		else if (direction * fmodf(angle, 360) > 101.25f && direction * fmodf(angle, 360) <= 123.75f) { sprite = &sb6; }
+		else if (direction * fmodf(angle, 360) > 123.75f && direction * fmodf(angle, 360) <= 146.25f) { sprite = &sb7; }
+		else if (direction * fmodf(angle, 360) > 146.25f && direction * fmodf(angle, 360) <= 168.75f) { sprite = &sb8; }
+		else if (direction * fmodf(angle, 360) > 168.75f && direction * fmodf(angle, 360) <= 191.25f) { sprite = &sb9; }
+		else if (direction * fmodf(angle, 360) > 191.25f && direction * fmodf(angle, 360) <= 213.75f) { sprite = &sb10; }
+		else if (direction * fmodf(angle, 360) > 213.75f && direction * fmodf(angle, 360) <= 236.25f) { sprite = &sb11; }
+		else if (direction * fmodf(angle, 360) > 236.25f && direction * fmodf(angle, 360) <= 258.75f) { sprite = &sb12; }
+		else if (direction * fmodf(angle, 360) > 258.75f && direction * fmodf(angle, 360) <= 281.25f) { sprite = &sb13; }
+		else if (direction * fmodf(angle, 360) > 281.25f && direction * fmodf(angle, 360) <= 303.75f) { sprite = &sb14; }
+		else if (direction * fmodf(angle, 360) > 303.75f && direction * fmodf(angle, 360) <= 326.25f) { sprite = &sb15; }
+		else if (direction * fmodf(angle, 360) > 326.25f && direction * fmodf(angle, 360) <= 348.75f) { sprite = &sb16; }
+	}
+	else if (points >= 1000 && points < 1500) {
+		if (direction * fmodf(angle, 360) > 348.75f || direction * fmodf(angle, 360) <= 11.25f) { sprite = &ub1; }
+		else if (direction * fmodf(angle, 360) > 11.25f && direction * fmodf(angle, 360) <= 33.75f) { sprite = &ub2; }
+		else if (direction * fmodf(angle, 360) > 33.75f && direction * fmodf(angle, 360) <= 56.25f) { sprite = &ub3; }
+		else if (direction * fmodf(angle, 360) > 56.25f && direction * fmodf(angle, 360) <= 78.75f) { sprite = &ub4; }
+		else if (direction * fmodf(angle, 360) > 78.75f && direction * fmodf(angle, 360) <= 101.25f) { sprite = &ub5; }
+		else if (direction * fmodf(angle, 360) > 101.25f && direction * fmodf(angle, 360) <= 123.75f) { sprite = &ub6; }
+		else if (direction * fmodf(angle, 360) > 123.75f && direction * fmodf(angle, 360) <= 146.25f) { sprite = &ub7; }
+		else if (direction * fmodf(angle, 360) > 146.25f && direction * fmodf(angle, 360) <= 168.75f) { sprite = &ub8; }
+		else if (direction * fmodf(angle, 360) > 168.75f && direction * fmodf(angle, 360) <= 191.25f) { sprite = &ub9; }
+		else if (direction * fmodf(angle, 360) > 191.25f && direction * fmodf(angle, 360) <= 213.75f) { sprite = &ub10; }
+		else if (direction * fmodf(angle, 360) > 213.75f && direction * fmodf(angle, 360) <= 236.25f) { sprite = &ub11; }
+		else if (direction * fmodf(angle, 360) > 236.25f && direction * fmodf(angle, 360) <= 258.75f) { sprite = &ub12; }
+		else if (direction * fmodf(angle, 360) > 258.75f && direction * fmodf(angle, 360) <= 281.25f) { sprite = &ub13; }
+		else if (direction * fmodf(angle, 360) > 281.25f && direction * fmodf(angle, 360) <= 303.75f) { sprite = &ub14; }
+		else if (direction * fmodf(angle, 360) > 303.75f && direction * fmodf(angle, 360) <= 326.25f) { sprite = &ub15; }
+		else if (direction * fmodf(angle, 360) > 326.25f && direction * fmodf(angle, 360) <= 348.75f) { sprite = &ub16; }
+	}
+	else if (points >= 1500) {
+		if (direction * fmodf(angle, 360) > 348.75f || direction * fmodf(angle, 360) <= 11.25f) { sprite = &mb1; }
+		else if (direction * fmodf(angle, 360) > 11.25f && direction * fmodf(angle, 360) <= 33.75f) { sprite = &mb2; }
+		else if (direction * fmodf(angle, 360) > 33.75f && direction * fmodf(angle, 360) <= 56.25f) { sprite = &mb3; }
+		else if (direction * fmodf(angle, 360) > 56.25f && direction * fmodf(angle, 360) <= 78.75f) { sprite = &mb4; }
+		else if (direction * fmodf(angle, 360) > 78.75f && direction * fmodf(angle, 360) <= 101.25f) { sprite = &mb5; }
+		else if (direction * fmodf(angle, 360) > 101.25f && direction * fmodf(angle, 360) <= 123.75f) { sprite = &mb6; }
+		else if (direction * fmodf(angle, 360) > 123.75f && direction * fmodf(angle, 360) <= 146.25f) { sprite = &mb7; }
+		else if (direction * fmodf(angle, 360) > 146.25f && direction * fmodf(angle, 360) <= 168.75f) { sprite = &mb8; }
+		else if (direction * fmodf(angle, 360) > 168.75f && direction * fmodf(angle, 360) <= 191.25f) { sprite = &mb9; }
+		else if (direction * fmodf(angle, 360) > 191.25f && direction * fmodf(angle, 360) <= 213.75f) { sprite = &mb10; }
+		else if (direction * fmodf(angle, 360) > 213.75f && direction * fmodf(angle, 360) <= 236.25f) { sprite = &mb11; }
+		else if (direction * fmodf(angle, 360) > 236.25f && direction * fmodf(angle, 360) <= 258.75f) { sprite = &mb12; }
+		else if (direction * fmodf(angle, 360) > 258.75f && direction * fmodf(angle, 360) <= 281.25f) { sprite = &mb13; }
+		else if (direction * fmodf(angle, 360) > 281.25f && direction * fmodf(angle, 360) <= 303.75f) { sprite = &mb14; }
+		else if (direction * fmodf(angle, 360) > 303.75f && direction * fmodf(angle, 360) <= 326.25f) { sprite = &mb15; }
+		else if (direction * fmodf(angle, 360) > 326.25f && direction * fmodf(angle, 360) <= 348.75f) { sprite = &mb16; }
+	}
 
 	ball_properties->current_sprite = sprite;
 
+	LOG("%f", fmodf(angle, 360));
+	//LOG("%f", angle);
 }
 
 void ModulePlayer::CreateBall(float diameter, int x, int y) {

@@ -42,23 +42,77 @@ private:
 	float ball_diameter;
 	Ball* ball_properties;
 
-	//Ball
-	SDL_Rect b1 = { 159, 926, 15, 15 };
-	SDL_Rect b2 = { 176, 926, 15, 15 };
-	SDL_Rect b3 = { 193, 926, 15, 15 };
-	SDL_Rect b4 = { 210, 926, 15, 15 };
-	SDL_Rect b5 = { 227, 926, 15, 15 };
-	SDL_Rect b6 = { 244, 926, 15, 15 };
-	SDL_Rect b7 = { 261, 926, 15, 15 };
-	SDL_Rect b8 = { 278, 926, 15, 15 };
-	SDL_Rect b9 = { 295, 926, 15, 15 };
-	SDL_Rect b10 = { 312, 926, 15, 15 };
-	SDL_Rect b11 = { 329, 926, 15, 15 };
-	SDL_Rect b12 = { 346, 926, 15, 15 };
-	SDL_Rect b13 = { 363, 926, 15, 15 };
-	SDL_Rect b14 = { 380, 926, 15, 15 };
-	SDL_Rect b15 = { 397, 926, 15, 15 };
-	SDL_Rect b16 = { 414, 926, 15, 15 };
+	//Pokeball
+	SDL_Rect pb1 = { 159, 926, 15, 15 };
+	SDL_Rect pb2 = { 176, 926, 15, 15 };
+	SDL_Rect pb3 = { 193, 926, 15, 15 };
+	SDL_Rect pb4 = { 210, 926, 15, 15 };
+	SDL_Rect pb5 = { 227, 926, 15, 15 };
+	SDL_Rect pb6 = { 244, 926, 15, 15 };
+	SDL_Rect pb7 = { 261, 926, 15, 15 };
+	SDL_Rect pb8 = { 278, 926, 15, 15 };
+	SDL_Rect pb9 = { 295, 926, 15, 15 };
+	SDL_Rect pb10 = { 312, 926, 15, 15 };
+	SDL_Rect pb11 = { 329, 926, 15, 15 };
+	SDL_Rect pb12 = { 346, 926, 15, 15 };
+	SDL_Rect pb13 = { 363, 926, 15, 15 };
+	SDL_Rect pb14 = { 380, 926, 15, 15 };
+	SDL_Rect pb15 = { 397, 926, 15, 15 };
+	SDL_Rect pb16 = { 414, 926, 15, 15 };
+
+	//Superball
+	SDL_Rect sb1 = { 159, 954, 15, 15 };
+	SDL_Rect sb2 = { 176, 954, 15, 15 };
+	SDL_Rect sb3 = { 193, 954, 15, 15 };
+	SDL_Rect sb4 = { 210, 954, 15, 15 };
+	SDL_Rect sb5 = { 227, 954, 15, 15 };
+	SDL_Rect sb6 = { 244, 954, 15, 15 };
+	SDL_Rect sb7 = { 261, 954, 15, 15 };
+	SDL_Rect sb8 = { 278, 954, 15, 15 };
+	SDL_Rect sb9 = { 295, 954, 15, 15 };
+	SDL_Rect sb10 = { 312, 954, 15, 15 };
+	SDL_Rect sb11 = { 329, 954, 15, 15 };
+	SDL_Rect sb12 = { 346, 954, 15, 15 };
+	SDL_Rect sb13 = { 363, 954, 15, 15 };
+	SDL_Rect sb14 = { 380, 954, 15, 15 };
+	SDL_Rect sb15 = { 397, 954, 15, 15 };
+	SDL_Rect sb16 = { 414, 954, 15, 15 };
+
+	//Ultraball
+	SDL_Rect ub1 = { 159, 982, 15, 15 };
+	SDL_Rect ub2 = { 176, 982, 15, 15 };
+	SDL_Rect ub3 = { 193, 982, 15, 15 };
+	SDL_Rect ub4 = { 210, 982, 15, 15 };
+	SDL_Rect ub5 = { 227, 982, 15, 15 };
+	SDL_Rect ub6 = { 244, 982, 15, 15 };
+	SDL_Rect ub7 = { 261, 982, 15, 15 };
+	SDL_Rect ub8 = { 278, 982, 15, 15 };
+	SDL_Rect ub9 = { 295, 982, 15, 15 };
+	SDL_Rect ub10 = { 312, 982, 15, 15 };
+	SDL_Rect ub11 = { 329, 982, 15, 15 };
+	SDL_Rect ub12 = { 346, 982, 15, 15 };
+	SDL_Rect ub13 = { 363, 982, 15, 15 };
+	SDL_Rect ub14 = { 380, 982, 15, 15 };
+	SDL_Rect ub15 = { 397, 982, 15, 15 };
+	SDL_Rect ub16 = { 414, 982, 15, 15 };
+
+	//Masterball
+	SDL_Rect mb1 = { 159, 1010, 15, 15 };
+	SDL_Rect mb2 = { 176, 1010, 15, 15 };
+	SDL_Rect mb3 = { 193, 1010, 15, 15 };
+	SDL_Rect mb4 = { 210, 1010, 15, 15 };
+	SDL_Rect mb5 = { 227, 1010, 15, 15 };
+	SDL_Rect mb6 = { 244, 1010, 15, 15 };
+	SDL_Rect mb7 = { 261, 1010, 15, 15 };
+	SDL_Rect mb8 = { 278, 1010, 15, 15 };
+	SDL_Rect mb9 = { 295, 1010, 15, 15 };
+	SDL_Rect mb10 = { 312, 1010, 15, 15 };
+	SDL_Rect mb11 = { 329, 1010, 15, 15 };
+	SDL_Rect mb12 = { 346, 1010, 15, 15 };
+	SDL_Rect mb13 = { 363, 1010, 15, 15 };
+	SDL_Rect mb14 = { 380, 1010, 15, 15 };
+	SDL_Rect mb15 = { 397, 1010, 15, 15 };
+	SDL_Rect mb16 = { 414, 1010, 15, 15 };
 
 	//Flipper (left)
 	SDL_Rect l_f1 = { 0, 1316, 31, 26 };
@@ -161,6 +215,7 @@ private:
 
 public:
 	PhysBody* ball;
-	int life = 0;
+	int life;
+	int points;
 
 };
