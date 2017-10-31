@@ -187,7 +187,7 @@ update_status ModuleSceneIntro::Update()
 
 	//Blit Points
 	sprintf_s(str1, "%i", App->player->points);
-	App->fonts->BlitText(35, 20, font_score, str1);
+	App->fonts->BlitText(195, 410, font_score, str1);
 
 	return UPDATE_CONTINUE;
 }
