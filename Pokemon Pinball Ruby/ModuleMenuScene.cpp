@@ -19,18 +19,18 @@ ModuleMenuScene::ModuleMenuScene(Application* app, bool start_enabled) : Module(
 	subMenu.w = 96;
 	subMenu.h = 83;
 
-	mapSelector.x = 18;
-	mapSelector.y = 270;
-	mapSelector.w = 240;
-	mapSelector.h = 160;
+	mapSelector.x = 20;
+	mapSelector.y = 266;
+	mapSelector.w = 256;
+	mapSelector.h = 168;
 
 	mapSelection.PushBack({ 18, 457, 72, 112 });
 	mapSelection.PushBack({ 0, 0, 0, 0 });
-	mapSelection.speed = 0.075f;
+	mapSelection.speed = 0.04f;
 
 	pressStart.PushBack({319, 19, 84, 8});
 	pressStart.PushBack({319, 29, 84, 8});
-	pressStart.speed = 0.02f;
+	pressStart.speed = 0.04f;
 
 	flipper.PushBack({ 406, 24, 13, 8 });
 	flipper.PushBack({ 406, 24, 13, 8 });
@@ -42,7 +42,7 @@ ModuleMenuScene::ModuleMenuScene(Application* app, bool start_enabled) : Module(
 	flipper.PushBack({ 436, 24, 13, 8 });
 	flipper.PushBack({ 436, 24, 13, 8 });
 	flipper.PushBack({ 421, 24, 13, 8 });
-	flipper.speed = 0.1f;
+	flipper.speed = 0.2f;
 }
 
 ModuleMenuScene::~ModuleMenuScene()
@@ -87,7 +87,7 @@ update_status ModuleMenuScene::Update()
 		current_animation = &flipper;
 		r = &current_animation->GetCurrentFrame();
 		App->renderer->Blit(menu, (256 / 2 - 84 / 2) - 20, 145, r);
-		App->renderer->Blit(menu, (256 / 2 - 84 / 2) + 84 + 13, 145, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+		App->renderer->Blit(menu, (256 / 2 - 84 / 2) + 84 + 13 - 7, 145, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
 		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
 			menuEnum = subMenu_;
 			break;
@@ -98,6 +98,12 @@ update_status ModuleMenuScene::Update()
 		App->renderer->Blit(menu, 0, 0, &menuBg);
 
 		App->renderer->Blit(menu, 256 / 2 - 96 / 2, 160 / 2 - 83 / 2, &subMenu);
+		
+		current_animation = &flipper;
+		r = &current_animation->GetCurrentFrame();
+		App->renderer->Blit(menu, (256 / 2 - 84 / 2) - 20 + 22, 54, r);
+		App->renderer->Blit(menu, (256 / 2 - 84 / 2) + 84 + 13 - 25, 54, r, 1, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+		
 		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
 			menuEnum = mapSelector_;
 			break;
@@ -112,7 +118,7 @@ update_status ModuleMenuScene::Update()
 		App->renderer->Blit(menu, 0, 0, &mapSelector);
 		current_animation = &mapSelection;
 		r = &current_animation->GetCurrentFrame();
-		App->renderer->Blit(menu, 32, 32, r);
+		App->renderer->Blit(menu, 40, 36, r);
 
 		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
 			menuEnum = null_;
