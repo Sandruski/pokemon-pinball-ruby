@@ -55,7 +55,9 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	eat_shark.loop = false;
 
 	go_back_shark.PushBack({ 146, 932, 36, 42 });
-	go_back_shark.speed = 0.1f;
+	go_back_shark.PushBack({ 146, 932, 36, 42 });
+	go_back_shark.PushBack({ 146, 932, 36, 42 });
+	go_back_shark.speed = 0.07f;
 	go_back_shark.loop = false;
 
 	spit_shark.PushBack({ 146, 932, 36, 42 });
@@ -166,6 +168,11 @@ bool ModulePlayer::Start()
 	life = 3;
 	points = 0;
 	num_cave_hits = 0;
+	blit_ball = true;
+
+	go_back_x = 0;
+	go_back_y = 0;
+	first = true;
 
 	// Create flippers
 	b2Vec2 flipper_vertices[8];
@@ -256,7 +263,7 @@ bool ModulePlayer::Start()
 
 	shark->listener = this;
 
-	f.categoryBits = NEUTRAL;
+	f.categoryBits = FLIPPER;
 	f.maskBits = BALL;
 	shark->body->GetFixtureList()->SetFilterData(f);
 
@@ -268,7 +275,7 @@ bool ModulePlayer::Start()
 
 	cave->listener = this;
 
-	f.categoryBits = NEUTRAL;
+	f.categoryBits = FLIPPER;
 	f.maskBits = BALL;
 	cave->body->GetFixtureList()->SetFilterData(f);
 
@@ -389,7 +396,7 @@ update_status ModulePlayer::Update()
 	// All draw functions ------------------------------------------------------
 
 	// Blit ball
-	if (ball != nullptr) {
+	if (ball != nullptr && blit_ball) {
 		int x, y;
 		ball->GetPosition(x, y);
 		float angle = ball->GetRotation();
@@ -479,9 +486,52 @@ update_status ModulePlayer::Update()
 	//
 
 	if (shark_hit) {
+
 		//The shark goes back and spits out the ball
-		shark_hit = false;
+		blit_ball = false;
+		ball->body->SetLinearVelocity({ 0,0 });
+		ball->body->SetGravityScale(0);
+
+		if (first)
+			current_shark = &eat_shark;
+
+		if (eat_shark.Finished()) {
+			first = false;
+			current_shark = &go_back_shark;
+
+			go_back_x += 0.1f;
+			go_back_y -= 0.2f;
+		}
+		if (go_back_shark.Finished()) {
+			eat_shark.Reset();
+			current_shark = &spit_shark;
+
+			if (go_back_x != 0)
+				go_back_x -= 0.2f;
+			if (go_back_y != 0)
+				go_back_y += 0.4f;
+		}
+		if (spit_shark.Finished()) {
+			go_back_shark.Reset();
+			current_shark = &idle_shark;
+
+			ball->body->SetGravityScale(1);
+			ball->body->ApplyForceToCenter({ -10, 10 }, true);
+			blit_ball = true;
+
+			spit_shark.Reset();
+			shark_hit = false;
+			first = true;
+		}
 	}
+
+	if (!shark_hit) {
+		if (go_back_x <= 0)
+			go_back_x += 0.1f;
+		if (go_back_y >= 0)
+			go_back_y -= 0.1f;
+	}
+
 	if (pokemon_cave_hit) {
 		//Pokémon goes inside the cave
 		pokemon_cave_hit = false;
@@ -498,7 +548,7 @@ update_status ModulePlayer::Update()
 	// Blit shark
 	r_shark = &current_shark->GetCurrentFrame();
 	b2Vec2 pos_shark = shark->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18, METERS_TO_PIXELS(pos_shark.y) - 34, r_shark);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18 + go_back_x, METERS_TO_PIXELS(pos_shark.y) - 34 + go_back_y, r_shark);
 	//
 
 	// Blit cave
@@ -542,7 +592,6 @@ void ModulePlayer::GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, boo
 
 	flipper_sprite = sprite;
 }
-
 
 // Get ball sprites
 void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {

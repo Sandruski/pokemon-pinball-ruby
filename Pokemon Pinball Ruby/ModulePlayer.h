@@ -41,6 +41,7 @@ private:
 	b2Vec2 start_ball;
 	float ball_diameter;
 	Ball* ball_properties;
+	bool blit_ball;
 
 	//Pokeball
 	SDL_Rect pb1 = { 159, 926, 15, 15 };
@@ -176,6 +177,9 @@ private:
 	Animation spit_shark;
 	PhysBody* shark;
 	Animation* current_shark;
+	float go_back_x;
+	float go_back_y;
+	bool first;
 
 	//Cave (+ egg, + pokémon)
 	Animation idle_cave;
