@@ -134,19 +134,255 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Start()
 {
 
-	time = 0;
-
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
+
+	font_score = App->fonts->Load("Assets/Sprites/Font.png", "0123456789", 1);
+
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	/*
-	TODOS
-	-Muchos edges.
-	-Crear bonus (cuando pasa la bola, se tienen que activar.Tipo sensores : isSensor = true), bouncers(cuerpos estáticos).
-	-Que llame a una función de AddBody de ModulePhysics.
-	*/
+	CreateChains();
+
+	SetSensors();
+
+	return ret;
+}
+
+// Load assets
+bool ModuleSceneIntro::CleanUp()
+{
+	LOG("Unloading Intro scene");
+
+	App->textures->Unload(general);
+
+	App->fonts->UnLoad(font_score);
+
+	return true;
+}
+
+// Update: draw background
+update_status ModuleSceneIntro::Update()
+{
+	//Pikachu
+	if (checkTime && time < 60) {
+		App->player->ball->body->SetLinearVelocity({0,0});
+		App->player->ball->body->SetGravityScale(0);
+		time++;
+	}
+	else if (checkTime && time >= 60) {
+		App->player->ball->body->SetGravityScale(1);
+		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
+		time = 0;
+		checkTime = false;
+	}
+	//
+
+	App->renderer->Blit(general, 0, 0, &background);
+
+	SensorsForBLit();
+
+	BlitStaticPokemonsAndLife();
+
+	//Blit Points
+	sprintf_s(str1, "%i", App->player->points);
+	App->fonts->BlitText(35, 20, font_score, str1);
+
+	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
+{
+
+	// Hey! Destroy the ball
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
+	{
+		destroy_ball = true;
+	}
+
+	// Check sensors
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
+	{
+		checkTime = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEvo->body)
+	{
+		Evo = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVo->body)
+	{
+		EVo = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVO->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVO->body)
+	{
+		EVO = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLs10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLs10->body)
+	{
+		Ls10 = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10->body)
+	{
+		LS10 = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10T->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10T->body)
+	{
+		LS10T = true;
+	}
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGet->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGet->body)
+	{
+		Get = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGEt->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGEt->body)
+	{
+		GEt = true;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGET->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGET->body)
+	{
+		GET = true;
+	}
+}
+
+void ModuleSceneIntro::SensorsForBLit() {
+	if (Evo && timeEvo < 45) {
+		App->renderer->Blit(general, 33, 249, &rEvo);
+		timeEvo++;
+		if (timeEvo >= 45) {
+			timeEvo = 0;
+			Evo = false;
+		}
+	}
+
+	if (EVo && timeEVo < 45) {
+		App->renderer->Blit(general, 43, 265, &rEVo);
+		timeEVo++;
+		if (timeEVo >= 45) {
+			timeEVo = 0;
+			EVo = false;
+		}
+	}
+
+	if (EVO && timeEVO < 45) {
+		App->renderer->Blit(general, 53, 281, &rEVO);
+		timeEVO++;
+		if (timeEVO >= 45) {
+			timeEVO = 0;
+			EVO = false;
+		}
+	}
+
+
+	if (Ls10 && timeEvo < 45) {
+		App->renderer->Blit(general, 61, 192, &rLs10);
+		timeEvo++;
+		if (timeEvo >= 45) {
+			timeEvo = 0;
+			Ls10 = false;
+		}
+	}
+
+	if (LS10 && timeEVo < 45) {
+		App->renderer->Blit(general, 66, 210, &rLS10);
+		timeEVo++;
+		if (timeEVo >= 45) {
+			timeEVo = 0;
+			LS10 = false;
+		}
+	}
+
+	if (LS10T && timeEVO < 45) {
+		App->renderer->Blit(general, 74, 227, &rLS10T);
+		timeEVO++;
+		if (timeEVO >= 45) {
+			timeEVO = 0;
+			LS10T = false;
+		}
+	}
+
+	if (Get && timeEvo < 45) {
+		App->renderer->Blit(general, 194, 249, &rGet);
+		timeEvo++;
+		if (timeEvo >= 45) {
+			timeEvo = 0;
+			Get = false;
+		}
+	}
+
+	if (GEt && timeEVo < 45) {
+		App->renderer->Blit(general, 183, 264, &rGEt);
+		timeEVo++;
+		if (timeEVo >= 45) {
+			timeEVo = 0;
+			GEt = false;
+		}
+	}
+
+	if (GET && timeEVO < 45) {
+		App->renderer->Blit(general, 173, 281, &rGET);
+		timeEVO++;
+		if (timeEVO >= 45) {
+			timeEVO = 0;
+			GET = false;
+		}
+	}
+
+}
+
+void ModuleSceneIntro::SetSensors() {
+
+	b2Filter f;
+	f.categoryBits = WALL;
+	f.maskBits = BALL;
+
+	//sensor to destroy the ball
+	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
+	sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
+	sensorEvo = App->physics->CreateRectangleSensor(40, 260, 4, 4);
+	sensorEVo = App->physics->CreateRectangleSensor(50, 277, 4, 4);
+	sensorEVO = App->physics->CreateRectangleSensor(60, 290, 4, 4);
+	sensorLs10 = App->physics->CreateRectangleSensor(68, 203, 4, 4);
+	sensorLS10 = App->physics->CreateRectangleSensor(73, 220, 4, 4);
+	sensorLS10T = App->physics->CreateRectangleSensor(80, 240, 4, 4);
+	sensorGet = App->physics->CreateRectangleSensor(200, 260, 4, 4);
+	sensorGEt = App->physics->CreateRectangleSensor(190, 275, 4, 4);
+	sensorGET = App->physics->CreateRectangleSensor(181, 291, 4, 4);
+
+	sensor->listener = this;
+	sensorPikachu->listener = this;
+	sensorEvo->listener = this;
+	sensorEVo->listener = this;
+	sensorEVO->listener = this;
+	sensorLs10->listener = this;
+	sensorLS10->listener = this;
+	sensorLS10T->listener = this;
+	sensorGet->listener = this;
+	sensorGEt->listener = this;
+	sensorGET->listener = this;
+
+	sensor->body->GetFixtureList()->SetFilterData(f);
+	sensorPikachu->body->GetFixtureList()->SetFilterData(f);
+	sensorEvo->body->GetFixtureList()->SetFilterData(f);
+	sensorEVo->body->GetFixtureList()->SetFilterData(f);
+	sensorEVO->body->GetFixtureList()->SetFilterData(f);
+	sensorLs10->body->GetFixtureList()->SetFilterData(f);
+	sensorLS10->body->GetFixtureList()->SetFilterData(f);
+	sensorLS10T->body->GetFixtureList()->SetFilterData(f);
+	sensorGet->body->GetFixtureList()->SetFilterData(f);
+	sensorGEt->body->GetFixtureList()->SetFilterData(f);
+	sensorGET->body->GetFixtureList()->SetFilterData(f);
+
+}
+
+void ModuleSceneIntro::CreateChains() const {
 
 	int triangle[14] = {
 		599 - 533, 337,
@@ -432,6 +668,9 @@ bool ModuleSceneIntro::Start()
 	p->body->GetFixtureList()->SetFilterData(f);
 	p = App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
 
+	PhysBody* trianglebody1;
+	PhysBody* trianglebody2;
+
 	//Setting... triangles(?)
 	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 14, b2_staticBody);
 	trianglebody2 = App->physics->CreateChain(0, 0, triangle2, 14, b2_staticBody);
@@ -440,164 +679,9 @@ bool ModuleSceneIntro::Start()
 	trianglebody1->body->GetFixtureList()->SetFilterData(f);
 	trianglebody2->body->GetFixtureList()->SetFilterData(f);
 
-	general = App->textures->Load("Assets/Sprites/GeneralSpritesheet.png");
-
-	font_score = App->fonts->Load("Assets/Sprites/Font.png", "0123456789", 1);
-
-	//sensor to destroy the ball
-	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
-	sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
-	sensorEvo = App->physics->CreateRectangleSensor(40, 260, 4, 4);
-	sensorEVo = App->physics->CreateRectangleSensor(50, 277, 4, 4);
-	sensorEVO = App->physics->CreateRectangleSensor(60, 290, 4, 4);
-	sensorLs10 = App->physics->CreateRectangleSensor(68, 203, 4, 4);
-	sensorLS10 = App->physics->CreateRectangleSensor(73, 220, 4, 4);
-	sensorLS10T = App->physics->CreateRectangleSensor(80, 240, 4, 4);
-	sensorGet = App->physics->CreateRectangleSensor(200, 260, 4, 4);
-	sensorGEt = App->physics->CreateRectangleSensor(190, 275, 4, 4);
-	sensorGET = App->physics->CreateRectangleSensor(181, 291, 4, 4);
-
-	sensor->listener = this;
-	sensorPikachu->listener = this;
-	sensorEvo->listener = this;
-	sensorEVo->listener = this;
-	sensorEVO->listener = this;
-	sensorLs10->listener = this;
-	sensorLS10->listener = this;
-	sensorLS10T->listener = this;
-	sensorGet->listener = this;
-	sensorGEt->listener = this;
-	sensorGET->listener = this;
-
-	sensor->body->GetFixtureList()->SetFilterData(f);
-	sensorPikachu->body->GetFixtureList()->SetFilterData(f);
-	sensorEvo->body->GetFixtureList()->SetFilterData(f);
-	sensorEVo->body->GetFixtureList()->SetFilterData(f);
-	sensorEVO->body->GetFixtureList()->SetFilterData(f);
-	sensorLs10->body->GetFixtureList()->SetFilterData(f);
-	sensorLS10->body->GetFixtureList()->SetFilterData(f);
-	sensorLS10T->body->GetFixtureList()->SetFilterData(f);
-	sensorGet->body->GetFixtureList()->SetFilterData(f);
-	sensorGEt->body->GetFixtureList()->SetFilterData(f);
-	sensorGET->body->GetFixtureList()->SetFilterData(f);
-
-	return ret;
 }
 
-// Load assets
-bool ModuleSceneIntro::CleanUp()
-{
-	LOG("Unloading Intro scene");
-
-	App->textures->Unload(general);
-
-	App->fonts->UnLoad(font_score);
-
-	return true;
-}
-
-// Update: draw background
-update_status ModuleSceneIntro::Update()
-{
-	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) {
-		//sensorPikachu->body->SetTransform(positionPikachu, 0);
-	}
-
-	if (checkTime && time < 60) {
-		App->player->ball->body->SetLinearVelocity({0,0});
-		App->player->ball->body->SetGravityScale(0);
-		time++;
-	}
-	else if (checkTime && time >= 60) {
-		App->player->ball->body->SetGravityScale(1);
-		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
-		time = 0;
-		checkTime = false;
-	}
-
-	App->renderer->Blit(general, 0, 0, &background);
-
-	if (Evo && timeEvo < 45) {
-		App->renderer->Blit(general, 33, 249, &rEvo);
-		timeEvo++;
-		if (timeEvo >= 45) {
-			timeEvo = 0;
-			Evo = false;
-		}
-	}
-
-	if (EVo && timeEVo < 45) {
-		App->renderer->Blit(general, 43, 265, &rEVo);
-		timeEVo++;
-		if (timeEVo >= 45) {
-			timeEVo = 0;
-			EVo = false;
-		}
-	}
-
-	if (EVO && timeEVO < 45) {
-		App->renderer->Blit(general, 53, 281, &rEVO);
-		timeEVO++;
-		if (timeEVO >= 45) {
-			timeEVO = 0;
-			EVO = false;
-		}
-	}
-
-
-	if (Ls10 && timeEvo < 45) {
-		App->renderer->Blit(general, 61, 192, &rLs10);
-		timeEvo++;
-		if (timeEvo >= 45) {
-			timeEvo = 0;
-			Ls10 = false;
-		}
-	}
-
-	if (LS10 && timeEVo < 45) {
-		App->renderer->Blit(general, 66, 210, &rLS10);
-		timeEVo++;
-		if (timeEVo >= 45) {
-			timeEVo = 0;
-			LS10 = false;
-		}
-	}
-
-	if (LS10T && timeEVO < 45) {
-		App->renderer->Blit(general, 74, 227, &rLS10T);
-		timeEVO++;
-		if (timeEVO >= 45) {
-			timeEVO = 0;
-			LS10T = false;
-		}
-	}
-
-	if (Get && timeEvo < 45) {
-		App->renderer->Blit(general, 194, 249, &rGet);
-		timeEvo++;
-		if (timeEvo >= 45) {
-			timeEvo = 0;
-			Get = false;
-		}
-	}
-
-	if (GEt && timeEVo < 45) {
-		App->renderer->Blit(general, 183, 264, &rGEt);
-		timeEVo++;
-		if (timeEVo >= 45) {
-			timeEVo = 0;
-			GEt = false;
-		}
-	}
-
-	if (GET && timeEVO < 45) {
-		App->renderer->Blit(general, 173, 281, &rGET);
-		timeEVO++;
-		if (timeEVO >= 45) {
-			timeEVO = 0;
-			GET = false;
-		}
-	}
+void ModuleSceneIntro::BlitStaticPokemonsAndLife() {
 
 	if (App->player->life == 3) {
 		current_anim = &latiosSave;
@@ -616,7 +700,6 @@ update_status ModuleSceneIntro::Update()
 	}
 	else
 		App->renderer->Blit(general, 98, 330, &rBall);
-
 
 	current_anim = &pikachu;
 	r = &current_anim->GetCurrentFrame();
@@ -644,93 +727,4 @@ update_status ModuleSceneIntro::Update()
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 55, 220, r);
 
-
-	sprintf_s(str1, "%i", App->player->points);
-	App->fonts->BlitText(35, 20, font_score, str1);
-
-	return UPDATE_CONTINUE;
 }
-
-void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
-{
-
-	// Hey! Destroy the ball
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
-	{
-		destroy_ball = true;
-	}
-
-	// Check sensors
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
-	{
-		checkTime = true;
-	}
-
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEvo->body)
-	{
-		Evo = true;
-	}
-
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVo->body)
-	{
-		EVo = true;
-	}
-
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVO->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVO->body)
-	{
-		EVO = true;
-	}
-
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLs10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLs10->body)
-	{
-		Ls10 = true;
-	}
-
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10->body)
-	{
-		LS10 = true;
-	}
-
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10T->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10T->body)
-	{
-		LS10T = true;
-	}
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGet->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGet->body)
-	{
-		Get = true;
-	}
-
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGEt->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGEt->body)
-	{
-		GEt = true;
-	}
-
-	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGET->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGET->body)
-	{
-		GET = true;
-	}
-}
-
-void ModuleSceneIntro::chainpoints() {
-	
-
-}
-
-/*
-Module Physics
-Class PhysBody:
-- Con GetUserData y SetUserData podemos acceder a nuestro cuerpo con punteros.
-- AddBody: con parámetros de densidad, restitución, masa, etc.Para que los objetos reboten más o menos.
-·Bouncers : mucha restitución.
-·Bola : mucha densidad, poca restitución.
-- b2ContactListener
-- b2Body*; = puntero al b2Body
-- Module* listener; //qué módulo está interesado para detectar una colisión. Cada módulo debe tener un OnCollision()
-
--NO HACE FALTA CREAR CUERPOS CINEMÁTICOS.
-
-Detección de colisiones y gestión de las mismas:
--Detectar cuando la bola cae más abajo del pinball. Detección con un sensor muy grande.
--SetListener al world. BeginContact. Para los sensores no nos llama al BeginContact: solución: a cada vuelta, iterar por todos los contactos del b2World y si alguno
-de los contactos es una colisión, gestionar dicha colisión.
-*/
