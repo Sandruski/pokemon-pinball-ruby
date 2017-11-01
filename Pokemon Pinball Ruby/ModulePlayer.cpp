@@ -344,7 +344,7 @@ update_status ModulePlayer::Update()
 			flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.06f, true);
 
 		// Create ball
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && post_start > 0)
 			CreateBall(ball_diameter, App->input->GetMouseX(), App->input->GetMouseY());
 
 		// Destroy ball

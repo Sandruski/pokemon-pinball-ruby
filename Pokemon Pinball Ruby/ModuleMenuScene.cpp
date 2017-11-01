@@ -125,8 +125,8 @@ update_status ModuleMenuScene::Update()
 		App->renderer->Blit(menu, 40, 36, r);
 
 		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
-			//App->fade->FadeToBlack(this, App->scene_intro, 4.0f);
-			menuEnum = null_;
+			//App->fade->FadeToBlack(this, App->scene_intro, 4.0f);	//UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			menuEnum = null_; //COMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			break;
 		}
 		else if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {

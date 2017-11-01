@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleInput.h"
+#include "ModuleWindow.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
@@ -165,6 +166,18 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+	// F2: fullscreen
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+		if (App->window->fullscreen) {
+			App->window->fullscreen = false;
+			SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_SHOWN);
+		}
+		else {
+			App->window->fullscreen = true;
+			SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN); //if not working properly, try SDL_WINDOW_FULLSCREEN_DESKTOP
+		}
+	}
+
 	//Pikachu
 	if (checkTime && time < 60) {
 		App->player->ball->body->SetLinearVelocity({0,0});

@@ -6,6 +6,7 @@
 #include "Animation.h"
 
 class PhysBody;
+class SDL_Texture;
 
 enum menuStates {
 	null_,
