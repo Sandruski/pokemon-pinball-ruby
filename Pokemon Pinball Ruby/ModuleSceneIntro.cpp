@@ -10,6 +10,11 @@
 #include "ModulePlayer.h"
 #include "ModuleFonts.h"
 
+#include <fstream>
+#include <iostream>
+
+using namespace std;
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	general = NULL;
@@ -19,6 +24,11 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	background.y = 3;
 	background.w = 257;
 	background.h = 425;
+
+	trianglesOnCollision.x = 273;
+	trianglesOnCollision.y = 329;
+	trianglesOnCollision.w = 23;
+	trianglesOnCollision.h = 34;
 
 	rBall.x = 470;
 	rBall.y = 252;
@@ -142,6 +152,8 @@ bool ModuleSceneIntro::Start()
 
 	font_score = App->fonts->Load("Assets/Sprites/Font.png", "0123456789", 1);
 
+	LoadScore();
+
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	CreateChains();
@@ -159,6 +171,8 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(general);
 
 	App->fonts->UnLoad(font_score);
+
+	SaveScore();
 
 	return true;
 }
@@ -194,12 +208,29 @@ update_status ModuleSceneIntro::Update()
 
 	App->renderer->Blit(general, 0, 0, &background);
 
+	if (trianglesBlit1) {
+		timeTriangle1++;
+		App->renderer->Blit(general, 65, 331, &trianglesOnCollision);
+		if (timeTriangle1 > 30) {
+			timeTriangle1 = 0;
+			trianglesBlit1 = false;
+		}
+	}
+	if (trianglesBlit2) {
+		timeTriangle2++;
+		App->renderer->Blit(general, 152, 331, &trianglesOnCollision, 1.0f, (0.0), INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+		if (timeTriangle2 > 30) {
+			timeTriangle2 = 0;
+			trianglesBlit2 = false;
+		}
+	}
+
 	SensorsForBLit();
 
 	BlitStaticPokemonsAndLife();
 
 	//Blit Points
-	sprintf_s(str1, "%i", App->player->points);
+	sprintf_s(str1, "%i", points);
 	App->fonts->BlitText(195, 410, font_score, str1);
 
 	return UPDATE_CONTINUE;
@@ -207,7 +238,6 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-
 	// Hey! Destroy the ball
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
 	{
@@ -262,6 +292,18 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGET->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGET->body)
 	{
 		GET = true;
+	}
+
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody1->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody1->body)
+	{
+		trianglesBlit1 = true;	
+	}
+
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody2->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody2->body)
+	{
+		trianglesBlit2 = true;
 	}
 }
 
@@ -357,7 +399,7 @@ void ModuleSceneIntro::SetSensors() {
 	f.maskBits = BALL;
 
 	//sensor to destroy the ball
-	sensor = App->physics->CreateRectangleSensor(0, 100, 135, 15);
+	sensor = App->physics->CreateRectangleSensor(115 , 440, 135, 15);
 	sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
 	sensorEvo = App->physics->CreateRectangleSensor(40, 260, 4, 4);
 	sensorEVo = App->physics->CreateRectangleSensor(50, 277, 4, 4);
@@ -395,7 +437,7 @@ void ModuleSceneIntro::SetSensors() {
 
 }
 
-void ModuleSceneIntro::CreateChains() const {
+void ModuleSceneIntro::CreateChains() {
 
 	int triangle[14] = {
 		599 - 533, 337,
@@ -427,82 +469,62 @@ void ModuleSceneIntro::CreateChains() const {
 		678 - 533, 97
 	};
 
-	int GeneralSpritesheet1[150] = {
-		632 - 533, 422,
-		600 - 533, 406,
-		573 - 533, 387,
+	int GeneralSpritesheet1[110] = {
+		632 - 533, 427,
+		632 - 533, 423,
+		573 - 533, 391,
 		573 - 533, 399,
-		557 - 533, 399,
-		557 - 533, 326,
-		560 - 533, 321,
-		565 - 533, 318,
-		574 - 533, 318,
-		578 - 533, 316,
-		580 - 533, 313,
-		580 - 533, 288,
-		571 - 533, 279,
-		565 - 533, 269,
-		558 - 533, 256,
-		552 - 533, 243,
-		548 - 533, 229,
-		545 - 533, 212,
-		545 - 533, 174,
-		547 - 533, 155,
-		551 - 533, 138,
-		556 - 533, 125,
-		566 - 533, 108,
-		579 - 533, 94,
-		592 - 533, 84,
-		606 - 533, 77,
-		625 - 533, 71,
-		642 - 533, 68,
-		667 - 533, 68,
-		683 - 533, 71,
-		698 - 533, 76,
-		710 - 533, 82,
-		722 - 533, 88,
-		736 - 533, 97,
-		750 - 533, 109,
-		760 - 533, 120,
-		769 - 533, 132,
-		774 - 533, 144,
-		777 - 533, 153,
-		780 - 533, 164,
-		782 - 533, 176,
-		783 - 533, 190,
+		556 - 533, 399,
+		556 - 533, 327,
+		557 - 533, 322,
+		560 - 533, 319,
+		564 - 533, 317,
+		569 - 533, 316,
+		574 - 533, 315,
+		578 - 533, 313,
+		580 - 533, 310,
+		580 - 533, 289,
+		567 - 533, 273,
+		551 - 533, 241,
+		544 - 533, 213,
+		545 - 533, 162,
+		562 - 533, 112,
+		588 - 533, 86,
+		626 - 533, 70,
+		654 - 533, 66,
+		678 - 533, 69,
+		713 - 533, 82,
+		737 - 533, 98,
+		758 - 533, 118,
+		772 - 533, 139,
+		781 - 533, 168,
+		783 - 533, 191,
 		783 - 533, 411,
-		769 - 533, 411,
-		768 - 533, 211,
-		767 - 533, 188,
-		765 - 533, 173,
-		763 - 533, 163,
-		759 - 533, 151,
+		767 - 533, 411,
+		767 - 533, 191,
 		756 - 533, 144,
-		753 - 533, 144,
-		752 - 533, 148,
-		756 - 533, 161,
-		758 - 533, 173,
-		760 - 533, 187,
-		761 - 533, 209,
-		757 - 533, 231,
-		750 - 533, 252,
-		740 - 533, 270,
-		726 - 533, 289,
-		726 - 533, 313,
-		728 - 533, 316,
-		734 - 533, 317,
-		741 - 533, 318,
-		747 - 533, 322,
-		749 - 533, 327,
-		749 - 533, 399,
-		734 - 533, 399,
-		734 - 533, 388,
-		726 - 533, 393,
-		715 - 533, 400,
-		706 - 533, 406,
-		696 - 533, 412,
-		686 - 533, 417,
-		676 - 533, 422
+		753 - 533, 141,
+		752 - 533, 147,
+		761 - 533, 192,
+		758 - 533, 226,
+		748 - 533, 257,
+		736 - 533, 279,
+		727 - 533, 287,
+		727 - 533, 312,
+		733 - 533, 317,
+		744 - 533, 320,
+		750 - 533, 327,
+		749 - 533, 400,
+		733 - 533, 400,
+		732 - 533, 389,
+		675 - 533, 421,
+		675 - 533, 426,
+		737 - 533, 449,
+		742 - 533, 544,
+		645 - 533, 558,
+		569 - 533, 531,
+		574 - 533, 457,
+		620 - 533, 430
 	};
 
 	int GeneralSpritesheet2[14] = {
@@ -665,7 +687,7 @@ void ModuleSceneIntro::CreateChains() const {
 	f.maskBits = BALL;
 
 	//App->physics->CreateChain(0, 0, GeneralSpritesheet0, 14, b2_staticBody);
-	PhysBody* p = App->physics->CreateChain(0, 0, GeneralSpritesheet1, 150, b2_staticBody);
+	PhysBody* p = App->physics->CreateChain(0, 0, GeneralSpritesheet1, 110, b2_staticBody);
 	p->body->GetFixtureList()->SetFilterData(f);
 	p = App->physics->CreateChain(0, 0, GeneralSpritesheet2, 14, b2_staticBody);
 	p->body->GetFixtureList()->SetFilterData(f);
@@ -681,14 +703,13 @@ void ModuleSceneIntro::CreateChains() const {
 	p->body->GetFixtureList()->SetFilterData(f);
 	p = App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
 
-	PhysBody* trianglebody1;
-	PhysBody* trianglebody2;
-
 	//Setting... triangles(?)
 	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 14, b2_staticBody);
 	trianglebody2 = App->physics->CreateChain(0, 0, triangle2, 14, b2_staticBody);
-	trianglebody1->body->GetFixtureList()->SetRestitution(3.0f);
-	trianglebody2->body->GetFixtureList()->SetRestitution(3.0f);
+	trianglebody1->body->GetFixtureList()->SetRestitution(2.0f);
+	trianglebody2->body->GetFixtureList()->SetRestitution(2.0f);
+	trianglebody1->listener = this;
+	trianglebody2->listener = this;
 	trianglebody1->body->GetFixtureList()->SetFilterData(f);
 	trianglebody2->body->GetFixtureList()->SetFilterData(f);
 
@@ -740,4 +761,28 @@ void ModuleSceneIntro::BlitStaticPokemonsAndLife() {
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 55, 220, r);
 
+}
+
+bool ModuleSceneIntro::LoadScore() {
+
+	bool ret = true;
+
+	ifstream scorefile;
+	scorefile.open("score.txt");
+	scorefile >> points;
+	scorefile.close();
+
+	return ret;
+}
+
+bool ModuleSceneIntro::SaveScore() const {
+
+	bool ret = true;
+
+	ofstream scorefile2;
+	scorefile2.open("score.txt", std::ofstream::out | std::ofstream::trunc);
+	scorefile2 << points;
+	scorefile2.close();
+
+	return ret;
 }
