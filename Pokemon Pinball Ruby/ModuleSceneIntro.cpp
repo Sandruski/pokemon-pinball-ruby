@@ -25,6 +25,11 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	background.w = 257;
 	background.h = 425;
 
+	trianglesOnCollision.x = 273;
+	trianglesOnCollision.y = 329;
+	trianglesOnCollision.w = 23;
+	trianglesOnCollision.h = 34;
+
 	rBall.x = 470;
 	rBall.y = 252;
 	rBall.w = 12;
@@ -203,6 +208,23 @@ update_status ModuleSceneIntro::Update()
 
 	App->renderer->Blit(general, 0, 0, &background);
 
+	if (trianglesBlit1) {
+		timeTriangle1++;
+		App->renderer->Blit(general, 65, 331, &trianglesOnCollision);
+		if (timeTriangle1 > 30) {
+			timeTriangle1 = 0;
+			trianglesBlit1 = false;
+		}
+	}
+	if (trianglesBlit2) {
+		timeTriangle2++;
+		App->renderer->Blit(general, 152, 331, &trianglesOnCollision, 1.0f, (0.0), INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+		if (timeTriangle2 > 30) {
+			timeTriangle2 = 0;
+			trianglesBlit2 = false;
+		}
+	}
+
 	SensorsForBLit();
 
 	BlitStaticPokemonsAndLife();
@@ -216,7 +238,6 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-
 	// Hey! Destroy the ball
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
 	{
@@ -271,6 +292,18 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGET->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGET->body)
 	{
 		GET = true;
+	}
+
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody1->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody1->body)
+	{
+		trianglesBlit1 = true;	
+	}
+
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody2->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody2->body)
+	{
+		trianglesBlit2 = true;
 	}
 }
 
@@ -404,7 +437,7 @@ void ModuleSceneIntro::SetSensors() {
 
 }
 
-void ModuleSceneIntro::CreateChains() const {
+void ModuleSceneIntro::CreateChains() {
 
 	int triangle[14] = {
 		599 - 533, 337,
@@ -670,14 +703,13 @@ void ModuleSceneIntro::CreateChains() const {
 	p->body->GetFixtureList()->SetFilterData(f);
 	p = App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
 
-	PhysBody* trianglebody1;
-	PhysBody* trianglebody2;
-
 	//Setting... triangles(?)
 	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 14, b2_staticBody);
 	trianglebody2 = App->physics->CreateChain(0, 0, triangle2, 14, b2_staticBody);
 	trianglebody1->body->GetFixtureList()->SetRestitution(2.0f);
 	trianglebody2->body->GetFixtureList()->SetRestitution(2.0f);
+	trianglebody1->listener = this;
+	trianglebody2->listener = this;
 	trianglebody1->body->GetFixtureList()->SetFilterData(f);
 	trianglebody2->body->GetFixtureList()->SetFilterData(f);
 
