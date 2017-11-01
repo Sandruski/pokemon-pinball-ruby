@@ -9,6 +9,7 @@
 #include "ModulePhysics.h"
 #include "ModulePlayer.h"
 #include "ModuleFonts.h"
+#include "ModuleMenuScene.h"
 
 #include <fstream>
 #include <iostream>
@@ -288,6 +289,8 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		destroy_ball = true;
 		App->player->life--;
+		if (App->player->life == 0)
+			App->menu_scene->menuEnum = score_;
 	}
 
 	// Check sensors
@@ -953,8 +956,12 @@ void ModuleSceneIntro::BlitStaticPokemonsAndLife() {
 		App->renderer->Blit(general, 98, 330, &rBall);
 		App->renderer->Blit(general, 114, 330, &rBall);
 	}
-	else if (App->player->life == 1)
+	else if (App->player->life == 1) {
+		current_anim = &latiosSave;
+		r = &current_anim->GetCurrentFrame();
+		App->renderer->Blit(general, 101, 353, r);
 		App->renderer->Blit(general, 98, 330, &rBall);
+	}
 
 	current_anim = &pikachu;
 	r = &current_anim->GetCurrentFrame();
@@ -990,7 +997,7 @@ bool ModuleSceneIntro::LoadScore() {
 
 	ifstream scorefile;
 	scorefile.open("score.txt");
-	scorefile >> points;
+	scorefile >> highscore;
 	scorefile.close();
 
 	return ret;
@@ -1002,7 +1009,7 @@ bool ModuleSceneIntro::SaveScore() const {
 
 	ofstream scorefile2;
 	scorefile2.open("score.txt", std::ofstream::out | std::ofstream::trunc);
-	scorefile2 << points;
+	scorefile2 << highscore;
 	scorefile2.close();
 
 	return ret;

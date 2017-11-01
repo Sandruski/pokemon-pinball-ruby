@@ -34,7 +34,10 @@ public:
 	SDL_Texture* general;
 
 	bool destroy_ball;
-	int points;
+	int points, highscore;
+
+	int font_score;
+	char str1[15];
 
 	PhysBody* map_chain1;
 	PhysBody* map_chain2;
@@ -81,9 +84,6 @@ private:
 	b2Vec2 ballSpeed;
 	float time, timeEvo, timeEVo, timeEVO, timeTriangle1, timeTriangle2, timeCircle1, timeCircle2, timeCircle3, timeCircle4, timeCircle5, timeCircle6, timeCircle7;
 	bool checkTime, Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET, trianglesBlit1, trianglesBlit2, circle1, circle2, circle3, circle4, circle5, circle6, circle7;
-
-	int font_score;
-	char str1[15];
 
 public: 
 	void SensorsForBLit();

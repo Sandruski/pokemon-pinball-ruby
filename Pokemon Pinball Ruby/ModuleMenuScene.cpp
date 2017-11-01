@@ -8,6 +8,13 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
+#include "ModulePlayer.h"
+#include "ModuleFonts.h"
+
+#include <fstream>
+#include <iostream>
+
+using namespace std;
 
 ModuleMenuScene::ModuleMenuScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -20,6 +27,16 @@ ModuleMenuScene::ModuleMenuScene(Application* app, bool start_enabled) : Module(
 	subMenu.y = 132;
 	subMenu.w = 96;
 	subMenu.h = 83;
+
+	scoreMenu.x = 99;
+	scoreMenu.y = 1403;
+	scoreMenu .w = 208;
+	scoreMenu.h = 80;
+
+	scorePrint.x = 388;
+	scorePrint.y = 618;
+	scorePrint.w = 35;
+	scorePrint.h = 10;
 
 	mapSelector.x = 20;
 	mapSelector.y = 266;
@@ -139,6 +156,25 @@ update_status ModuleMenuScene::Update()
 		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
 			menuEnum = mapSelector_;
 			break;
+		}
+		break;
+
+	case score_:
+
+		App->renderer->Blit(App->scene_intro->general, 256/2 - 104, 280, &scoreMenu);
+		App->renderer->Blit(App->scene_intro->general, 256 / 2 - 60, 320, &scorePrint);
+		sprintf_s(App->scene_intro->str1, "%i", App->scene_intro->points);
+		App->fonts->BlitText(256/2, 330, App->scene_intro->font_score, App->scene_intro->str1);
+		sprintf_s(App->scene_intro->str1, "%i", App->scene_intro->highscore);
+		App->fonts->BlitText(256/2, 310, App->scene_intro->font_score, App->scene_intro->str1);
+
+		if (App->scene_intro->points > App->scene_intro->highscore) 
+			App->scene_intro->highscore = App->scene_intro->points;
+
+		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
+			App->player->life = 3;
+			App->scene_intro->points = 0;
+			menuEnum = menu_;
 		}
 		break;
 	}

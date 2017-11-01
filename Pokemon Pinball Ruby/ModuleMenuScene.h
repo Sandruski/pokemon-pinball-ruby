@@ -13,6 +13,7 @@ enum menuStates {
 	menu_,
 	subMenu_,
 	mapSelector_,
+	score_,
 };
 
 class ModuleMenuScene : public Module
@@ -28,10 +29,10 @@ public:
 	menuStates menuEnum;
 
 private:
-	SDL_Texture* menu;
+	SDL_Texture* menu; 
 	SDL_Rect* r;
 
-	SDL_Rect menuBg, subMenu, mapSelector;
+	SDL_Rect menuBg, subMenu, mapSelector, scoreMenu, scorePrint;
 	Animation* current_animation;
 	Animation pressStart, flipper, mapSelection;
 	int positionFlipper1, positionFlipper2;
