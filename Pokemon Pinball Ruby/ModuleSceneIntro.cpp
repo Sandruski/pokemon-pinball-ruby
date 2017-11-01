@@ -30,6 +30,16 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	trianglesOnCollision.w = 23;
 	trianglesOnCollision.h = 34;
 
+	rCircle1.x = 412;
+	rCircle1.y = 253;
+	rCircle1.w = 10;
+	rCircle1.h = 10;
+
+	rCircle2.x = 460;
+	rCircle2.y = 254;
+	rCircle2.w = 8;
+	rCircle2.h = 8;
+
 	rBall.x = 470;
 	rBall.y = 252;
 	rBall.w = 12;
@@ -79,6 +89,22 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	rGET.y = 248;
 	rGET.w = 14;
 	rGET.h = 19;
+
+	hatch.PushBack({ 273, 283, 30, 33 });
+	hatch.PushBack({ 0, 0, 0, 0 });
+	hatch.speed = 0.075f;
+
+	bumper.PushBack({ 0, 0, 0, 0 });
+	bumper.PushBack({ 305, 283, 31, 33 });
+	bumper.speed = 0.075f;
+
+	catchvar.PushBack({ 0, 0, 0, 0 });
+	catchvar.PushBack({ 391, 284, 30, 33 });
+	catchvar.speed = 0.075f;
+
+	hart.PushBack({ 338, 284, 24, 32 });
+	hart.PushBack({ 0, 0, 0, 0 });
+	hart.speed = 0.075f;
 
 	latiosSave.PushBack({ 484, 245, 43, 25 });
 	latiosSave.PushBack({ 0, 0, 0, 0 });
@@ -225,6 +251,25 @@ update_status ModuleSceneIntro::Update()
 		}
 	}
 
+	current_anim = &hatch;
+	r = &current_anim->GetCurrentFrame();
+	App->renderer->Blit(general, 87, 198, r);
+
+
+	current_anim = &catchvar;
+	r = &current_anim->GetCurrentFrame();
+	App->renderer->Blit(general, 154, 249, r);
+
+
+	current_anim = &hart;
+	r = &current_anim->GetCurrentFrame();
+	App->renderer->Blit(general, 144, 222, r);
+
+
+	current_anim = &bumper;
+	r = &current_anim->GetCurrentFrame();
+	App->renderer->Blit(general, 120, 194, r);
+
 	SensorsForBLit();
 
 	BlitStaticPokemonsAndLife();
@@ -242,6 +287,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensor->body)
 	{
 		destroy_ball = true;
+		App->player->life--;
 	}
 
 	// Check sensors
@@ -311,11 +357,53 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		points += 5;
 	}
 
-
 	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody2->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody2->body)
 	{
 		trianglesBlit2 = true;
 		points += 5;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorCircle1->body || bodyA->body == App->player->ball->body && bodyB->body == sensorCircle1->body)
+	{
+		circle1 = true;
+		points += 2;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorCircle2->body || bodyA->body == App->player->ball->body && bodyB->body == sensorCircle2->body)
+	{
+		circle2 = true;
+		points += 2;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorCircle3->body || bodyA->body == App->player->ball->body && bodyB->body == sensorCircle3->body)
+	{
+		circle3 = true;
+		points += 2;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorCircle4->body || bodyA->body == App->player->ball->body && bodyB->body == sensorCircle4->body)
+	{
+		circle4 = true;
+		points += 2;
+
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorCircle5->body || bodyA->body == App->player->ball->body && bodyB->body == sensorCircle5->body)
+	{
+		circle5 = true;
+		points += 2;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorCircle6->body || bodyA->body == App->player->ball->body && bodyB->body == sensorCircle6->body)
+	{
+		circle6 = true;
+		points += 2;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorCircle7->body || bodyA->body == App->player->ball->body && bodyB->body == sensorCircle7->body)
+	{
+		circle7 = true;
+		points += 2;
 	}
 }
 
@@ -402,6 +490,69 @@ void ModuleSceneIntro::SensorsForBLit() {
 		}
 	}
 
+	if (circle1 && timeCircle1 < 45) {
+		App->renderer->Blit(general, 155, 97, &rCircle2);
+		timeCircle1++;
+		if (timeCircle1 >= 45) {
+			timeCircle1 = 0;
+			circle1 = false;
+		}
+	}
+
+	if (circle2 && timeCircle2 < 45) {
+		App->renderer->Blit(general, 134, 97, &rCircle2);
+		timeCircle2++;
+		if (timeCircle2 >= 45) {
+			timeCircle2 = 0;
+			circle2 = false;
+		}
+	}
+
+	if (circle3 && timeCircle3 < 45) {
+		App->renderer->Blit(general, 113, 97, &rCircle2);
+		timeCircle3++;
+		if (timeCircle3 >= 45) {
+			timeCircle3 = 0;
+			circle3 = false;
+		}
+	}
+
+	if (circle4 && timeCircle4 < 45) {
+		App->renderer->Blit(general, 28, 335, &rCircle1);
+		timeCircle4++;
+		if (timeCircle4 >= 45) {
+			timeCircle4 = 0;
+			circle4 = false;
+		}
+	}
+
+	if (circle5 && timeCircle5 < 45) {
+		App->renderer->Blit(general, 52, 335, &rCircle1);
+		timeCircle5++;
+		if (timeCircle5 >= 45) {
+			timeCircle5 = 0;
+			circle5 = false;
+		}
+	}
+
+	if (circle6 && timeCircle6 < 45) {
+		App->renderer->Blit(general, 178, 335, &rCircle1);
+		timeCircle6++;
+		if (timeCircle6 >= 45) {
+			timeCircle6 = 0;
+			circle6 = false;
+		}
+	}
+
+	if (circle7 && timeCircle7 < 45) {
+		App->renderer->Blit(general, 202, 335, &rCircle1);
+		timeCircle7++;
+		if (timeCircle7 >= 45) {
+			timeCircle7 = 0;
+			circle7 = false;
+		}
+	}
+
 }
 
 void ModuleSceneIntro::SetSensors() {
@@ -422,6 +573,13 @@ void ModuleSceneIntro::SetSensors() {
 	sensorGet = App->physics->CreateRectangleSensor(200, 260, 4, 4);
 	sensorGEt = App->physics->CreateRectangleSensor(190, 275, 4, 4);
 	sensorGET = App->physics->CreateRectangleSensor(181, 291, 4, 4);
+	sensorCircle1 = App->physics->CreateRectangleSensor(159, 101, 3, 3);
+	sensorCircle2 = App->physics->CreateRectangleSensor(138, 101, 4, 4);
+	sensorCircle3 = App->physics->CreateRectangleSensor(117, 101, 4, 4);
+	sensorCircle4 = App->physics->CreateRectangleSensor(33, 340, 4, 4);
+	sensorCircle5 = App->physics->CreateRectangleSensor(57, 340, 4, 4);
+	sensorCircle6 = App->physics->CreateRectangleSensor(183, 340, 4, 4);
+	sensorCircle7 = App->physics->CreateRectangleSensor(207, 340, 4, 4);
 
 	sensor->listener = this;
 	sensorPikachu->listener = this;
@@ -434,6 +592,13 @@ void ModuleSceneIntro::SetSensors() {
 	sensorGet->listener = this;
 	sensorGEt->listener = this;
 	sensorGET->listener = this;
+	sensorCircle1->listener = this;
+	sensorCircle2->listener = this;
+	sensorCircle3->listener = this;
+	sensorCircle4->listener = this;
+	sensorCircle5->listener = this;
+	sensorCircle6->listener = this;
+	sensorCircle7->listener = this;
 
 	sensor->body->GetFixtureList()->SetFilterData(f);
 	sensorPikachu->body->GetFixtureList()->SetFilterData(f);
@@ -446,7 +611,13 @@ void ModuleSceneIntro::SetSensors() {
 	sensorGet->body->GetFixtureList()->SetFilterData(f);
 	sensorGEt->body->GetFixtureList()->SetFilterData(f);
 	sensorGET->body->GetFixtureList()->SetFilterData(f);
-
+	sensorCircle1->body->GetFixtureList()->SetFilterData(f);
+	sensorCircle2->body->GetFixtureList()->SetFilterData(f);
+	sensorCircle3->body->GetFixtureList()->SetFilterData(f);
+	sensorCircle4->body->GetFixtureList()->SetFilterData(f);
+	sensorCircle5->body->GetFixtureList()->SetFilterData(f);
+	sensorCircle6->body->GetFixtureList()->SetFilterData(f);
+	sensorCircle7->body->GetFixtureList()->SetFilterData(f);
 }
 
 void ModuleSceneIntro::CreateChains() {
@@ -743,7 +914,7 @@ void ModuleSceneIntro::BlitStaticPokemonsAndLife() {
 		App->renderer->Blit(general, 98, 330, &rBall);
 		App->renderer->Blit(general, 114, 330, &rBall);
 	}
-	else
+	else if (App->player->life == 1)
 		App->renderer->Blit(general, 98, 330, &rBall);
 
 	current_anim = &pikachu;
