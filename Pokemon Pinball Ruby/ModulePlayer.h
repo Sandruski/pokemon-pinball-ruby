@@ -177,35 +177,51 @@ private:
 	Animation spit_shark;
 	PhysBody* shark;
 	Animation* current_shark;
-	float go_back_x;
-	float go_back_y;
-	bool first;
+	bool shark_hit;
+	float go_back1_x;
+	float go_back1_y;
+	bool first_shark;
 
 	//Cave (+ egg, + pokémon)
 	Animation idle_cave;
-	Animation to_red_cave;
 	Animation red_cave;
 	Animation to_idle_cave;
+	Animation jump_cave;
+	Animation wait_cave;
 
 	Animation idle_egg;
-	Animation jump_egg;
-	Animation break_egg;
+	Animation jump1_egg;
+	Animation jump2_egg;
+	Animation break_egg1;
+	Animation break_egg2;
 
 	Animation idle_pokemon_cave;
-	Animation enter_pokemon_cave;
+	Animation go_back_pokemon_cave;
 	Animation in_pokemon_cave;
+	Animation disappear_pokemon_cave;
+	Animation almost_in_pokemon_cave;
 
 	Animation* current_cave;
 	Animation* current_pokemon_cave;
 	Animation* current_egg;
 
 	PhysBody* pokemon_cave;
+	PhysBody* pokemon_cave1;
 	PhysBody* cave;
+	bool destroy_pokemon_cave;
+	bool destroy_pokemon_cave1;
+	bool pokemon_cave_hit;
+	bool pokemon_cave1_hit;
+	bool go_forward;
+	float go_back2_x;
+	float go_back2_y;
+	float go_back3_y;
+	bool blit_pokemon_over_cave;
+	bool blit_egg;
+	bool blit_pokemon_cave;
 
 	int num_cave_hits = 0;
 	bool cave_hit;
-	bool pokemon_cave_hit;
-	bool shark_hit;
 
 private:
 	void CreateBall(float diameter, int x, int y);

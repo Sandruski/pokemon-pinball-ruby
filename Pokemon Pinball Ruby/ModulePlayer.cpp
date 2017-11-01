@@ -72,24 +72,32 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	idle_cave.speed = 0.1f;
 	idle_cave.loop = false;
 
-	to_red_cave.PushBack({ 227, 867, 41, 44 });
-	to_red_cave.PushBack({ 270, 867, 47, 44 });
-	to_red_cave.PushBack({ 319, 867, 41, 44 });
-	to_red_cave.PushBack({ 362, 867, 41, 44 });
-	to_red_cave.speed = 0.1f;
-	to_red_cave.loop = false;
+	wait_cave.PushBack({ 184, 867, 41, 44 });
+	wait_cave.PushBack({ 184, 867, 41, 44 });
+	wait_cave.PushBack({ 184, 867, 41, 44 });
+	wait_cave.PushBack({ 184, 867, 41, 44 });
+	wait_cave.speed = 0.06f;
+	wait_cave.loop = false;
 
+	jump_cave.PushBack({ 227, 867, 41, 44 });
+	jump_cave.PushBack({ 270, 867, 41, 44 });
+	jump_cave.PushBack({ 184, 867, 41, 44 });
+	jump_cave.speed = 0.1f;
+	jump_cave.loop = false;
+
+	red_cave.PushBack({ 184, 867, 41, 44 });
+	red_cave.PushBack({ 319, 867, 41, 44 });
+	red_cave.PushBack({ 362, 867, 41, 44 });
 	red_cave.PushBack({ 405, 867, 41, 44 });
 	red_cave.PushBack({ 362, 867, 41, 44 });
 	red_cave.PushBack({ 319, 867, 41, 44 });
-	red_cave.PushBack({ 270, 867, 47, 44 });
-	red_cave.PushBack({ 184, 867, 41, 44 });
-	red_cave.speed = 0.1f;
+	red_cave.speed = 0.08f;
 
 	to_idle_cave.PushBack({ 362, 867, 41, 44 });
 	to_idle_cave.PushBack({ 319, 867, 41, 44 });
 	to_idle_cave.PushBack({ 270, 867, 47, 44 });
 	to_idle_cave.PushBack({ 227, 867, 41, 44 });
+	to_idle_cave.PushBack({ 184, 867, 41, 44 });
 	to_idle_cave.speed = 0.1f;
 	to_idle_cave.loop = false;
 
@@ -98,26 +106,62 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	idle_egg.speed = 0.1f;
 	idle_egg.loop = false;
 
-	jump_egg.PushBack({ 327, 1438, 16, 23 });
-	jump_egg.PushBack({ 327, 1438, 16, 27 });
-	jump_egg.PushBack({ 327, 1438, 16, 31 });
-	jump_egg.PushBack({ 327, 1438, 16, 35 });
+	jump1_egg.PushBack({ 327, 1438, 16, 23 });
+	jump1_egg.PushBack({ 327, 1438, 16, 27 });
+	jump1_egg.PushBack({ 327, 1438, 16, 31 });
+	jump1_egg.PushBack({ 327, 1438, 16, 35 });
+	jump1_egg.speed = 0.1f;
+	jump1_egg.loop = false;
 
-	jump_egg.PushBack({ 327, 1438, 16, 31 });
-	jump_egg.PushBack({ 327, 1438, 16, 27 });
-	jump_egg.PushBack({ 327, 1438, 16, 23 });
-	jump_egg.PushBack({ 327, 1438, 16, 19 });
-	jump_egg.speed = 0.1f;
-	jump_egg.loop = false;
+	jump2_egg.PushBack({ 327, 1438, 16, 31 });
+	jump2_egg.PushBack({ 327, 1438, 16, 27 });
+	jump2_egg.PushBack({ 327, 1438, 16, 23 });
+	jump2_egg.PushBack({ 327, 1438, 16, 19 });
+	jump2_egg.speed = 0.1f;
+	jump2_egg.loop = false;
 
-	break_egg.PushBack({ 345, 1438, 16, 19 });
-	break_egg.PushBack({ 363, 1438, 16, 19 });
-	break_egg.PushBack({ 381, 1438, 16, 19 });
-	break_egg.PushBack({ 399, 1438, 18, 19 });
-	break_egg.PushBack({ 419, 1438, 45, 19 });
-	break_egg.PushBack({ 466, 1438, 19, 19 });
-	break_egg.speed = 0.1f;
-	break_egg.loop = false;
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 345, 1438, 16, 19 });
+	break_egg1.PushBack({ 363, 1438, 16, 19 });
+	break_egg1.PushBack({ 345, 1438, 16, 19 });
+	break_egg1.PushBack({ 363, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg1.PushBack({ 327, 1438, 16, 19 });
+	break_egg2.PushBack({ 345, 1438, 16, 19 });
+	break_egg2.PushBack({ 363, 1438, 16, 19 });
+	break_egg2.PushBack({ 345, 1438, 16, 19 });
+	break_egg2.PushBack({ 363, 1438, 16, 19 });
+	break_egg1.speed = 0.1f;
+	break_egg1.loop = false;
+
+	break_egg2.PushBack({ 327, 1438, 16, 19 });
+	break_egg2.PushBack({ 327, 1438, 16, 19 });
+	break_egg2.PushBack({ 327, 1438, 16, 19 });
+	break_egg2.PushBack({ 327, 1438, 16, 19 });
+	break_egg2.PushBack({ 381, 1438, 16, 19 });
+	break_egg2.PushBack({ 381, 1438, 16, 19 });
+	break_egg2.PushBack({ 399, 1438, 18, 19 });
+	break_egg2.PushBack({ 399, 1438, 18, 19 });
+	break_egg2.PushBack({ 399, 1438, 18, 19 });
+	break_egg2.PushBack({ 399, 1438, 18, 19 });
+	break_egg2.PushBack({ 419, 1438, 45, 19 });
+	break_egg2.PushBack({ 419, 1438, 45, 19 });
+	break_egg2.PushBack({ 419, 1438, 45, 19 });
+	break_egg2.PushBack({ 419, 1438, 45, 19 });
+	break_egg2.PushBack({ 419, 1438, 45, 19 });
+	break_egg2.PushBack({ 466, 1438, 19, 19 });
+	break_egg2.PushBack({ 466, 1438, 19, 19 });
+	break_egg2.PushBack({ 466, 1438, 19, 19 });
+	break_egg2.PushBack({ 466, 1438, 19, 19 });
+	break_egg2.speed = 0.1f;
+	break_egg2.loop = false;
 
 	//Pokemon cave
 	idle_pokemon_cave.PushBack({ 36, 873, 30, 38 });
@@ -126,14 +170,34 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	idle_pokemon_cave.PushBack({ 132, 873, 30, 38 });
 	idle_pokemon_cave.speed = 0.1f;
 
-	enter_pokemon_cave.PushBack({ 164, 892, 18, 19 });
-	enter_pokemon_cave.PushBack({ 164, 890, 18, 21 });
-	enter_pokemon_cave.PushBack({ 164, 888, 18, 23 });
-	enter_pokemon_cave.PushBack({ 164, 886, 18, 25 });
-	enter_pokemon_cave.speed = 0.1f;
-	enter_pokemon_cave.loop = false;
+	go_back_pokemon_cave.PushBack({ 36, 873, 30, 38 });
+	go_back_pokemon_cave.PushBack({ 68, 873, 30, 38 });
+	go_back_pokemon_cave.PushBack({ 100, 873, 30, 38 });
+	go_back_pokemon_cave.PushBack({ 132, 873, 30, 38 });
+	go_back_pokemon_cave.PushBack({ 36, 873, 30, 38 });
+	go_back_pokemon_cave.PushBack({ 68, 873, 30, 38 });
+	go_back_pokemon_cave.PushBack({ 100, 873, 30, 38 });
+	go_back_pokemon_cave.PushBack({ 132, 873, 30, 38 });
+	go_back_pokemon_cave.speed = 0.1f;
+	go_back_pokemon_cave.loop = false;
 
-	in_pokemon_cave.PushBack({ 164, 892, 18, 19 });
+	almost_in_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	almost_in_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	almost_in_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	almost_in_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	almost_in_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	almost_in_pokemon_cave.speed = 0.05f;
+	almost_in_pokemon_cave.loop = false;
+
+	disappear_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	disappear_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	disappear_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	disappear_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	disappear_pokemon_cave.PushBack({ 164, 873, 18, 38 });
+	disappear_pokemon_cave.speed = 0.05f;
+	disappear_pokemon_cave.loop = false;
+
+	in_pokemon_cave.PushBack({ 164, 873, 18, 38 });
 	in_pokemon_cave.speed = 0.1f;
 	in_pokemon_cave.loop = false;
 }
@@ -168,11 +232,22 @@ bool ModulePlayer::Start()
 	life = 3;
 	points = 0;
 	num_cave_hits = 0;
+	cave_hit = false;
 	blit_ball = true;
 
-	go_back_x = 0;
-	go_back_y = 0;
-	first = true;
+	go_back1_x = 0;
+	go_back1_y = 0;
+	go_back2_x = 0;
+	go_back2_y = 0;
+	first_shark = true;
+	destroy_pokemon_cave = false;
+	destroy_pokemon_cave1 = false;
+	pokemon_cave_hit = false;
+	pokemon_cave1_hit = false;
+	go_forward = false;
+	blit_pokemon_over_cave = true;
+	blit_egg = true;
+	blit_pokemon_cave = true;
 
 	// Create flippers
 	b2Vec2 flipper_vertices[8];
@@ -270,7 +345,7 @@ bool ModulePlayer::Start()
 	current_shark = &idle_shark;
 
 	// Create cave
-	cave = App->physics->CreateRectangleSensor(90, 140, 30, 30);
+	cave = App->physics->CreateRectangleSensor(90, 135, 30, 20);
 	//ball->body->GetFixtureList()->SetDensity(0.7f);
 
 	cave->listener = this;
@@ -284,14 +359,20 @@ bool ModulePlayer::Start()
 	// Create pokémon that lives in the cave
 	diameter = 22.0f;
 	pokemon_cave = App->physics->CreateCircle(92, 180, diameter, b2_staticBody);
-	pokemon_cave->body->GetFixtureList()->SetSensor(true);
+	diameter = 26.0f;
+	pokemon_cave1 = App->physics->CreateCircle(90, 150, diameter, b2_staticBody);
+	pokemon_cave->body->GetFixtureList()->SetRestitution(2.0f);
+	pokemon_cave1->body->GetFixtureList()->SetRestitution(2.0f);
+	//pokemon_cave->body->GetFixtureList()->SetSensor(true);
 	//ball->body->GetFixtureList()->SetDensity(0.7f);
 
 	pokemon_cave->listener = this;
+	pokemon_cave1->listener = this;
 
-	f.categoryBits = NEUTRAL;
+	f.categoryBits = FLIPPER;
 	f.maskBits = BALL;
-	cave->body->GetFixtureList()->SetFilterData(f);
+	pokemon_cave->body->GetFixtureList()->SetFilterData(f);
+	pokemon_cave1->body->GetFixtureList()->SetFilterData(f);
 
 	current_pokemon_cave = &idle_pokemon_cave;
 
@@ -486,30 +567,29 @@ update_status ModulePlayer::Update()
 	//
 
 	if (shark_hit) {
-
 		//The shark goes back and spits out the ball
 		blit_ball = false;
 		ball->body->SetLinearVelocity({ 0,0 });
 		ball->body->SetGravityScale(0);
 
-		if (first)
+		if (first_shark)
 			current_shark = &eat_shark;
 
 		if (eat_shark.Finished()) {
-			first = false;
+			first_shark = false;
 			current_shark = &go_back_shark;
 
-			go_back_x += 0.1f;
-			go_back_y -= 0.2f;
+			go_back1_x += 0.1f;
+			go_back1_y -= 0.2f;
 		}
 		if (go_back_shark.Finished()) {
 			eat_shark.Reset();
 			current_shark = &spit_shark;
 
-			if (go_back_x != 0)
-				go_back_x -= 0.2f;
-			if (go_back_y != 0)
-				go_back_y += 0.4f;
+			if (go_back1_x != 0)
+				go_back1_x -= 0.2f;
+			if (go_back1_y != 0)
+				go_back1_y += 0.4f;
 		}
 		if (spit_shark.Finished()) {
 			go_back_shark.Reset();
@@ -521,49 +601,189 @@ update_status ModulePlayer::Update()
 
 			spit_shark.Reset();
 			shark_hit = false;
-			first = true;
+			first_shark = true;
 		}
 	}
 
 	if (!shark_hit) {
-		if (go_back_x <= 0)
-			go_back_x += 0.1f;
-		if (go_back_y >= 0)
-			go_back_y -= 0.1f;
+		if (go_back1_x <= 0)
+			go_back1_x += 0.1f;
+		if (go_back1_y >= 0)
+			go_back1_y -= 0.1f;
+	}
+
+	if (destroy_pokemon_cave) {
+		if (pokemon_cave != nullptr)
+			App->physics->world->DestroyBody(pokemon_cave->body);
+		pokemon_cave = nullptr;
+		destroy_pokemon_cave = false;
+	}
+	if (destroy_pokemon_cave1) {
+		if (pokemon_cave1 != nullptr)
+			App->physics->world->DestroyBody(pokemon_cave1->body);
+		pokemon_cave1 = nullptr;
+		destroy_pokemon_cave1 = false;
 	}
 
 	if (pokemon_cave_hit) {
-		//Pokémon goes inside the cave
+		//Pokémon goes back
+		current_pokemon_cave = &go_back_pokemon_cave;
+
+		go_back2_x -= 0.02f;
+		go_back2_y -= 0.3f;
+	}
+	if (go_back_pokemon_cave.Finished()) {
+		go_back_pokemon_cave.Reset();
+		destroy_pokemon_cave = true;
 		pokemon_cave_hit = false;
 	}
-	if (num_cave_hits == 1 && cave_hit) {
+	//
+	if (pokemon_cave1_hit) {
+		//Pokémon goes inside the cave
+		current_pokemon_cave = &almost_in_pokemon_cave;
+
+		if (jump_cave.Finished())
+			current_cave = &idle_cave;
+		else
+			current_cave = &jump_cave;
+
+		if (jump2_egg.Finished())
+			current_egg = &idle_egg;
+		else {
+			if (jump1_egg.Finished()) {
+				current_egg = &jump2_egg;
+				go_back3_y += 0.3f;
+			}
+			else {
+				current_egg = &jump1_egg;
+				go_back3_y -= 0.3f;
+			}
+		}
+
+		blit_pokemon_over_cave = false;
+
+		if (!go_forward) {
+			go_back2_x += 10.0f;
+			go_back2_y -= 16.0f;
+			go_forward = true;
+		}
+		else {
+			//go_back2_x += 0.01f;
+			go_back2_y += 0.08f;
+		}
+	}
+	if (almost_in_pokemon_cave.Finished()) {
+		destroy_pokemon_cave1 = true;
+		go_forward = false;
+		pokemon_cave1_hit = false;
+		current_pokemon_cave = &in_pokemon_cave;
+		current_cave = &red_cave;
+
+		almost_in_pokemon_cave.Reset();
+		jump_cave.Reset();
+		jump1_egg.Reset();
+		jump2_egg.Reset();
+		//almost_in_pokemon_cave.Reset();
+	}
+	//
+	if ((num_cave_hits == 1  || num_cave_hits == 2) && cave_hit) {
 		//The egg breaks and the player recieves some points
+		current_cave = &to_idle_cave;
+		current_pokemon_cave = &disappear_pokemon_cave;
+		go_back2_y -= 0.3f;
+
+		blit_ball = false;
+		ball->body->SetLinearVelocity({ 0,0 });
+		ball->body->SetGravityScale(0);
+
+		if (jump2_egg.Finished())
+			current_egg = &idle_egg;
+		else {
+			if (jump1_egg.Finished()) {
+				current_egg = &jump2_egg;
+				go_back3_y += 0.3f;
+			}
+			else {
+				current_egg = &jump1_egg;
+				go_back3_y -= 0.3f;
+			}
+		}
+	}
+	if (disappear_pokemon_cave.Finished()) {
+		current_cave = &idle_cave;
+		current_egg = &break_egg1;
+		blit_pokemon_cave = false;
+
+		to_idle_cave.Reset();
+		disappear_pokemon_cave.Reset();
+		jump1_egg.Reset();
+		jump2_egg.Reset();
 		cave_hit = false;
 	}
-	if (num_cave_hits >= 2 && cave_hit) {
+	if (break_egg1.Finished()) {
+		current_egg = &break_egg2;
+	}
+	if (break_egg2.Finished()) {
+		current_egg = &idle_egg;
+		break_egg2.Reset();
+		break_egg1.Reset();
+		blit_egg = false;
+
+		ball->body->SetGravityScale(1);
+		ball->body->ApplyForceToCenter({ 10, 10 }, true);
+		blit_ball = true;
+	}
+	//
+	if (num_cave_hits > 2 && cave_hit) {
 		//The cave acts like the shark
+		current_cave = &wait_cave;
+
+		blit_ball = false;
+		ball->body->SetLinearVelocity({ 0,0 });
+		ball->body->SetGravityScale(0);
+	}
+	if (wait_cave.Finished()) {
+		wait_cave.Reset();
+
+		ball->body->SetGravityScale(1);
+		ball->body->ApplyForceToCenter({ 10, 10 }, true);
+		blit_ball = true;
 		cave_hit = false;
 	}
 
 	// Blit shark
 	r_shark = &current_shark->GetCurrentFrame();
 	b2Vec2 pos_shark = shark->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18 + go_back_x, METERS_TO_PIXELS(pos_shark.y) - 34 + go_back_y, r_shark);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18 + go_back1_x, METERS_TO_PIXELS(pos_shark.y) - 34 + go_back1_y, r_shark);
 	//
 
-	// Blit cave
+	// Blit cave	// Blit pokemon cave
 	r_cave = &current_cave->GetCurrentFrame();
+	r_pokemon_cave = &current_pokemon_cave->GetCurrentFrame();
 	b2Vec2 pos_cave = cave->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 22, METERS_TO_PIXELS(pos_cave.y) - 36, r_cave);
+
+
+	if (blit_pokemon_over_cave) {
+		App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 22, METERS_TO_PIXELS(pos_cave.y) - 36 + 5, r_cave);
+		if (blit_pokemon_cave)
+			App->renderer->Blit(App->scene_intro->general, 91 - 17 - 2 + go_back2_x, 180 - 15 - 15 + go_back2_y, r_pokemon_cave);
+	}
+	else {
+		if (blit_pokemon_cave)
+			App->renderer->Blit(App->scene_intro->general, 91 - 17 - 2 + go_back2_x, 180 - 15 - 15 + go_back2_y, r_pokemon_cave);
+		App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 22, METERS_TO_PIXELS(pos_cave.y) - 36 + 5, r_cave);
+	}
 
 	// Blit egg
 	r_egg = &current_egg->GetCurrentFrame();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10, METERS_TO_PIXELS(pos_cave.y) - 41, r_egg);
-
-	// Blit pokemon cave
-	r_pokemon_cave = &current_pokemon_cave->GetCurrentFrame();
-	b2Vec2 pos_pokemon_cave = pokemon_cave->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_pokemon_cave.x) - 17 - 2, METERS_TO_PIXELS(pos_pokemon_cave.y) - 15 - 15, r_pokemon_cave);
+	if (blit_egg) {
+		if (r_egg->x == 419)
+			App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10 - 14, METERS_TO_PIXELS(pos_cave.y) - 41 + 5 + go_back3_y, r_egg);
+		else if (r_egg->x == 399)
+			App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10 - 1, METERS_TO_PIXELS(pos_cave.y) - 41 + 5 + go_back3_y, r_egg);
+		else
+			App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10, METERS_TO_PIXELS(pos_cave.y) - 41 + 5 + go_back3_y, r_egg);
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -744,13 +964,20 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 
 	// Cave
-	if (bodyB->body == App->player->ball->body && bodyA->body == pokemon_cave->body || bodyA->body == App->player->ball->body && bodyB->body == pokemon_cave->body) {
+	if (bodyB->body == App->player->ball->body && bodyA->body == cave->body || bodyA->body == App->player->ball->body && bodyB->body == cave->body) {
 		num_cave_hits++;
 		cave_hit = true;
 	}
 	// Pokémon cave
-	if (bodyB->body == App->player->ball->body && bodyA->body == cave->body || bodyA->body == App->player->ball->body && bodyB->body == cave->body) {
-		pokemon_cave_hit = true;
+	if (pokemon_cave != nullptr) {
+		if (bodyB->body == App->player->ball->body && bodyA->body == pokemon_cave->body || bodyA->body == App->player->ball->body && bodyB->body == pokemon_cave->body) {
+			pokemon_cave_hit = true;
+		}
+	}
+	if (pokemon_cave1 != nullptr) {
+		if (bodyB->body == App->player->ball->body && bodyA->body == pokemon_cave1->body || bodyA->body == App->player->ball->body && bodyB->body == pokemon_cave1->body) {
+			pokemon_cave1_hit = true;
+		}
 	}
 	// Shark
 	if (bodyB->body == App->player->ball->body && bodyA->body == shark->body || bodyA->body == App->player->ball->body && bodyB->body == shark->body) {
