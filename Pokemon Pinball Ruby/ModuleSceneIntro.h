@@ -34,6 +34,7 @@ public:
 	SDL_Texture* general;
 
 	bool destroy_ball;
+	int points;
 
 private:
 
@@ -62,7 +63,6 @@ private:
 
 	int font_score;
 	char str1[15];
-	int points;
 
 public: 
 	void SensorsForBLit();

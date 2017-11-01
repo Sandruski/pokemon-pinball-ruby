@@ -248,62 +248,74 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
 	{
 		checkTime = true;
+		points += 2;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEvo->body)
 	{
 		Evo = true;
+		points += 2;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVo->body)
 	{
 		EVo = true;
+		points += 2;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEVO->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEVO->body)
 	{
 		EVO = true;
+		points += 2;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLs10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLs10->body)
 	{
 		Ls10 = true;
+		points += 2;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10->body)
 	{
 		LS10 = true;
+		points += 2;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLS10T->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLS10T->body)
 	{
 		LS10T = true;
+		points += 2;
 	}
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGet->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGet->body)
 	{
 		Get = true;
+		points += 2;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGEt->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGEt->body)
 	{
 		GEt = true;
+		points += 2;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGET->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGET->body)
 	{
 		GET = true;
+		points += 2;
 	}
 
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody1->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody1->body)
 	{
 		trianglesBlit1 = true;	
+		points += 5;
 	}
 
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody2->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody2->body)
 	{
 		trianglesBlit2 = true;
+		points += 5;
 	}
 }
 
@@ -712,7 +724,6 @@ void ModuleSceneIntro::CreateChains() {
 	trianglebody2->listener = this;
 	trianglebody1->body->GetFixtureList()->SetFilterData(f);
 	trianglebody2->body->GetFixtureList()->SetFilterData(f);
-
 }
 
 void ModuleSceneIntro::BlitStaticPokemonsAndLife() {

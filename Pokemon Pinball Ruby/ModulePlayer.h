@@ -236,6 +236,5 @@ private:
 public:
 	PhysBody* ball;
 	int life;
-	int points;
 
 };

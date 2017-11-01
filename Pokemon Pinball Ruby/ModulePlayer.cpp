@@ -228,9 +228,8 @@ bool ModulePlayer::Start()
 	// Ball (player) general parameters
 	start_ball.x = 242;
 	start_ball.y = 355;
-	ball_diameter = 13.0f;
+	ball_diameter = 15.0f;
 	life = 3;
-	points = 0;
 	num_cave_hits = 0;
 	cave_hit = false;
 	blit_ball = true;
@@ -420,9 +419,9 @@ update_status ModulePlayer::Update()
 	if (App->menu_scene->menuEnum == null_) { //player can do things
 		// Update Flippers
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-			flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.06f, true);
+			flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-			flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.06f, true);
+			flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
 
 		// Create ball
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && post_start > 0)
@@ -446,7 +445,7 @@ update_status ModulePlayer::Update()
 				current_spring = &start_spring;
 			//
 
-			if (impulse.y < 10.0f)
+			if (impulse.y < 15.0f)
 				impulse.y += 0.5f;
 
 			springDistanceJoint->GetBodyA()->ApplyForce(impulse, { 0, 0 }, true);
@@ -461,7 +460,7 @@ update_status ModulePlayer::Update()
 			grey_spring.Reset();
 			//
 
-			impulse.y += 60.0f; //minimum impulse
+			impulse.y += 70.0f; //minimum impulse
 			springDistanceJoint->GetBodyA()->ApplyForce(-impulse, { 0, 0 }, true);
 			impulse = { 0,0 };
 		}
@@ -822,7 +821,7 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 	if (angle < 0)
 		direction = -1;
 
-	if (points < 500) {
+	if (App->scene_intro->points < 500) {
 		if (direction * fmodf(angle, 360) > 348.75f || direction * fmodf(angle, 360) <= 11.25f) { sprite = &pb1; }
 		else if (direction * fmodf(angle, 360) > 11.25f && direction * fmodf(angle, 360) <= 33.75f) { sprite = &pb2; }
 		else if (direction * fmodf(angle, 360) > 33.75f && direction * fmodf(angle, 360) <= 56.25f) { sprite = &pb3; }
@@ -840,7 +839,7 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 		else if (direction * fmodf(angle, 360) > 303.75f && direction * fmodf(angle, 360) <= 326.25f) { sprite = &pb15; }
 		else if (direction * fmodf(angle, 360) > 326.25f && direction * fmodf(angle, 360) <= 348.75f) { sprite = &pb16; }
 	}
-	else if (points >= 500 && points < 1000) {
+	else if (App->scene_intro->points >= 500 && App->scene_intro->points < 1000) {
 		if (direction * fmodf(angle, 360) > 348.75f || direction * fmodf(angle, 360) <= 11.25f) { sprite = &sb1; }
 		else if (direction * fmodf(angle, 360) > 11.25f && direction * fmodf(angle, 360) <= 33.75f) { sprite = &sb2; }
 		else if (direction * fmodf(angle, 360) > 33.75f && direction * fmodf(angle, 360) <= 56.25f) { sprite = &sb3; }
@@ -858,7 +857,7 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 		else if (direction * fmodf(angle, 360) > 303.75f && direction * fmodf(angle, 360) <= 326.25f) { sprite = &sb15; }
 		else if (direction * fmodf(angle, 360) > 326.25f && direction * fmodf(angle, 360) <= 348.75f) { sprite = &sb16; }
 	}
-	else if (points >= 1000 && points < 1500) {
+	else if (App->scene_intro->points >= 1000 && App->scene_intro->points < 1500) {
 		if (direction * fmodf(angle, 360) > 348.75f || direction * fmodf(angle, 360) <= 11.25f) { sprite = &ub1; }
 		else if (direction * fmodf(angle, 360) > 11.25f && direction * fmodf(angle, 360) <= 33.75f) { sprite = &ub2; }
 		else if (direction * fmodf(angle, 360) > 33.75f && direction * fmodf(angle, 360) <= 56.25f) { sprite = &ub3; }
@@ -876,7 +875,7 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 		else if (direction * fmodf(angle, 360) > 303.75f && direction * fmodf(angle, 360) <= 326.25f) { sprite = &ub15; }
 		else if (direction * fmodf(angle, 360) > 326.25f && direction * fmodf(angle, 360) <= 348.75f) { sprite = &ub16; }
 	}
-	else if (points >= 1500) {
+	else if (App->scene_intro->points >= 1500) {
 		if (direction * fmodf(angle, 360) > 348.75f || direction * fmodf(angle, 360) <= 11.25f) { sprite = &mb1; }
 		else if (direction * fmodf(angle, 360) > 11.25f && direction * fmodf(angle, 360) <= 33.75f) { sprite = &mb2; }
 		else if (direction * fmodf(angle, 360) > 33.75f && direction * fmodf(angle, 360) <= 56.25f) { sprite = &mb3; }
@@ -915,7 +914,7 @@ void ModulePlayer::CreateBall(float diameter, int x, int y) {
 	// Create class PhysBody ball
 	ball = App->physics->CreateCircle(x, y, diameter);
 	ball->body->SetBullet(true); //ball is a fast moving object, so it can be labeled as bullet
-	ball->body->GetFixtureList()->SetDensity(0.6f);
+	ball->body->GetFixtureList()->SetDensity(0.4f);
 
 	ball->listener = this;
 
@@ -952,14 +951,17 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[1]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[1]->body)
 	{
+		App->scene_intro->points += 10;
 		p1 = true;
 	}
 	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[2]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[2]->body)
 	{
+		App->scene_intro->points += 10;
 		p2 = true;
 	}
 	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[3]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[3]->body)
 	{
+		App->scene_intro->points += 10;
 		p3 = true;
 	}
 
@@ -967,21 +969,25 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB->body == App->player->ball->body && bodyA->body == cave->body || bodyA->body == App->player->ball->body && bodyB->body == cave->body) {
 		num_cave_hits++;
 		cave_hit = true;
+		App->scene_intro->points += 100;
 	}
 	// Pokémon cave
 	if (pokemon_cave != nullptr) {
 		if (bodyB->body == App->player->ball->body && bodyA->body == pokemon_cave->body || bodyA->body == App->player->ball->body && bodyB->body == pokemon_cave->body) {
 			pokemon_cave_hit = true;
+			App->scene_intro->points += 10;
 		}
 	}
 	if (pokemon_cave1 != nullptr) {
 		if (bodyB->body == App->player->ball->body && bodyA->body == pokemon_cave1->body || bodyA->body == App->player->ball->body && bodyB->body == pokemon_cave1->body) {
 			pokemon_cave1_hit = true;
+			App->scene_intro->points += 50;
 		}
 	}
 	// Shark
 	if (bodyB->body == App->player->ball->body && bodyA->body == shark->body || bodyA->body == App->player->ball->body && bodyB->body == shark->body) {
 		shark_hit = true;
+		App->scene_intro->points += 100;
 	}
 }
 
