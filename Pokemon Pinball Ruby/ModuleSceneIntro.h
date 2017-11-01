@@ -19,6 +19,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+	bool LoadScore();
+	bool SaveScore() const;
 
 
 public:
@@ -58,6 +60,7 @@ private:
 
 	int font_score;
 	char str1[15];
+	int points;
 
 public: 
 	void SensorsForBLit();

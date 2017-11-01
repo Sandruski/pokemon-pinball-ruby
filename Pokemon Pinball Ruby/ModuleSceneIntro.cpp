@@ -10,6 +10,11 @@
 #include "ModulePlayer.h"
 #include "ModuleFonts.h"
 
+#include <fstream>
+#include <iostream>
+
+using namespace std;
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	general = NULL;
@@ -142,6 +147,8 @@ bool ModuleSceneIntro::Start()
 
 	font_score = App->fonts->Load("Assets/Sprites/Font.png", "0123456789", 1);
 
+	LoadScore();
+
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	CreateChains();
@@ -159,6 +166,8 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(general);
 
 	App->fonts->UnLoad(font_score);
+
+	SaveScore();
 
 	return true;
 }
@@ -199,7 +208,7 @@ update_status ModuleSceneIntro::Update()
 	BlitStaticPokemonsAndLife();
 
 	//Blit Points
-	sprintf_s(str1, "%i", App->player->points);
+	sprintf_s(str1, "%i", points);
 	App->fonts->BlitText(195, 410, font_score, str1);
 
 	return UPDATE_CONTINUE;
@@ -740,4 +749,28 @@ void ModuleSceneIntro::BlitStaticPokemonsAndLife() {
 	r = &current_anim->GetCurrentFrame();
 	App->renderer->Blit(general, 55, 220, r);
 
+}
+
+bool ModuleSceneIntro::LoadScore() {
+
+	bool ret = true;
+
+	ifstream scorefile;
+	scorefile.open("score.txt");
+	scorefile >> points;
+	scorefile.close();
+
+	return ret;
+}
+
+bool ModuleSceneIntro::SaveScore() const {
+
+	bool ret = true;
+
+	ofstream scorefile2;
+	scorefile2.open("score.txt", std::ofstream::out | std::ofstream::trunc);
+	scorefile2 << points;
+	scorefile2.close();
+
+	return ret;
 }
