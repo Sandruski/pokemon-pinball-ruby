@@ -135,7 +135,14 @@ private:
 	SDL_Rect above = { 268, 3, 256, 227 };
 	SDL_Rect above_details = { 0, 3, 256, 200};
 
-	SDL_Rect door = { 323, 331, 24, 27 };
+	Animation idle_door;
+	Animation opening_door;
+	Animation closing_door;
+	Animation* current_door;
+	SDL_Rect* r_door;
+	PhysBody* door;
+	bool door_hit;
+
 	Animation pokemon_mart_center;
 	Animation* current_mart_center;
 	SDL_Rect* r_mart_center;
@@ -239,6 +246,19 @@ private:
 
 	int num_cave_hits = 0;
 	bool cave_hit;
+
+	//Coin
+	Animation coin_idle;
+	Animation coin_picked;
+	SDL_Rect* r_coin_left;
+	SDL_Rect* r_coin_right;
+	SDL_Rect* r_coin_mid;
+	Animation* current_coin_left;
+	Animation* current_coin_right;
+	Animation* current_coin_mid;
+	PhysBody* coin_left;
+	PhysBody* coin_right;
+	PhysBody* coin_mid;
 
 private:
 	void CreateBall(float diameter, int x, int y);

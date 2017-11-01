@@ -209,6 +209,49 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	pokemon_mart_center.PushBack({ 369, 419, 64, 40 });
 	pokemon_mart_center.PushBack({ 446, 419, 64, 40 });
 	pokemon_mart_center.speed = 0.08f;
+
+	//Coin
+	coin_idle.PushBack({ 639, 1049, 15, 15 });
+	coin_idle.PushBack({ 667, 1049, 15, 15 });
+	coin_idle.PushBack({ 695, 1049, 15, 15 });
+	coin_idle.speed = 0.06f;
+
+	coin_picked.PushBack({ 639, 1049, 15, 15 });
+	coin_picked.PushBack({ 667, 1049, 15, 15 });
+	coin_picked.PushBack({ 695, 1049, 15, 15 });
+	coin_picked.PushBack({ 667, 1049, 15, 15 });
+	coin_picked.PushBack({ 639, 1049, 15, 15 });
+	coin_picked.PushBack({ 667, 1049, 15, 15 });
+	coin_picked.PushBack({ 695, 1049, 15, 15 });
+	coin_picked.PushBack({ 639, 1049, 15, 15 });
+	coin_picked.PushBack({ 667, 1049, 15, 15 });
+	coin_picked.PushBack({ 695, 1049, 15, 15 });
+	coin_picked.PushBack({ 639, 1049, 15, 15 });
+	coin_picked.PushBack({ 667, 1049, 15, 15 });
+	coin_picked.PushBack({ 695, 1049, 15, 15 });
+	coin_picked.PushBack({ 639, 1049, 15, 15 });
+	coin_picked.PushBack({ 667, 1049, 15, 15 });
+	coin_picked.PushBack({ 695, 1049, 15, 15 });
+	coin_picked.speed = 0.3f;
+	coin_picked.loop = false;
+
+	//Door
+	idle_door.PushBack({ 323, 331, 24, 27 });
+	idle_door.speed = 0.1f;
+
+	opening_door.PushBack({ 323, 331, 24, 27 });
+	opening_door.PushBack({ 349, 331, 24, 27 });
+	opening_door.PushBack({ 375, 331, 24, 27 });
+	opening_door.PushBack({ 401, 331, 24, 27 });
+	opening_door.speed = 0.05f;
+	opening_door.loop = false;
+
+	closing_door.PushBack({ 401, 331, 24, 27 });
+	closing_door.PushBack({ 375, 331, 24, 27 });
+	closing_door.PushBack({ 349, 331, 24, 27 });
+	closing_door.PushBack({ 323, 331, 24, 27 });
+	closing_door.speed = 0.05f;
+	closing_door.loop = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -244,6 +287,7 @@ bool ModulePlayer::Start()
 	blit_ball = true;
 
 	current_mart_center = &pokemon_mart_center;
+	current_door = &idle_door;
 
 	go_back1_x = 0;
 	go_back1_y = 0;
@@ -390,6 +434,7 @@ bool ModulePlayer::Start()
 
 	post_start = 0;
 
+	//Above
 	int leftAb[66] = {
 		318 - 275, 190,
 		305 - 275, 176,
@@ -472,18 +517,57 @@ bool ModulePlayer::Start()
 
 	left_above = App->physics->CreateChain(12, 2, leftAb, 66, b2_staticBody);
 	right_above = App->physics->CreateChain(12, 2, rightAb, 82, b2_staticBody);
-	left_sensor_above = App->physics->CreateRectangleSensor(40, 196, 10, 10);
-	right_sensor_above = App->physics->CreateRectangleSensor(171, 212, 10, 10);
-	not_above_left = App->physics->CreateRectangleSensor(58, 208, 10, 20);
-	not_above_right = App->physics->CreateRectangleSensor(163, 225, 15, 10);
+	left_sensor_above = App->physics->CreateRectangleSensor(37, 195, 10, 10);
+	right_sensor_above = App->physics->CreateRectangleSensor(180, 200, 10, 10);
+	not_above_left = App->physics->CreateRectangleSensor(63, 215, 10, 10);
+	not_above_right = App->physics->CreateRectangleSensor(163, 230, 10, 10);
+
+	left_above->listener = this;
+	right_above->listener = this;
+	left_sensor_above->listener = this;
+	right_sensor_above->listener = this;
+	not_above_left->listener = this;
+	not_above_right->listener = this;
 
 	f.categoryBits = NEUTRAL;
 	f.maskBits = BALL;
+
 	left_above->body->GetFixtureList()->SetFilterData(f);
 	right_above->body->GetFixtureList()->SetFilterData(f);
 
+	f.categoryBits = FLIPPER;
+
+	left_sensor_above->body->GetFixtureList()->SetFilterData(f);
+	right_sensor_above->body->GetFixtureList()->SetFilterData(f);
+	not_above_left->body->GetFixtureList()->SetFilterData(f);
+	not_above_right->body->GetFixtureList()->SetFilterData(f);
+
 	enable_above = false;
 	disable_above = false;
+
+	//Coin
+	diameter = 13.0f;
+	coin_left = App->physics->CreateCircle(74, 60, diameter, b2_staticBody);
+	coin_right = App->physics->CreateCircle(140, 60, diameter, b2_staticBody);
+	coin_mid = App->physics->CreateCircle(198, 150, diameter, b2_staticBody);
+	coin_left->listener = this;
+	coin_right->listener = this;
+	coin_mid->listener = this;
+
+	f.categoryBits = FLIPPER;
+	f.maskBits = BALL;
+	coin_left->body->GetFixtureList()->SetFilterData(f);
+	coin_right->body->GetFixtureList()->SetFilterData(f);
+	coin_mid->body->GetFixtureList()->SetFilterData(f);
+
+	current_coin_left = &coin_idle;
+	current_coin_right = &coin_idle;
+	current_coin_mid = &coin_idle;
+
+	//Door
+	door = App->physics->CreateRectangleSensor(223, 90, 20, 25);
+	door->listener = this;
+	door->body->GetFixtureList()->SetFilterData(f);
 
 	return true;
 }
@@ -580,23 +664,6 @@ update_status ModulePlayer::Update()
 	}
 
 	// All draw functions ------------------------------------------------------
-
-	// Blit ball
-	if (ball != nullptr && blit_ball) {
-		int x, y;
-		ball->GetPosition(x, y);
-		float angle = ball->GetRotation();
-
-		// Get sprite for the ball
-		GetBallSprites(angle, ball_properties);
-
-		// Blit bullet sprite
-		if (angle < 0)
-			App->renderer->Blit(pokeball, x, y, ball_properties->current_sprite);
-		else
-			App->renderer->Blit(pokeball, x, y, ball_properties->current_sprite, 1.0f, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
-	}
-	//
 
 	// Blit flippers
 	// Left
@@ -834,9 +901,11 @@ update_status ModulePlayer::Update()
 		break_egg1.Reset();
 		blit_egg = false;
 
-		ball->body->SetGravityScale(1);
-		ball->body->ApplyForceToCenter({ 10, 10 }, true);
-		blit_ball = true;
+		if (ball != nullptr) {
+			ball->body->SetGravityScale(1);
+			ball->body->ApplyForceToCenter({ 10, 10 }, true);
+			blit_ball = true;
+		}
 	}
 	//
 	if (num_cave_hits > 2 && cave_hit) {
@@ -850,11 +919,87 @@ update_status ModulePlayer::Update()
 	if (wait_cave.Finished()) {
 		wait_cave.Reset();
 
-		ball->body->SetGravityScale(1);
-		ball->body->ApplyForceToCenter({ 10, 10 }, true);
-		blit_ball = true;
+		if (ball != nullptr) {
+			ball->body->SetGravityScale(1);
+			ball->body->ApplyForceToCenter({ 10, 10 }, true);
+			blit_ball = true;
+		}
 		cave_hit = false;
 	}
+
+	//Door
+	if (door_hit) {
+		//The door acts like the shark
+		current_door = &opening_door;
+
+		blit_ball = false;
+		ball->body->SetLinearVelocity({ 0,0 });
+		ball->body->SetGravityScale(0);
+	}
+	if (opening_door.Finished()) {
+		opening_door.Reset();
+		current_door = &closing_door;
+
+		if (ball != nullptr) {
+			ball->body->SetGravityScale(1);
+			ball->body->ApplyForceToCenter({ 10, 10 }, true);
+			blit_ball = true;
+		}
+		door_hit = false;
+	}
+	if (closing_door.Finished()) {
+		current_door = &idle_door;
+		closing_door.Reset();
+	}
+
+	if (enable_above) {
+		// Blit above
+		r_door = &current_door->GetCurrentFrame();
+		App->renderer->Blit(App->scene_intro->general, 4, 4, &above);
+		App->renderer->Blit(App->scene_intro->general, -5, 3, &above_details);
+		// Blit ball
+		if (ball != nullptr && blit_ball) {
+			int x, y;
+			ball->GetPosition(x, y);
+			float angle = ball->GetRotation();
+
+			// Get sprite for the ball
+			GetBallSprites(angle, ball_properties);
+
+			// Blit bullet sprite
+			if (angle < 0)
+				App->renderer->Blit(pokeball, x, y, ball_properties->current_sprite);
+			else
+				App->renderer->Blit(pokeball, x, y, ball_properties->current_sprite, 1.0f, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+		}
+	}
+	else {
+		// Blit ball
+		if (ball != nullptr && blit_ball) {
+			int x, y;
+			ball->GetPosition(x, y);
+			float angle = ball->GetRotation();
+
+			// Get sprite for the ball
+			GetBallSprites(angle, ball_properties);
+
+			// Blit bullet sprite
+			if (angle < 0)
+				App->renderer->Blit(pokeball, x, y, ball_properties->current_sprite);
+			else
+				App->renderer->Blit(pokeball, x, y, ball_properties->current_sprite, 1.0f, 0, INT_MAX, INT_MAX, SDL_FLIP_HORIZONTAL);
+		}
+		// Blit above
+		r_door = &current_door->GetCurrentFrame();
+		App->renderer->Blit(App->scene_intro->general, 4, 4, &above);
+		App->renderer->Blit(App->scene_intro->general, -5, 3, &above_details);
+	}
+
+	// Blit above
+	App->renderer->Blit(App->scene_intro->general, 208, 72, r_door);
+
+	r_mart_center = &current_mart_center->GetCurrentFrame();
+	App->renderer->Blit(App->scene_intro->general, 181, 39, r_mart_center);
 
 	// Blit cave // Blit pokemon cave
 	r_cave = &current_cave->GetCurrentFrame();
@@ -882,14 +1027,6 @@ update_status ModulePlayer::Update()
 		else
 			App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10, METERS_TO_PIXELS(pos_cave.y) - 41 + 5 + go_back3_y, r_egg);
 	}
-
-	// Blit above
-	App->renderer->Blit(App->scene_intro->general, 4, 4, &above);
-	App->renderer->Blit(App->scene_intro->general, -5, 3, &above_details);
-	App->renderer->Blit(App->scene_intro->general, 208, 72, &door);
-
-	r_mart_center = &current_mart_center->GetCurrentFrame();
-	App->renderer->Blit(App->scene_intro->general, 181, 39, r_mart_center);
 	
 	// Blit shark
 	r_shark = &current_shark->GetCurrentFrame();
@@ -904,7 +1041,19 @@ update_status ModulePlayer::Update()
 		right_above->body->GetFixtureList()->SetFilterData(f);
 
 		//Change the collision of the rest of the walls
-		enable_above = false;
+		f.categoryBits = NEUTRAL;
+
+		App->scene_intro->map_chain1->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain2->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain3->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain4->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain5->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain6->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain7->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain8->body->GetFixtureList()->SetFilterData(f);
+		//App->scene_intro->map_chain9->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain10->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain11->body->GetFixtureList()->SetFilterData(f);
 	}
 	if (disable_above) {
 		b2Filter f;
@@ -914,8 +1063,42 @@ update_status ModulePlayer::Update()
 		right_above->body->GetFixtureList()->SetFilterData(f);
 
 		//Rest of the walls back to normal collision
+		f.categoryBits = WALL;
+
+		App->scene_intro->map_chain1->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain2->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain3->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain4->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain5->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain6->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain7->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain8->body->GetFixtureList()->SetFilterData(f);
+		//App->scene_intro->map_chain9->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain10->body->GetFixtureList()->SetFilterData(f);
+		App->scene_intro->map_chain11->body->GetFixtureList()->SetFilterData(f);
+
+		enable_above = false;
 		disable_above = false;
 	}
+
+	if (coin_picked.Finished()) {
+		current_coin_left = &coin_idle;
+		current_coin_right = &coin_idle;
+		current_coin_mid = &coin_idle;
+		coin_picked.Reset();
+	}
+
+	//Blit coins
+	r_coin_left = &current_coin_left->GetCurrentFrame();
+	r_coin_right = &current_coin_right->GetCurrentFrame();
+	r_coin_mid = &current_coin_mid->GetCurrentFrame();
+	b2Vec2 pos_coin_left = coin_left->body->GetPosition();
+	b2Vec2 pos_coin_right = coin_right->body->GetPosition();
+	b2Vec2 pos_coin_mid = coin_mid->body->GetPosition();
+
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_coin_left.x) - 8, METERS_TO_PIXELS(pos_coin_left.y) - 7, r_coin_left);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_coin_right.x) - 8, METERS_TO_PIXELS(pos_coin_right.y) - 7, r_coin_right);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_coin_mid.x) - 8, METERS_TO_PIXELS(pos_coin_mid.y) - 7, r_coin_mid);
 
 	return UPDATE_CONTINUE;
 }
@@ -1130,7 +1313,27 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 	if (bodyB->body == App->player->ball->body && bodyA->body == not_above_left->body || bodyA->body == App->player->ball->body && bodyB->body == not_above_left->body
 		|| bodyB->body == App->player->ball->body && bodyA->body == not_above_right->body || bodyA->body == App->player->ball->body && bodyB->body == not_above_right->body) {
-		disable_above = false;
+		disable_above = true;
+	}
+
+	//Coins
+	if (bodyB->body == App->player->ball->body && bodyA->body == coin_left->body || bodyA->body == App->player->ball->body && bodyB->body == coin_left->body) {
+		current_coin_left = &coin_picked;
+		App->scene_intro->points += 500;
+	}
+	if (bodyB->body == App->player->ball->body && bodyA->body == coin_right->body || bodyA->body == App->player->ball->body && bodyB->body == coin_right->body) {
+		current_coin_right = &coin_picked;
+		App->scene_intro->points += 500;
+	}
+	if (bodyB->body == App->player->ball->body && bodyA->body == coin_mid->body || bodyA->body == App->player->ball->body && bodyB->body == coin_mid->body) {
+		current_coin_mid = &coin_picked;
+		App->scene_intro->points += 500;
+	}
+
+	//Door
+	if (bodyB->body == App->player->ball->body && bodyA->body == door->body || bodyA->body == App->player->ball->body && bodyB->body == door->body) {
+		door_hit = true;
+		App->scene_intro->points += 500;
 	}
 }
 

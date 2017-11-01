@@ -36,6 +36,19 @@ public:
 	bool destroy_ball;
 	int points;
 
+	PhysBody* map_chain1;
+	PhysBody* map_chain2;
+	PhysBody* map_chain3;
+	PhysBody* map_chain4;
+	PhysBody* map_chain5;
+	PhysBody* map_chain6;
+	PhysBody* map_chain7;
+	PhysBody* map_chain8;
+	PhysBody* map_chain9;
+	PhysBody* map_chain10;
+	PhysBody* map_chain11;
+	PhysBody* map_chain12;
+
 private:
 
 	p2List_item<PhysBody*>* item;

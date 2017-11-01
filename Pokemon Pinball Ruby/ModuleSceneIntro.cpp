@@ -865,26 +865,65 @@ void ModuleSceneIntro::CreateChains() {
 		586 - 533, 113
 	};
 
+	int GeneralSpritesheet9[22] = {
+		565 - 533, 209,
+		573 - 533, 240,
+		588 - 533, 266,
+		601 - 533, 281,
+		611 - 533, 274,
+		612 - 533, 262,
+		601 - 533, 244,
+		594 - 533, 228,
+		581 - 533, 220,
+		571 - 533, 210,
+		566 - 533, 206
+	};
+
+	int GeneralSpritesheet10[8] = {
+		565 - 533, 206,
+		564 - 533, 191,
+		564 - 533, 180,
+		566 - 533, 165
+	};
+
+	int GeneralSpritesheet11[16] = {
+		678 - 533, 98,
+		678 - 533, 109,
+		678 - 533, 116,
+		682 - 533, 118,
+		685 - 533, 114,
+		685 - 533, 95,
+		682 - 533, 92,
+		678 - 533, 96
+	};
+
 	b2Filter f;
 	f.categoryBits = WALL;
 	f.maskBits = BALL;
 
 	//App->physics->CreateChain(0, 0, GeneralSpritesheet0, 14, b2_staticBody);
-	PhysBody* p = App->physics->CreateChain(0, 0, GeneralSpritesheet1, 110, b2_staticBody);
-	p->body->GetFixtureList()->SetFilterData(f);
-	p = App->physics->CreateChain(0, 0, GeneralSpritesheet2, 14, b2_staticBody);
-	p->body->GetFixtureList()->SetFilterData(f);
-	p = App->physics->CreateChain(0, 0, GeneralSpritesheet3, 30, b2_staticBody);
-	p->body->GetFixtureList()->SetFilterData(f);
-	p = App->physics->CreateChain(0, 0, GeneralSpritesheet4, 58, b2_staticBody);
-	p->body->GetFixtureList()->SetFilterData(f);
-	p = App->physics->CreateChain(0, 0, GeneralSpritesheet5, 58, b2_staticBody);
-	p->body->GetFixtureList()->SetFilterData(f);
-	p = App->physics->CreateChain(0, 0, GeneralSpritesheet6, 28, b2_staticBody);
-	p->body->GetFixtureList()->SetFilterData(f);
-	p = App->physics->CreateChain(0, 0, GeneralSpritesheet7, 58, b2_staticBody);
-	p->body->GetFixtureList()->SetFilterData(f);
-	p = App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
+	map_chain1 = App->physics->CreateChain(0, 0, GeneralSpritesheet1, 110, b2_staticBody);
+	map_chain1->body->GetFixtureList()->SetFilterData(f);
+	map_chain2 = App->physics->CreateChain(0, 0, GeneralSpritesheet2, 14, b2_staticBody);
+	map_chain2->body->GetFixtureList()->SetFilterData(f);
+	map_chain3 = App->physics->CreateChain(0, 0, GeneralSpritesheet3, 30, b2_staticBody);
+	map_chain3->body->GetFixtureList()->SetFilterData(f);
+	map_chain4 = App->physics->CreateChain(0, 0, GeneralSpritesheet4, 58, b2_staticBody);
+	map_chain4->body->GetFixtureList()->SetFilterData(f);
+	map_chain5 = App->physics->CreateChain(0, 0, GeneralSpritesheet5, 58, b2_staticBody);
+	map_chain5->body->GetFixtureList()->SetFilterData(f);
+	map_chain6 = App->physics->CreateChain(0, 0, GeneralSpritesheet6, 28, b2_staticBody);
+	map_chain6->body->GetFixtureList()->SetFilterData(f);
+	map_chain7 = App->physics->CreateChain(0, 0, GeneralSpritesheet7, 58, b2_staticBody);
+	map_chain7->body->GetFixtureList()->SetFilterData(f);
+	map_chain8 = App->physics->CreateChain(0, 0, GeneralSpritesheet8, 22, b2_staticBody);
+	map_chain8->body->GetFixtureList()->SetFilterData(f);
+	map_chain9 = App->physics->CreateChain(0, 0, GeneralSpritesheet9, 22, b2_staticBody);
+	map_chain9->body->GetFixtureList()->SetFilterData(f);
+	map_chain10 = App->physics->CreateChain(0, 0, GeneralSpritesheet10, 8, b2_staticBody);
+	map_chain10->body->GetFixtureList()->SetFilterData(f);
+	map_chain11 = App->physics->CreateChain(0, 0, GeneralSpritesheet11, 16, b2_staticBody);
+	map_chain11->body->GetFixtureList()->SetFilterData(f);
 
 	//Setting... triangles(?)
 	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 14, b2_staticBody);
