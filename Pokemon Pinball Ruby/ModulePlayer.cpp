@@ -200,6 +200,15 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 	in_pokemon_cave.PushBack({ 164, 873, 18, 38 });
 	in_pokemon_cave.speed = 0.1f;
 	in_pokemon_cave.loop = false;
+
+	//Pokémon mart-center
+	pokemon_mart_center.PushBack({ 299, 376, 64, 40 });
+	pokemon_mart_center.PushBack({ 369, 376, 64, 40 });
+	pokemon_mart_center.PushBack({ 446, 376, 64, 40 });
+	pokemon_mart_center.PushBack({ 299, 419, 64, 40 });
+	pokemon_mart_center.PushBack({ 369, 419, 64, 40 });
+	pokemon_mart_center.PushBack({ 446, 419, 64, 40 });
+	pokemon_mart_center.speed = 0.08f;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -233,6 +242,8 @@ bool ModulePlayer::Start()
 	num_cave_hits = 0;
 	cave_hit = false;
 	blit_ball = true;
+
+	current_mart_center = &pokemon_mart_center;
 
 	go_back1_x = 0;
 	go_back1_y = 0;
@@ -378,6 +389,101 @@ bool ModulePlayer::Start()
 	current_egg = &idle_egg;
 
 	post_start = 0;
+
+	int leftAb[66] = {
+		318 - 275, 190,
+		305 - 275, 176,
+		298 - 275, 156,
+		295 - 275, 128,
+		301 - 275, 101,
+		316 - 275, 84,
+		334 - 275, 72,
+		350 - 275, 66,
+		358 - 275, 62,
+		359 - 275, 47,
+		349 - 275, 42,
+		335 - 275, 45,
+		316 - 275, 52,
+		305 - 275, 60,
+		288 - 275, 76,
+		278 - 275, 98,
+		272 - 275, 115,
+		274 - 275, 150,
+		280 - 275, 176,
+		288 - 275, 192,
+		298 - 275, 203,
+		281 - 275, 212,
+		257 - 275, 168,
+		258 - 275, 80,
+		318 - 275, 24,
+		367 - 275, 29,
+		366 - 275, 68,
+		340 - 275, 83,
+		317 - 275, 101,
+		309 - 275, 136,
+		322 - 275, 171,
+		327 - 275, 183,
+		320 - 275, 189
+	};
+
+	int rightAb[82] = {
+		438 - 275, 225,
+		466 - 275, 174,
+		479 - 275, 150,
+		488 - 275, 130,
+		497 - 275, 100,
+		502 - 275, 83,
+		474 - 275, 79,
+		474 - 275, 95,
+		469 - 275, 116,
+		466 - 275, 123,
+		464 - 275, 110,
+		458 - 275, 92,
+		449 - 275, 76,
+		433 - 275, 60,
+		404 - 275, 45,
+		389 - 275, 44,
+		384 - 275, 52,
+		384 - 275, 60,
+		389 - 275, 65,
+		398 - 275, 68,
+		414 - 275, 75,
+		429 - 275, 89,
+		438 - 275, 102,
+		444 - 275, 114,
+		447 - 275, 131,
+		448 - 275, 144,
+		447 - 275, 159,
+		436 - 275, 184,
+		425 - 275, 206,
+		417 - 275, 202,
+		427 - 275, 141,
+		411 - 275, 104,
+		388 - 275, 75,
+		378 - 275, 65,
+		381 - 275, 38,
+		403 - 275, 37,
+		518 - 275, 70,
+		507 - 275, 121,
+		478 - 275, 204,
+		448 - 275, 229,
+		439 - 275, 226
+	};
+
+	left_above = App->physics->CreateChain(12, 2, leftAb, 66, b2_staticBody);
+	right_above = App->physics->CreateChain(12, 2, rightAb, 82, b2_staticBody);
+	left_sensor_above = App->physics->CreateRectangleSensor(40, 196, 10, 10);
+	right_sensor_above = App->physics->CreateRectangleSensor(171, 212, 10, 10);
+	not_above_left = App->physics->CreateRectangleSensor(58, 208, 10, 20);
+	not_above_right = App->physics->CreateRectangleSensor(163, 225, 15, 10);
+
+	f.categoryBits = NEUTRAL;
+	f.maskBits = BALL;
+	left_above->body->GetFixtureList()->SetFilterData(f);
+	right_above->body->GetFixtureList()->SetFilterData(f);
+
+	enable_above = false;
+	disable_above = false;
 
 	return true;
 }
@@ -750,17 +856,10 @@ update_status ModulePlayer::Update()
 		cave_hit = false;
 	}
 
-	// Blit shark
-	r_shark = &current_shark->GetCurrentFrame();
-	b2Vec2 pos_shark = shark->body->GetPosition();
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18 + go_back1_x, METERS_TO_PIXELS(pos_shark.y) - 34 + go_back1_y, r_shark);
-	//
-
-	// Blit cave	// Blit pokemon cave
+	// Blit cave // Blit pokemon cave
 	r_cave = &current_cave->GetCurrentFrame();
 	r_pokemon_cave = &current_pokemon_cave->GetCurrentFrame();
 	b2Vec2 pos_cave = cave->body->GetPosition();
-
 
 	if (blit_pokemon_over_cave) {
 		App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 22, METERS_TO_PIXELS(pos_cave.y) - 36 + 5, r_cave);
@@ -782,6 +881,40 @@ update_status ModulePlayer::Update()
 			App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10 - 1, METERS_TO_PIXELS(pos_cave.y) - 41 + 5 + go_back3_y, r_egg);
 		else
 			App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_cave.x) - 10, METERS_TO_PIXELS(pos_cave.y) - 41 + 5 + go_back3_y, r_egg);
+	}
+
+	// Blit above
+	App->renderer->Blit(App->scene_intro->general, 4, 4, &above);
+	App->renderer->Blit(App->scene_intro->general, -5, 3, &above_details);
+	App->renderer->Blit(App->scene_intro->general, 208, 72, &door);
+
+	r_mart_center = &current_mart_center->GetCurrentFrame();
+	App->renderer->Blit(App->scene_intro->general, 181, 39, r_mart_center);
+	
+	// Blit shark
+	r_shark = &current_shark->GetCurrentFrame();
+	b2Vec2 pos_shark = shark->body->GetPosition();
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18 + go_back1_x, METERS_TO_PIXELS(pos_shark.y) - 34 + go_back1_y, r_shark);
+
+	if (enable_above) {
+		b2Filter f;
+		f.categoryBits = WALL;
+		f.maskBits = BALL;
+		left_above->body->GetFixtureList()->SetFilterData(f);
+		right_above->body->GetFixtureList()->SetFilterData(f);
+
+		//Change the collision of the rest of the walls
+		enable_above = false;
+	}
+	if (disable_above) {
+		b2Filter f;
+		f.categoryBits = NEUTRAL;
+		f.maskBits = BALL;
+		left_above->body->GetFixtureList()->SetFilterData(f);
+		right_above->body->GetFixtureList()->SetFilterData(f);
+
+		//Rest of the walls back to normal collision
+		disable_above = false;
 	}
 
 	return UPDATE_CONTINUE;
@@ -988,6 +1121,16 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB->body == App->player->ball->body && bodyA->body == shark->body || bodyA->body == App->player->ball->body && bodyB->body == shark->body) {
 		shark_hit = true;
 		App->scene_intro->points += 100;
+	}
+
+	//Above sensors
+	if (bodyB->body == App->player->ball->body && bodyA->body == left_sensor_above->body || bodyA->body == App->player->ball->body && bodyB->body == left_sensor_above->body
+		|| bodyB->body == App->player->ball->body && bodyA->body == right_sensor_above->body || bodyA->body == App->player->ball->body && bodyB->body == right_sensor_above->body) {
+		enable_above = true;
+	}
+	if (bodyB->body == App->player->ball->body && bodyA->body == not_above_left->body || bodyA->body == App->player->ball->body && bodyB->body == not_above_left->body
+		|| bodyB->body == App->player->ball->body && bodyA->body == not_above_right->body || bodyA->body == App->player->ball->body && bodyB->body == not_above_right->body) {
+		disable_above = false;
 	}
 }
 

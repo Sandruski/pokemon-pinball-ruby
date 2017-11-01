@@ -131,6 +131,23 @@ private:
 	SDL_Rect r_f5 = { 249, 1316, 31, 26 };
 	SDL_Rect r_f6 = { 203, 1316, 31, 26 };
 
+	//Map stuff
+	SDL_Rect above = { 268, 3, 256, 227 };
+	SDL_Rect above_details = { 0, 3, 256, 200};
+
+	SDL_Rect door = { 323, 331, 24, 27 };
+	Animation pokemon_mart_center;
+	Animation* current_mart_center;
+	SDL_Rect* r_mart_center;
+	PhysBody* left_above;
+	PhysBody* right_above;
+	PhysBody* left_sensor_above;
+	PhysBody* right_sensor_above;
+	PhysBody* not_above_left;
+	PhysBody* not_above_right;
+	bool enable_above;
+	bool disable_above;
+
 	SDL_Rect* r_pokemons1;
 	SDL_Rect* r_pokemons2;
 	SDL_Rect* r_pokemons3;
