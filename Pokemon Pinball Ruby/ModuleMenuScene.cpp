@@ -157,13 +157,6 @@ update_status ModuleMenuScene::Update()
 		}
 		break;
 
-	case null_:
-		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
-			menuEnum = mapSelector_;
-			break;
-		}
-		break;
-
 	case score_:
 
 		App->renderer->Blit(App->scene_intro->general, 256/2 - 104, 280, &scoreMenu);
@@ -172,6 +165,7 @@ update_status ModuleMenuScene::Update()
 		App->fonts->BlitText(256/2, 330, App->scene_intro->font_score, App->scene_intro->str1);
 		sprintf_s(App->scene_intro->str1, "%i", App->scene_intro->highscore);
 		App->fonts->BlitText(256/2, 310, App->scene_intro->font_score, App->scene_intro->str1);
+		App->player->cameraAtPlayer = false;
 
 		if (App->scene_intro->points > App->scene_intro->highscore) 
 			App->scene_intro->highscore = App->scene_intro->points;
@@ -188,6 +182,19 @@ update_status ModuleMenuScene::Update()
 			menuEnum = menu_;
 		}
 		break;
+
+	case null_:
+		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			menuEnum = mapSelector_;
+			App->player->cameraAtPlayer = false;
+			// Restart variables
+			App->scene_intro->points = 0;
+			App->player->SetGeneralParameters();
+			App->player->CreatePokemonCave();
+			break;
+		}
+		break;
+
 	}
 
 	return UPDATE_CONTINUE;

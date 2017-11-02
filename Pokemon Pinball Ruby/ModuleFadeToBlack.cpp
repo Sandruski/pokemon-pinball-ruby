@@ -44,8 +44,7 @@ update_status ModuleFadeToBlack::Update()
 
 		if (now >= total_time)
 		{
-			//off->CleanUp();
-			//on->Start();
+			App->player->cameraAtPlayer = true;
 			App->menu_scene->menuEnum = null_;
 
 			total_time += total_time;

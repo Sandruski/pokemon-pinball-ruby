@@ -303,4 +303,5 @@ public:
 	PhysBody* ball;
 	int life;
 
+	bool cameraAtPlayer;
 };

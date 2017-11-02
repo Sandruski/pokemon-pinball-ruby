@@ -333,6 +333,25 @@ update_status ModulePlayer::Update()
 	pokemonsRevoluteJoint[1]->SetMotorSpeed(cosf(0.5f * 2));
 	pokemonsRevoluteJoint[2]->SetMotorSpeed(cosf(0.5f * 2));
 
+	if (cameraAtPlayer) {
+		int x, y;
+		ball->GetPosition(x, y);
+		App->renderer->camera.y = (-y*SCREEN_SIZE) + 180;
+		if (App->renderer->camera.y >= 0)
+			App->renderer->camera.y = 0;
+		else if (App->renderer->camera.y <= -424 - 80)
+			App->renderer->camera.y = -424 - 80;
+
+	}
+
+	if (!cameraAtPlayer && App->menu_scene->menuEnum == score_) {
+		App->renderer->camera.y = -424 - 80;
+
+	}
+
+	if (!cameraAtPlayer && (App->menu_scene->menuEnum == menu_ || App->menu_scene->menuEnum == mapSelector_))
+		App->renderer->camera.y = 0;
+
 	if (App->menu_scene->menuEnum == null_) { //player can do things
 
 		// Update Flippers
