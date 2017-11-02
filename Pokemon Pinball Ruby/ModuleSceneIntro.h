@@ -55,10 +55,11 @@ public:
 private:
 
 	p2List_item<PhysBody*>* item;
-	SDL_Rect background, rEvo, rEVo, rEVO, rLs10, rLS10, rLS10T, rGet, rGEt, rGET, rBall, trianglesOnCollision, rCircle1, rCircle2;
+	SDL_Rect background, rEvo, rEVo, rEVO, rLs10, rLS10, rLS10T, rGet, rGEt, rGET, rBall, trianglesOnCollision, rCircle1, rCircle2, rChargePikachu;
 
 	PhysBody* sensor; 
 	PhysBody* sensorPikachu;
+	PhysBody* sensorPikachuCharge;
 	PhysBody* sensorEvo;
 	PhysBody* sensorEVo;
 	PhysBody* sensorEVO;
@@ -79,11 +80,11 @@ private:
 	PhysBody* trianglebody1;
 	PhysBody* trianglebody2;
 
-	Animation pikachu, impactTrueno, impactTrueno2, slime, mPokemon, chikorita, topo, latiosSave, hatch, bumper, catchvar, hart;
+	Animation pikachu, impactTrueno, impactTrueno2, chargePikachu, slime, mPokemon, chikorita, topo, latiosSave, hatch, bumper, catchvar, hart;
 
 	b2Vec2 ballSpeed;
 	float timeEvo, timeEVo, timeEVO, timeTriangle1, timeTriangle2, timeCircle1, timeCircle2, timeCircle3, timeCircle4, timeCircle5, timeCircle6, timeCircle7;
-	bool  Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET, trianglesBlit1, trianglesBlit2, circle1, circle2, circle3, circle4, circle5, circle6, circle7;
+	bool  Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET, trianglesBlit1, trianglesBlit2, circle1, circle2, circle3, circle4, circle5, circle6, circle7, pikachuChargeCheck;
 	uint impactCheck;
 
 public: 

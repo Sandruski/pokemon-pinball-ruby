@@ -26,6 +26,11 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	background.w = 257;
 	background.h = 425;
 
+	rChargePikachu.x = 63;
+	rChargePikachu.y = 703;
+	rChargePikachu.w = 18;
+	rChargePikachu.h = 17;
+
 	trianglesOnCollision.x = 273;
 	trianglesOnCollision.y = 329;
 	trianglesOnCollision.w = 23;
@@ -124,7 +129,6 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	impactTrueno.speed = 0.1f;
 	impactTrueno.loop = false;
 
-
 	impactTrueno2.PushBack({ 11, 1106, 38, 91 });
 	impactTrueno2.PushBack({ 11, 1199, 38, 91 });
 	impactTrueno2.PushBack({ 51, 1106, 38, 91 });
@@ -133,6 +137,22 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	impactTrueno2.PushBack({ 329, 1199, 38, 91 });
 	impactTrueno2.speed = 0.1f;
 	impactTrueno2.loop = false;
+
+	chargePikachu.PushBack({ 83, 703, 18, 17 });
+	chargePikachu.PushBack({ 103, 703, 18, 17 });
+	chargePikachu.PushBack({ 123, 703, 18, 17 });
+	chargePikachu.PushBack({ 143, 703, 18, 17 });
+	chargePikachu.PushBack({ 163, 703, 18, 17 });
+	chargePikachu.PushBack({ 183, 703, 18, 17 });
+	chargePikachu.PushBack({ 203, 703, 18, 17 });
+	chargePikachu.PushBack({ 223, 703, 18, 17 });
+	chargePikachu.PushBack({ 243, 703, 18, 17 });
+	chargePikachu.PushBack({ 263, 703, 18, 17 });
+	chargePikachu.PushBack({ 283, 703, 18, 17 });
+	chargePikachu.PushBack({ 303, 703, 18, 17 });
+	chargePikachu.PushBack({ 323, 703, 18, 17 });
+	chargePikachu.PushBack({ 343, 703, 18, 17 });
+	chargePikachu.speed = 0.5f;
 
 	mPokemon.PushBack({ 345, 990, 28, 34 });
 	mPokemon.PushBack({ 375, 990, 30, 34 });
@@ -233,6 +253,7 @@ update_status ModuleSceneIntro::Update()
 		App->player->ball->body->SetLinearVelocity({0,0});
 		App->player->ball->body->SetGravityScale(0);
 	}
+
 	else if (impactCheck == 1 && impactTrueno.Finished()) {	
 		App->player->ball->body->SetGravityScale(1);
 		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
@@ -255,6 +276,20 @@ update_status ModuleSceneIntro::Update()
 	int x, y;
 	sensorPikachu->GetPosition(x, y);
 	App->renderer->Blit(general, x - 10, y - 45, r);
+
+	/// pikaCharge
+	if(!pikachuChargeCheck)
+	App->renderer->Blit(general, 209, 170, &rChargePikachu);
+
+	if (pikachuChargeCheck && !chargePikachu.Finished()) {
+		current_anim = &chargePikachu;
+		r = &current_anim->GetCurrentFrame();
+		App->renderer->Blit(general, 209, 170, r);
+	}
+	else {
+		pikachuChargeCheck = false;
+		chargePikachu.Reset();
+	}
 	//
 
 	if (trianglesBlit1) {
@@ -320,6 +355,12 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		impactCheck = 1;
 		points += 2;
+	}
+
+	if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachuCharge->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachuCharge->body)
+	{
+		pikachuChargeCheck = true;
+		points += 5;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEvo->body)
@@ -589,6 +630,7 @@ void ModuleSceneIntro::SetSensors() {
 	//sensor to destroy the ball
 	sensor = App->physics->CreateRectangleSensor(115 , 440, 135, 15);
 	sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
+	sensorPikachuCharge = App->physics->CreateRectangleSensor(218, 180, 5, 5);
 	sensorEvo = App->physics->CreateRectangleSensor(40, 260, 4, 4);
 	sensorEVo = App->physics->CreateRectangleSensor(50, 277, 4, 4);
 	sensorEVO = App->physics->CreateRectangleSensor(60, 290, 4, 4);
@@ -608,6 +650,7 @@ void ModuleSceneIntro::SetSensors() {
 
 	sensor->listener = this;
 	sensorPikachu->listener = this;
+	sensorPikachuCharge->listener = this;
 	sensorEvo->listener = this;
 	sensorEVo->listener = this;
 	sensorEVO->listener = this;
@@ -627,6 +670,7 @@ void ModuleSceneIntro::SetSensors() {
 
 	sensor->body->GetFixtureList()->SetFilterData(f);
 	sensorPikachu->body->GetFixtureList()->SetFilterData(f);
+	sensorPikachuCharge->body->GetFixtureList()->SetFilterData(f);
 	sensorEvo->body->GetFixtureList()->SetFilterData(f);
 	sensorEVo->body->GetFixtureList()->SetFilterData(f);
 	sensorEVO->body->GetFixtureList()->SetFilterData(f);
