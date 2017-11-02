@@ -5,6 +5,7 @@
 #include "ModuleMenuScene.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleAudio.h"
 #include "ModuleSceneIntro.h"
 
 #include "Box2D/Box2D/Box2D.h"
@@ -263,6 +264,11 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player...");
 
+	App->audio->LoadFx("Assets/Audio/FX/Flipper.wav");
+	App->audio->LoadFx("Assets/Audio/FX/PikachuThunderbolt.wav");
+	App->audio->LoadFx("Assets/Audio/FX/Spring.wav");
+	App->audio->LoadFx("Assets/Audio/FX/Bumper.wav");
+
 	pokeball = App->textures->Load("Assets/Sprites/Pokeball&more.png");
 
 	// Player general parameters
@@ -337,6 +343,8 @@ update_status ModulePlayer::Update()
 			flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
 
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN && App->scene_intro->impactCheck == 0) {
+			App->audio->PlayFx(1);
+
 			if (App->scene_intro->indexPikachu == 0)
 				App->scene_intro->indexPikachu = 1;
 			else
@@ -344,6 +352,8 @@ update_status ModulePlayer::Update()
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN && App->scene_intro->impactCheck == 0) {
+			App->audio->PlayFx(1);
+
 			if (App->scene_intro->indexPikachu == 0)
 				App->scene_intro->indexPikachu = 1;
 			else
@@ -407,7 +417,8 @@ update_status ModulePlayer::Update()
 	return UPDATE_CONTINUE;
 }
 
-void ModulePlayer::GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, bool left) {
+void ModulePlayer::GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, bool left) 
+{
 
 	SDL_Rect* sprite = &l_f1;
 
@@ -431,7 +442,8 @@ void ModulePlayer::GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, boo
 	flipper_sprite = sprite;
 }
 
-void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
+void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) 
+{
 
 	SDL_Rect* sprite = &pb1;
 	int direction = 1;
@@ -516,7 +528,8 @@ void ModulePlayer::GetBallSprites(float angle, Ball* ball_properties) {
 		ball_properties->current_sprite = sprite;
 }
 
-void ModulePlayer::CreateBall(float diameter, int x, int y) {
+void ModulePlayer::CreateBall(float diameter, int x, int y) 
+{
 	// Destroy last ball (in case it exists)
 	if (ball != nullptr) {
 		App->physics->world->DestroyBody(ball->body);
@@ -543,7 +556,8 @@ void ModulePlayer::CreateBall(float diameter, int x, int y) {
 	ball_properties = new Ball();
 }
 
-void ModulePlayer::DestroyBall() {
+void ModulePlayer::DestroyBall() 
+{
 	App->physics->world->DestroyBody(ball->body);
 	ball = nullptr;
 
@@ -637,11 +651,13 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 }
 
-void ModulePlayer::UpdateCamera() {
+void ModulePlayer::UpdateCamera() 
+{
 
 }
 
-void ModulePlayer::CreatePokemonCave() {
+void ModulePlayer::CreatePokemonCave() 
+{
 	float diameter = 22.0f;
 	b2Filter f;
 	f.categoryBits = FLIPPER;
@@ -664,7 +680,8 @@ void ModulePlayer::CreatePokemonCave() {
 	}
 }
 
-void ModulePlayer::CreateSpring() {
+void ModulePlayer::CreateSpring()
+{
 	PhysBody* spring_anchor = App->physics->CreateRectangle(243, 392, 10, 10, b2_staticBody);
 	PhysBody* spring = App->physics->CreateRectangle(243, 375, 10, 10);
 
@@ -680,7 +697,8 @@ void ModulePlayer::CreateSpring() {
 	springDistanceJoint->SetFrequency(4.0f);
 }
 
-void ModulePlayer::CreateFlippers() {
+void ModulePlayer::CreateFlippers() 
+{
 	b2Vec2 flipper_vertices[8];
 	flipper_vertices[0].Set(10, 11);
 	flipper_vertices[1].Set(21, 10);
@@ -715,7 +733,8 @@ void ModulePlayer::CreateFlippers() {
 	flippers[1]->body->GetFixtureList()->SetFilterData(f);
 }
 
-void ModulePlayer::CreateRotatingPokemons() {
+void ModulePlayer::CreateRotatingPokemons() 
+{
 	rotatingPokemons[0] = App->physics->CreateCircle(147, 146, 40, b2_staticBody);
 	rotatingPokemons[1] = App->physics->CreateCircle(0, 0, 15, b2_dynamicBody);
 	rotatingPokemons[2] = App->physics->CreateCircle(0, 0, 15, b2_dynamicBody);
@@ -740,7 +759,8 @@ void ModulePlayer::CreateRotatingPokemons() {
 	rotatingPokemons[3]->body->GetFixtureList()->SetFilterData(f);
 }
 
-void ModulePlayer::CreateShark() {
+void ModulePlayer::CreateShark() 
+{
 	float diameter = 19.0f;
 	shark = App->physics->CreateCircle(198, 206, diameter, b2_staticBody);
 	shark->body->GetFixtureList()->SetSensor(true);
@@ -753,7 +773,8 @@ void ModulePlayer::CreateShark() {
 	shark->body->GetFixtureList()->SetFilterData(f);
 }
 
-void ModulePlayer::CreateCave() {
+void ModulePlayer::CreateCave() 
+{
 	cave = App->physics->CreateRectangleSensor(90, 135, 30, 20);
 
 	cave->listener = this;
@@ -764,7 +785,8 @@ void ModulePlayer::CreateCave() {
 	cave->body->GetFixtureList()->SetFilterData(f);
 }
 
-void ModulePlayer::CreateAboveLayer() {
+void ModulePlayer::CreateAboveLayer() 
+{
 	int leftAb[66] = {
 		318 - 275, 190,
 		305 - 275, 176,
@@ -874,7 +896,8 @@ void ModulePlayer::CreateAboveLayer() {
 	not_above_right->body->GetFixtureList()->SetFilterData(f);
 }
 
-void ModulePlayer::CreateAboveStuff() {
+void ModulePlayer::CreateAboveStuff() 
+{
 	//Coin
 	float diameter = 13.0f;
 	coin_left = App->physics->CreateCircle(74, 60, diameter, b2_staticBody);
@@ -900,7 +923,8 @@ void ModulePlayer::CreateAboveStuff() {
 	door->body->GetFixtureList()->SetFilterData(f);
 }
 
-void ModulePlayer::SetGeneralParameters() {
+void ModulePlayer::SetGeneralParameters() 
+{
 	// General parameters
 	start_ball.x = 242;
 	start_ball.y = 355;
@@ -958,7 +982,8 @@ void ModulePlayer::SetGeneralParameters() {
 	almost_in_pokemon_cave.Reset();
 }
 
-void ModulePlayer::BlitRotatingPokemons() {
+void ModulePlayer::BlitRotatingPokemons() 
+{
 	if (p1) {
 		if (r_pokemons1->x == 171)
 			current_rotating_pokemons1 = &rotating_pokemons_hit1;
@@ -999,7 +1024,8 @@ void ModulePlayer::BlitRotatingPokemons() {
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_p1.x) - 12, METERS_TO_PIXELS(pos_p1.y) - 12, r_pokemons3);
 }
 
-void ModulePlayer::BlitSpring() {
+void ModulePlayer::BlitSpring() 
+{
 	// Spring animation change
 	if (end_spring.Finished() && spring_anim) {
 		current_spring = &grey_spring;
@@ -1019,7 +1045,8 @@ void ModulePlayer::BlitSpring() {
 		springDistanceJoint->GetBodyA()->ApplyForce({ 0, -0.4f }, { 0, 0 }, true);
 }
 
-void ModulePlayer::BlitFlippers() {
+void ModulePlayer::BlitFlippers() 
+{
 	// Left
 	b2Vec2 pos_l = flipperRevoluteJoints[0]->GetAnchorB();
 	pos_l -= { 0.13f, 0.12f };
@@ -1039,7 +1066,8 @@ void ModulePlayer::BlitFlippers() {
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_r.x) - 18, METERS_TO_PIXELS(pos_r.y) - 4 - 2, flipper_sprite[1]);
 }
 
-void ModulePlayer::BlitShark() {
+void ModulePlayer::BlitShark() 
+{
 	r_shark = &current_shark->GetCurrentFrame();
 	b2Vec2 pos_shark = shark->body->GetPosition();
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_shark.x) - 18 + go_back1_x, METERS_TO_PIXELS(pos_shark.y) - 34 + go_back1_y, r_shark);
@@ -1074,7 +1102,8 @@ void ModulePlayer::BlitCave() {
 	}
 }
 
-void ModulePlayer::BlitCoins() {
+void ModulePlayer::BlitCoins() 
+{
 	if (coin_picked.Finished()) {
 		current_coin_left = &coin_idle;
 		current_coin_right = &coin_idle;
@@ -1095,7 +1124,8 @@ void ModulePlayer::BlitCoins() {
 	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_coin_mid.x) - 8, METERS_TO_PIXELS(pos_coin_mid.y) - 7, r_coin_mid);
 }
 
-void ModulePlayer::BlitAboveLayer() {
+void ModulePlayer::BlitAboveLayer() 
+{
 	if (enable_above) {
 		// Blit above
 		r_door = &current_door->GetCurrentFrame();
@@ -1146,7 +1176,8 @@ void ModulePlayer::BlitAboveLayer() {
 	App->renderer->Blit(App->scene_intro->general, 181, 39, r_mart_center);
 }
 
-void ModulePlayer::ChangeAboveLayer() {
+void ModulePlayer::ChangeAboveLayer() 
+{
 	if (enable_above) {
 		is_above = true;
 
@@ -1200,7 +1231,8 @@ void ModulePlayer::ChangeAboveLayer() {
 	}
 }
 
-void ModulePlayer::UpdateSpring() {
+void ModulePlayer::UpdateSpring() 
+{	
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
 		if (post_start == 0)
 			post_start = 1;
@@ -1219,6 +1251,8 @@ void ModulePlayer::UpdateSpring() {
 		springDistanceJoint->GetBodyA()->ApplyForce(impulse, { 0, 0 }, true);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
+		App->audio->PlayFx(3);
+
 		// Animation change
 		current_spring = &end_spring;
 		spring_anim = true;
@@ -1234,7 +1268,8 @@ void ModulePlayer::UpdateSpring() {
 	}
 }
 
-void ModulePlayer::UpdateShark() {
+void ModulePlayer::UpdateShark() 
+{
 	if (shark_hit) {
 		//The shark goes back and spits out the ball
 		blit_ball = false;
@@ -1282,7 +1317,8 @@ void ModulePlayer::UpdateShark() {
 	}
 }
 
-void ModulePlayer::UpdateCave() {
+void ModulePlayer::UpdateCave() 
+{
 	if (destroy_pokemon_cave) {
 		if (pokemon_cave != nullptr)
 			App->physics->world->DestroyBody(pokemon_cave->body);
@@ -1425,7 +1461,8 @@ void ModulePlayer::UpdateCave() {
 	}
 }
 
-void ModulePlayer::UpdateDoor() {
+void ModulePlayer::UpdateDoor() 
+{
 	if (door_hit) {
 		//The door acts like the shark
 		current_door = &opening_door;
@@ -1451,7 +1488,8 @@ void ModulePlayer::UpdateDoor() {
 	}
 }
 
-void ModulePlayer::CreateDistanceJoints() {
+void ModulePlayer::CreateDistanceJoints() 
+{
 	if (post_start == 1) {
 		App->physics->CreateDistanceJoint(rotatingPokemons[1]->body, rotatingPokemons[2]->body);
 		App->physics->CreateDistanceJoint(rotatingPokemons[2]->body, rotatingPokemons[3]->body);

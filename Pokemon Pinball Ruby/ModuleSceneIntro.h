@@ -92,7 +92,7 @@ private:
 
 	b2Vec2 ballSpeed;
 	float timeEvo, timeEVo, timeEVO, timeTriangle1, timeTriangle2, timeCircle1, timeCircle2, timeCircle3, timeCircle4, timeCircle5, timeCircle6, timeCircle7;
-	bool  Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET, trianglesBlit1, trianglesBlit2, circle1, circle2, circle3, circle4, circle5, circle6, circle7, pikachuChargeCheck;
+	bool  Evo, EVo, EVO, Ls10, LS10, LS10T, Get, GEt, GET, trianglesBlit1, trianglesBlit2, circle1, circle2, circle3, circle4, circle5, circle6, circle7, pikachuChargeCheck, pika;
 
 public: 
 	void SensorsForBLit();

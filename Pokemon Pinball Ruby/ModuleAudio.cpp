@@ -166,3 +166,8 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 
 	return ret;
 }
+
+// Pause music
+void ModuleAudio::PauseMusic() const {
+	Mix_FadeOutMusic(300);
+}

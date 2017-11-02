@@ -25,6 +25,9 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
+	// Pause music
+	void PauseMusic() const;
+
 private:
 
 	Mix_Music*			music;

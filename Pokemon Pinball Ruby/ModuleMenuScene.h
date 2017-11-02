@@ -28,6 +28,8 @@ public:
 
 	menuStates menuEnum;
 
+	bool to_scene_intro;
+
 private:
 	SDL_Texture* menu; 
 	SDL_Rect* r;

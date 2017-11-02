@@ -76,6 +76,9 @@ bool ModuleMenuScene::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	menu = App->textures->Load("Assets/Sprites/Menu&more.png");
+	App->audio->PlayMusic("Assets/Audio/Music/MenuTheme.ogg");
+
+	to_scene_intro = false;
 
 	menuEnum = menu_;
 	return ret;
@@ -142,7 +145,10 @@ update_status ModuleMenuScene::Update()
 		App->renderer->Blit(menu, 40, 36, r);
 
 		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
+			App->audio->PlayMusic("Assets/Audio/Music/MainTheme.ogg");
+
 			App->fade->FadeToBlack(this, App->scene_intro, 4.0f);
+
 			break;
 		}
 		else if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
@@ -176,6 +182,8 @@ update_status ModuleMenuScene::Update()
 
 			App->player->SetGeneralParameters();
 			App->player->CreatePokemonCave();
+
+			App->audio->PlayMusic("Assets/Audio/Music/MenuTheme.ogg");
 
 			menuEnum = menu_;
 		}

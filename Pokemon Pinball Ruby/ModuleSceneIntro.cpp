@@ -215,6 +215,7 @@ bool ModuleSceneIntro::Start()
 	SetSensors();
 
 	indexPikachu = 0;
+	pika = false;
 
 	return ret;
 }
@@ -325,6 +326,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	// Check sensors
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
 	{
+		pika = true;
 		impactCheck = 1;
 		points += 2;
 	}
@@ -391,12 +393,14 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody1->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody1->body)
 	{
+		App->audio->PlayFx(4);
 		trianglesBlit1 = true;	
 		points += 5;
 	}
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == trianglebody2->body || bodyA->body == App->player->ball->body && bodyB->body == trianglebody2->body)
 	{
+		App->audio->PlayFx(4);
 		trianglesBlit2 = true;
 		points += 5;
 	}
@@ -1094,6 +1098,11 @@ void ModuleSceneIntro::Pikachu() {
 	if (impactCheck == 1 && !impactTrueno.Finished()) {
 		App->player->ball->body->SetLinearVelocity({ 0,0 });
 		App->player->ball->body->SetGravityScale(0);
+
+		if (pika) {
+			App->audio->PlayFx(2);
+			pika = false;
+		}
 	}
 
 	else if (impactCheck == 1 && impactTrueno.Finished()) {
