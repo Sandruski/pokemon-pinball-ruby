@@ -172,8 +172,12 @@ update_status ModuleMenuScene::Update()
 			App->scene_intro->highscore = App->scene_intro->points;
 
 		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
-			App->player->life = 3;
+			// Restart variables
 			App->scene_intro->points = 0;
+
+			App->player->SetGeneralParameters();
+			App->player->CreatePokemonCave();
+
 			menuEnum = menu_;
 		}
 		break;

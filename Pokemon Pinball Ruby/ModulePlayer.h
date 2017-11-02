@@ -37,6 +37,7 @@ public:
 	bool CleanUp();
 
 private:
+	//Ball
 	SDL_Texture* pokeball;
 	b2Vec2 start_ball;
 	float ball_diameter;
@@ -131,21 +132,9 @@ private:
 	SDL_Rect r_f5 = { 249, 1316, 31, 26 };
 	SDL_Rect r_f6 = { 203, 1316, 31, 26 };
 
-	//Map stuff
+	//Above layer
 	SDL_Rect above = { 268, 3, 256, 227 };
 	SDL_Rect above_details = { 0, 3, 256, 200};
-
-	Animation idle_door;
-	Animation opening_door;
-	Animation closing_door;
-	Animation* current_door;
-	SDL_Rect* r_door;
-	PhysBody* door;
-	bool door_hit;
-
-	Animation pokemon_mart_center;
-	Animation* current_mart_center;
-	SDL_Rect* r_mart_center;
 	PhysBody* left_above;
 	PhysBody* right_above;
 	PhysBody* left_sensor_above;
@@ -155,14 +144,19 @@ private:
 	bool enable_above;
 	bool disable_above;
 
-	SDL_Rect* r_pokemons1;
-	SDL_Rect* r_pokemons2;
-	SDL_Rect* r_pokemons3;
-	SDL_Rect* r_spring;
-	SDL_Rect* r_shark;
-	SDL_Rect* r_cave;
-	SDL_Rect* r_pokemon_cave;
-	SDL_Rect* r_egg;
+	//Door
+	Animation idle_door;
+	Animation opening_door;
+	Animation closing_door;
+	Animation* current_door;
+	SDL_Rect* r_door;
+	PhysBody* door;
+	bool door_hit;
+
+	//Pokemon mart-center
+	Animation pokemon_mart_center;
+	Animation* current_mart_center;
+	SDL_Rect* r_mart_center;
 
 	//Flippers
 	PhysBody* flippers[2];
@@ -179,8 +173,11 @@ private:
 	Animation* current_rotating_pokemons1;
 	Animation* current_rotating_pokemons2;
 	Animation* current_rotating_pokemons3;
+	SDL_Rect* r_pokemons1;
+	SDL_Rect* r_pokemons2;
+	SDL_Rect* r_pokemons3;
 	bool p1, p2, p3;
-	uint post_start; //shhh...
+	uint post_start;
 
 	//Spring
 	b2DistanceJoint* springDistanceJoint;
@@ -191,9 +188,9 @@ private:
 	Animation start_spring;
 	Animation end_spring;
 	Animation* current_spring;
+	SDL_Rect* r_spring;
 	bool spring_anim;
 
-	//I think this should go to scene_intro...
 	//Shark
 	Animation idle_shark;
 	Animation eat_shark;
@@ -201,37 +198,43 @@ private:
 	Animation spit_shark;
 	PhysBody* shark;
 	Animation* current_shark;
+	SDL_Rect* r_shark;
 	bool shark_hit;
 	float go_back1_x;
 	float go_back1_y;
 	bool first_shark;
 
-	//Cave (+ egg, + pokémon)
+	//Cave
+	PhysBody* cave;
 	Animation idle_cave;
 	Animation red_cave;
 	Animation to_idle_cave;
 	Animation jump_cave;
 	Animation wait_cave;
+	Animation* current_cave;
+	SDL_Rect* r_cave;
 
+	//Egg
 	Animation idle_egg;
 	Animation jump1_egg;
 	Animation jump2_egg;
 	Animation break_egg1;
 	Animation break_egg2;
+	Animation* current_egg;
+	SDL_Rect* r_egg;
+	bool blit_egg;
 
+	//Pokémon cave
+	PhysBody* pokemon_cave;
+	PhysBody* pokemon_cave1;
 	Animation idle_pokemon_cave;
 	Animation go_back_pokemon_cave;
 	Animation in_pokemon_cave;
 	Animation disappear_pokemon_cave;
 	Animation almost_in_pokemon_cave;
-
-	Animation* current_cave;
 	Animation* current_pokemon_cave;
-	Animation* current_egg;
+	SDL_Rect* r_pokemon_cave;
 
-	PhysBody* pokemon_cave;
-	PhysBody* pokemon_cave1;
-	PhysBody* cave;
 	bool destroy_pokemon_cave;
 	bool destroy_pokemon_cave1;
 	bool pokemon_cave_hit;
@@ -241,34 +244,59 @@ private:
 	float go_back2_y;
 	float go_back3_y;
 	bool blit_pokemon_over_cave;
-	bool blit_egg;
 	bool blit_pokemon_cave;
-
 	int num_cave_hits = 0;
 	bool cave_hit;
 
 	//Coin
-	Animation coin_idle;
-	Animation coin_picked;
-	SDL_Rect* r_coin_left;
-	SDL_Rect* r_coin_right;
-	SDL_Rect* r_coin_mid;
-	Animation* current_coin_left;
-	Animation* current_coin_right;
-	Animation* current_coin_mid;
 	PhysBody* coin_left;
 	PhysBody* coin_right;
 	PhysBody* coin_mid;
+	Animation coin_idle;
+	Animation coin_picked;
+	Animation* current_coin_left;
+	Animation* current_coin_right;
+	Animation* current_coin_mid;
+	SDL_Rect* r_coin_left;
+	SDL_Rect* r_coin_right;
+	SDL_Rect* r_coin_mid;
 
 private:
 	void CreateBall(float diameter, int x, int y);
 	void DestroyBall();
+	void CreateSpring();
+	void CreateFlippers();
+	void CreateRotatingPokemons();
+	void CreateShark();
+	void CreateCave();
+	void CreateAboveLayer();
+	void CreateAboveStuff();
+	void CreateDistanceJoints();
+
+	void BlitRotatingPokemons();
+	void BlitSpring();
+	void BlitFlippers();
+	void BlitShark();
+	void BlitCave();
+	void BlitCoins();
+	void BlitAboveLayer();
+
+	void ChangeAboveLayer();
+	void UpdateSpring();
+	void UpdateShark();
+	void UpdateCave();
+	void UpdateDoor();
+
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void UpdateCamera();
 
 	//Get sprites
 	void GetBallSprites(float angle, Ball* ball_properties); //Ball
 	void GetFlipperSprites(float angle, SDL_Rect* &flipper_sprite, bool left); //Flipper
+
+public:
+	void CreatePokemonCave();
+	void SetGeneralParameters();
 
 public:
 	PhysBody* ball;
