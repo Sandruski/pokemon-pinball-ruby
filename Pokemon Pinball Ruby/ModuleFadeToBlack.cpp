@@ -44,9 +44,9 @@ update_status ModuleFadeToBlack::Update()
 
 		if (now >= total_time)
 		{
-			off->CleanUp();
+			//off->CleanUp();
 			//on->Start();
-
+			App->menu_scene->menuEnum = null_;
 			total_time += total_time;
 			start_time = SDL_GetTicks();
 			current_step = fade_step::fade_from_black;

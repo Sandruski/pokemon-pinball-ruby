@@ -1,25 +1,25 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (2D Physics - class 4.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: El directorio intermedio (Debug\) contiene archivos compartidos de otro proyecto (2D Physics - class 4.vcxproj). Esto puede dar lugar a un comportamiento incorrecto de limpieza y recompilación.
   ModulePlayer.cpp
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): warning C4099: 'SDL_Texture': type name first seen using 'struct' now seen using 'class'
-  c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(128): note: see declaration of 'SDL_Texture'
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(370): warning C4244: 'argument': conversion from 'float32' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(390): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(416): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(418): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(551): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(552): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(553): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(623): warning C4244: 'argument': conversion from 'float32' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(680): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(689): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1017): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1021): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1029): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1031): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1033): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1039): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1236): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\sandraag3\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1261): warning C4244: 'argument': conversion from 'float32' to 'int', possible loss of data
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\cmath(113): warning C4577: 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
-  SDL Game.vcxproj -> C:\Users\sandraag3\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
-  SDL Game.vcxproj -> C:\Users\sandraag3\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'struct' ahora se ve usando 'class'
+  c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(128): note: vea la declaración de 'SDL_Texture'
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(278): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(359): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(531): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(556): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(651): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(659): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(745): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(880): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(881): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(882): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1029): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1038): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1045): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1057): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1061): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1069): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1071): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1073): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\cmath(113): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+  SDL Game.vcxproj -> C:\Users\disob\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
+  SDL Game.vcxproj -> C:\Users\disob\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)

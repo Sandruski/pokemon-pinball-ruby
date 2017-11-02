@@ -285,11 +285,8 @@ update_status ModulePhysics::PostUpdate()
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) //F1: show colliders
 		debug = !debug;
 
-	//UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	/*
 	if (debug)
 		return UPDATE_CONTINUE;
-	*/
 
 	// Bonus code: this will iterate all objects in the world and draw the circles
 	// You need to provide your own macro to translate meters to pixels
@@ -297,7 +294,7 @@ update_status ModulePhysics::PostUpdate()
 	b2Body* body_clicked = nullptr;
 	b2Vec2 mouse_position = { PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY()) };
 	
-	if (App->menu_scene->menuEnum == null_ /*&& !debug*/) {	//UNCOMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if (App->menu_scene->menuEnum == null_ && !debug) {
 
 		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 		{

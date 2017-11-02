@@ -143,6 +143,7 @@ private:
 	PhysBody* not_above_right;
 	bool enable_above;
 	bool disable_above;
+	bool is_above;
 
 	//Door
 	Animation idle_door;

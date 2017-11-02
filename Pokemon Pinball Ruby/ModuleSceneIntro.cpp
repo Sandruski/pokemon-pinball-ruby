@@ -250,8 +250,6 @@ update_status ModuleSceneIntro::Update()
 
 	App->renderer->Blit(general, 0, 0, &background);
 
-	Pikachu();
-
 	if (indexPikachu == 0 && sensorPikachu->body->GetPosition().x != 33) {
 		App->physics->world->DestroyBody(sensorPikachu->body);
 		sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
@@ -706,7 +704,7 @@ void ModuleSceneIntro::CreateChains() {
 
 	int GeneralSpritesheet1[110] = {
 		632 - 533, 427,
-		632 - 533, 423,
+		632 - 533, 426,
 		573 - 533, 391,
 		573 - 533, 399,
 		556 - 533, 399,
@@ -730,9 +728,9 @@ void ModuleSceneIntro::CreateChains() {
 		678 - 533, 69,
 		713 - 533, 82,
 		737 - 533, 98,
-		758 - 533, 118,
-		772 - 533, 139,
-		781 - 533, 168,
+		760 - 533, 118,
+		774 - 533, 139,
+		783 - 533, 168,
 		783 - 533, 191,
 		783 - 533, 411,
 		767 - 533, 411,
@@ -740,9 +738,9 @@ void ModuleSceneIntro::CreateChains() {
 		756 - 533, 144,
 		753 - 533, 141,
 		752 - 533, 147,
-		761 - 533, 192,
-		758 - 533, 226,
-		748 - 533, 257,
+		764 - 533, 192,
+		760 - 533, 226,
+		750 - 533, 257,
 		736 - 533, 279,
 		727 - 533, 287,
 		727 - 533, 312,
@@ -752,7 +750,7 @@ void ModuleSceneIntro::CreateChains() {
 		749 - 533, 400,
 		733 - 533, 400,
 		732 - 533, 389,
-		675 - 533, 421,
+		675 - 533, 427,
 		675 - 533, 426,
 		737 - 533, 449,
 		742 - 533, 544,
@@ -772,22 +770,26 @@ void ModuleSceneIntro::CreateChains() {
 		658 - 533, 95
 	};
 
-	int GeneralSpritesheet3[30] = {
-		583 - 533, 337,
-		581 - 533, 333,
-		577 - 533, 334,
-		576 - 533, 338,
-		576 - 533, 371,
-		580 - 533, 375,
-		586 - 533, 379,
-		595 - 533, 384,
-		609 - 533, 393,
-		619 - 533, 398,
-		625 - 533, 393,
-		612 - 533, 384,
-		598 - 533, 375,
-		583 - 533, 364,
-		583 - 533, 341
+	int GeneralSpritesheet3[38] = {
+		620 - 533, 396,
+		624 - 533, 393,
+		618 - 533, 388,
+		605 - 533, 380,
+		590 - 533, 371,
+		582 - 533, 364,
+		582 - 533, 352,
+		582 - 533, 343,
+		582 - 533, 338,
+		580 - 533, 334,
+		577 - 533, 335,
+		577 - 533, 343,
+		577 - 533, 353,
+		577 - 533, 361,
+		577 - 533, 371,
+		582 - 533, 375,
+		592 - 533, 380,
+		604 - 533, 387,
+		614 - 533, 394
 	};
 
 	int GeneralSpritesheet4[58] = {
@@ -855,20 +857,20 @@ void ModuleSceneIntro::CreateChains() {
 	};
 
 	int GeneralSpritesheet6[28] = {
-		681 - 533, 393,
-		720 - 533, 367,
-		723 - 533, 364,
-		723 - 533, 345,
+		729 - 533, 336,
+		727 - 533, 333,
 		723 - 533, 336,
-		725 - 533, 334,
-		728 - 533, 334,
-		730 - 533, 336,
-		730 - 533, 370,
-		727 - 533, 373,
-		721 - 533, 377,
-		708 - 533, 385,
-		687 - 533, 399,
-		684 - 533, 396
+		723 - 533, 347,
+		723 - 533, 363,
+		719 - 533, 369,
+		708 - 533, 375,
+		689 - 533, 387,
+		682 - 533, 392,
+		682 - 533, 397,
+		688 - 533, 396,
+		720 - 533, 375,
+		729 - 533, 367,
+		729 - 533, 340
 	};
 
 	int GeneralSpritesheet7[58] = {
@@ -898,8 +900,8 @@ void ModuleSceneIntro::CreateChains() {
 		730 - 533, 242,
 		741 - 533, 214,
 		744 - 533, 199,
-		742 - 533, 161,
-		736 - 533, 137,
+		738 - 533, 161,
+		730 - 533, 137,
 		718 - 533, 114
 	};
 
@@ -938,15 +940,36 @@ void ModuleSceneIntro::CreateChains() {
 		566 - 533, 165
 	};
 
-	int GeneralSpritesheet11[16] = {
-		678 - 533, 98,
-		678 - 533, 109,
-		678 - 533, 116,
-		682 - 533, 118,
-		685 - 533, 114,
-		685 - 533, 95,
-		682 - 533, 92,
-		678 - 533, 96
+	int GeneralSpritesheet11[14] = {
+		680 - 533, 103,
+		680 - 533, 116,
+		684 - 533, 116,
+		684 - 533, 106,
+		684 - 533, 97,
+		682 - 533, 93,
+		680 - 533, 98
+	};
+
+	int GeneralSpritesheet12[16] = {
+		554 - 533, 368,
+		558 - 533, 377,
+		565 - 533, 383,
+		573 - 533, 388,
+		561 - 533, 389,
+		552 - 533, 386,
+		548 - 533, 370,
+		550 - 533, 365
+	};
+
+	int GeneralSpritesheet13[16] = {
+		729 - 533, 390,
+		740 - 533, 383,
+		747 - 533, 378,
+		751 - 533, 372,
+		752 - 533, 389,
+		739 - 533, 393,
+		732 - 533, 399,
+		726 - 533, 394
 	};
 
 	f.categoryBits = WALL;
@@ -957,7 +980,7 @@ void ModuleSceneIntro::CreateChains() {
 	map_chain1->body->GetFixtureList()->SetFilterData(f);
 	map_chain2 = App->physics->CreateChain(0, 0, GeneralSpritesheet2, 14, b2_staticBody);
 	map_chain2->body->GetFixtureList()->SetFilterData(f);
-	map_chain3 = App->physics->CreateChain(0, 0, GeneralSpritesheet3, 30, b2_staticBody);
+	map_chain3 = App->physics->CreateChain(0, 0, GeneralSpritesheet3, 38, b2_staticBody);
 	map_chain3->body->GetFixtureList()->SetFilterData(f);
 	map_chain4 = App->physics->CreateChain(0, 0, GeneralSpritesheet4, 58, b2_staticBody);
 	map_chain4->body->GetFixtureList()->SetFilterData(f);
@@ -973,8 +996,12 @@ void ModuleSceneIntro::CreateChains() {
 	map_chain9->body->GetFixtureList()->SetFilterData(f);
 	map_chain10 = App->physics->CreateChain(0, 0, GeneralSpritesheet10, 8, b2_staticBody);
 	map_chain10->body->GetFixtureList()->SetFilterData(f);
-	map_chain11 = App->physics->CreateChain(0, 0, GeneralSpritesheet11, 16, b2_staticBody);
+	map_chain11 = App->physics->CreateChain(0, 0, GeneralSpritesheet11, 14, b2_staticBody);
 	map_chain11->body->GetFixtureList()->SetFilterData(f);
+	map_chain12 = App->physics->CreateChain(0, 0, GeneralSpritesheet12, 16, b2_staticBody);
+	map_chain12->body->GetFixtureList()->SetFilterData(f);
+	map_chain13 = App->physics->CreateChain(0, 0, GeneralSpritesheet13, 16, b2_staticBody);
+	map_chain13->body->GetFixtureList()->SetFilterData(f);
 
 	//Setting... triangles(?)
 	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 6, b2_staticBody);
@@ -1071,13 +1098,13 @@ void ModuleSceneIntro::Pikachu() {
 
 	else if (impactCheck == 1 && impactTrueno.Finished()) {
 		App->player->ball->body->SetGravityScale(1);
-		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
-		impactTrueno.Reset();
+		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);		
 		impactCheck = 2;
 	}
 
 	else if (impactTrueno2.Finished() && impactCheck == 2) {
 		impactCheck = 0;
+		impactTrueno.Reset();
 		impactTrueno2.Reset();
 	}
 

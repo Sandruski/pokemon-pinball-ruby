@@ -398,6 +398,9 @@ update_status ModulePlayer::Update()
 	// Blit shark
 	BlitShark();
 
+	// Blit pikachu
+	App->scene_intro->Pikachu();
+
 	// Blit coins (last thing to blit)
 	BlitCoins();
 
@@ -622,7 +625,7 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		current_coin_right = &coin_picked;
 		App->scene_intro->points += 500;
 	}
-	if (bodyB->body == App->player->ball->body && bodyA->body == coin_mid->body || bodyA->body == App->player->ball->body && bodyB->body == coin_mid->body) {
+	if ((bodyB->body == App->player->ball->body && bodyA->body == coin_mid->body || bodyA->body == App->player->ball->body && bodyB->body == coin_mid->body) && is_above) {
 		current_coin_mid = &coin_picked;
 		App->scene_intro->points += 500;
 	}
@@ -696,8 +699,8 @@ void ModulePlayer::CreateFlippers() {
 	flippers[0] = App->physics->CreateFlipper(flipper_vertices, 8, 32); //Left flipper 45
 	flippers[1] = App->physics->CreateFlipper(flipper_vertices, 8, 192); //Right flipper 205
 
-	flipperCircles[0] = App->physics->CreateCircle(90, 396, 6, b2_staticBody); //Left circle
-	flipperCircles[1] = App->physics->CreateCircle(151, 396, 6, b2_staticBody); //Right circle
+	flipperCircles[0] = App->physics->CreateCircle(90, 394, 6, b2_staticBody); //Left circle
+	flipperCircles[1] = App->physics->CreateCircle(151, 394, 6, b2_staticBody); //Right circle
 
 	flipperRevoluteJoints[0] = App->physics->CreateFlipperRevoluteJoint(flippers[0]->body, flipperCircles[0]->body, { 0.13f,0.12f }, 20, -32); //Left flipper revolute joint
 	flipperRevoluteJoints[1] = App->physics->CreateFlipperRevoluteJoint(flippers[1]->body, flipperCircles[1]->body, { 0.13f,0.12f }, -150, -192); //Right flipper revolute joint
@@ -905,6 +908,7 @@ void ModulePlayer::SetGeneralParameters() {
 	life = 3;
 	enable_above = false;
 	disable_above = false;
+	is_above = false;
 
 	current_rotating_pokemons1 = &rotating_pokemons;
 	current_rotating_pokemons2 = &rotating_pokemons;
@@ -1023,7 +1027,7 @@ void ModulePlayer::BlitFlippers() {
 
 	// Get sprite for the flipper
 	GetFlipperSprites(angle_l, flipper_sprite[0], true);
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_l.x), METERS_TO_PIXELS(pos_l.y) - 4, flipper_sprite[0]);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_l.x), METERS_TO_PIXELS(pos_l.y) - 4 - 2, flipper_sprite[0]);
 
 	// Right
 	b2Vec2 pos_r = flipperRevoluteJoints[1]->GetAnchorB();
@@ -1032,7 +1036,7 @@ void ModulePlayer::BlitFlippers() {
 
 	// Get sprite for the flipper
 	GetFlipperSprites(angle_r, flipper_sprite[1], false);
-	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_r.x) - 18, METERS_TO_PIXELS(pos_r.y) - 4, flipper_sprite[1]);
+	App->renderer->Blit(App->scene_intro->general, METERS_TO_PIXELS(pos_r.x) - 18, METERS_TO_PIXELS(pos_r.y) - 4 - 2, flipper_sprite[1]);
 }
 
 void ModulePlayer::BlitShark() {
@@ -1144,6 +1148,8 @@ void ModulePlayer::BlitAboveLayer() {
 
 void ModulePlayer::ChangeAboveLayer() {
 	if (enable_above) {
+		is_above = true;
+
 		b2Filter f;
 		f.categoryBits = WALL;
 		f.maskBits = BALL;
@@ -1166,6 +1172,8 @@ void ModulePlayer::ChangeAboveLayer() {
 		App->scene_intro->map_chain11->body->GetFixtureList()->SetFilterData(f);
 	}
 	if (disable_above) {
+		is_above = false;
+
 		b2Filter f;
 		f.categoryBits = NEUTRAL;
 		f.maskBits = BALL;

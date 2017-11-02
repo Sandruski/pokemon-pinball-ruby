@@ -54,6 +54,7 @@ public:
 	PhysBody* map_chain10;
 	PhysBody* map_chain11;
 	PhysBody* map_chain12;
+	PhysBody* map_chain13;
 
 private:
 
