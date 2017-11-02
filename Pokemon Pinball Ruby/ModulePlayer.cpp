@@ -332,8 +332,23 @@ update_status ModulePlayer::Update()
 		// Update Flippers
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 			flipperRevoluteJoints[0]->GetBodyA()->ApplyAngularImpulse(-0.1f, true);
+
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 			flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
+
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN && App->scene_intro->impactCheck == 0) {
+			if (App->scene_intro->indexPikachu == 0)
+				App->scene_intro->indexPikachu = 1;
+			else
+				App->scene_intro->indexPikachu = 0;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN && App->scene_intro->impactCheck == 0) {
+			if (App->scene_intro->indexPikachu == 0)
+				App->scene_intro->indexPikachu = 1;
+			else
+				App->scene_intro->indexPikachu = 0;
+		}
 
 		// Create ball
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && post_start > 0 && App->window->fullscreen == false) //this does not work in fullscreen mode
