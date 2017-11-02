@@ -8,8 +8,8 @@
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 #include "ModulePlayer.h"
-#include "ModuleFonts.h"
 #include "ModuleMenuScene.h"
+#include "ModuleFonts.h"
 
 #include <fstream>
 #include <iostream>
@@ -305,10 +305,6 @@ update_status ModuleSceneIntro::Update()
 
 	BlitStaticPokemonsAndLife();
 
-	//Blit Points
-	sprintf_s(str1, "%i", points);
-	App->fonts->BlitText(195, 410, font_score, str1);
-
 	return UPDATE_CONTINUE;
 }
 
@@ -339,6 +335,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorEvo->body || bodyA->body == App->player->ball->body && bodyB->body == sensorEvo->body)
 	{
+		App->audio->PlayFx(7);
 		Evo = true;
 		points += 2;
 	}
@@ -357,6 +354,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorLs10->body || bodyA->body == App->player->ball->body && bodyB->body == sensorLs10->body)
 	{
+		App->audio->PlayFx(7);
 		Ls10 = true;
 		points += 2;
 	}
@@ -374,6 +372,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorGet->body || bodyA->body == App->player->ball->body && bodyB->body == sensorGet->body)
 	{
+		App->audio->PlayFx(7);
 		Get = true;
 		points += 2;
 	}

@@ -1,67 +1,25 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: El directorio intermedio (Debug\) contiene archivos compartidos de otro proyecto (2D Physics - class 4.vcxproj). Esto puede dar lugar a un comportamiento incorrecto de limpieza y recompilación.
-  ModuleWindow.cpp
-  ModuleTextures.cpp
-  ModuleSceneIntro.cpp
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'struct' ahora se ve usando 'class'
-  c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulefonts.h(10): note: vea la declaración de 'SDL_Texture'
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\xlocale(314): warning C4530: Se ha utilizado el controlador de excepciones de C++, pero la semántica de desenredo no está habilitada. Especifique /EHsc
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModuleRender.cpp
   ModulePlayer.cpp
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'struct' ahora se ve usando 'class'
-  c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(128): note: vea la declaración de 'SDL_Texture'
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(284): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(388): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(563): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(589): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(686): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(694): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(784): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(922): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(923): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(924): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1075): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1084): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1092): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1104): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1108): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1116): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1118): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1120): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\cmath(113): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModulePhysics.cpp
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(127): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'class' ahora se ve usando 'struct'
-  c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): note: vea la declaración de 'SDL_Texture'
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(128): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'class' ahora se ve usando 'struct'
-  c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(127): note: vea la declaración de 'SDL_Texture'
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(80): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(104): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(105): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(148): warning C4018: '<': no coinciden signed/unsigned
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(534): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(535): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulephysics.cpp(541): warning C4244: 'return': conversión de 'float32' a 'int'; posible pérdida de datos
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\cmath(113): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModuleMenuScene.cpp
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'struct' ahora se ve usando 'class'
-  c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(128): note: vea la declaración de 'SDL_Texture'
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\xlocale(314): warning C4530: Se ha utilizado el controlador de excepciones de C++, pero la semántica de desenredo no está habilitada. Especifique /EHsc
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModuleInput.cpp
-  ModuleFonts.cpp
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulefonts.cpp(54): warning C4018: '<': no coinciden signed/unsigned
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulefonts.cpp(105): warning C4018: '<': no coinciden signed/unsigned
-  ModuleFadeToBlack.cpp
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'struct' ahora se ve usando 'class'
-  c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulefadetoblack.h(10): note: vea la declaración de 'SDL_Texture'
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModuleAudio.cpp
-  Main.cpp
-  log.cpp
-  Application.cpp
-c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'struct' ahora se ve usando 'class'
-  c:\users\kayte\desktop\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(128): note: vea la declaración de 'SDL_Texture'
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  Generando código...
-  SDL Game.vcxproj -> C:\Users\kayte\Desktop\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
-  SDL Game.vcxproj -> C:\Users\kayte\Desktop\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\modulemenuscene.h(9): warning C4099: 'SDL_Texture': nombre de tipo visto anteriormente usando 'struct' ahora se ve usando 'class'
+  c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\sdl\include\sdl_render.h(128): note: vea la declaración de 'SDL_Texture'
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(290): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(397): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(575): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(601): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(708): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(716): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(806): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(944): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(945): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(946): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1097): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1106): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1114): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1126): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1130): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1138): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1140): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\disob\documents\github\pokemon-pinball-ruby\pokemon pinball ruby\moduleplayer.cpp(1142): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\cmath(113): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+  SDL Game.vcxproj -> C:\Users\disob\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.exe
+  SDL Game.vcxproj -> C:\Users\disob\Documents\GitHub\Pokemon-Pinball-Ruby\Pokemon Pinball Ruby\Debug\Pokemon Pinball Ruby.pdb (Partial PDB)

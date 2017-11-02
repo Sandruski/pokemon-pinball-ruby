@@ -7,6 +7,7 @@
 #include "ModuleRender.h"
 #include "ModuleAudio.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleFonts.h"
 
 #include "Box2D/Box2D/Box2D.h"
 
@@ -264,10 +265,15 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player...");
 
-	App->audio->LoadFx("Assets/Audio/FX/Flipper.wav");
-	App->audio->LoadFx("Assets/Audio/FX/PikachuThunderbolt.wav");
-	App->audio->LoadFx("Assets/Audio/FX/Spring.wav");
-	App->audio->LoadFx("Assets/Audio/FX/Bumper.wav");
+	App->audio->LoadFx("Assets/Audio/FX/Flipper.wav"); /// id == 1
+	App->audio->LoadFx("Assets/Audio/FX/PikachuThunderbolt.wav"); /// 2
+	App->audio->LoadFx("Assets/Audio/FX/Spring.wav"); /// 3
+	App->audio->LoadFx("Assets/Audio/FX/Bumper.wav"); /// 4
+	App->audio->LoadFx("Assets/Audio/FX/Rotating.wav"); /// 5
+	App->audio->LoadFx("Assets/Audio/FX/Cave.wav"); /// 6
+	App->audio->LoadFx("Assets/Audio/FX/Sensor.wav"); /// 7
+	App->audio->LoadFx("Assets/Audio/FX/Shark.wav"); /// 8
+	App->audio->LoadFx("Assets/Audio/FX/Coin.wav"); /// id == 9
 
 	pokeball = App->textures->Load("Assets/Sprites/Pokeball&more.png");
 
@@ -337,11 +343,14 @@ update_status ModulePlayer::Update()
 		int x, y;
 		ball->GetPosition(x, y);
 		App->renderer->camera.y = (-y*SCREEN_SIZE) + 180;
-		if (App->renderer->camera.y >= 0)
+		
+		if (App->renderer->camera.y >= 0) {
 			App->renderer->camera.y = 0;
-		else if (App->renderer->camera.y <= -424 - 80)
+		}
+		else if (App->renderer->camera.y <= -424 - 80) {
 			App->renderer->camera.y = -424 - 80;
-
+		}
+	
 	}
 
 	if (!cameraAtPlayer && App->menu_scene->menuEnum == score_) {
@@ -381,7 +390,7 @@ update_status ModulePlayer::Update()
 
 		// Create ball
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && post_start > 0 && App->window->fullscreen == false) //this does not work in fullscreen mode
-			CreateBall(ball_diameter, App->input->GetMouseX(), App->input->GetMouseY());
+			CreateBall(ball_diameter, App->input->GetMouseX(), App->input->GetMouseY() * SCREEN_SIZE);
 
 		// Create ball at start position (in case the ball gets stuck, etc.)
 		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN && post_start > 0) //respawn
@@ -432,6 +441,9 @@ update_status ModulePlayer::Update()
 
 	// Blit coins (last thing to blit)
 	BlitCoins();
+
+	sprintf_s(App->scene_intro->str1, "%i", App->scene_intro->points);
+	App->fonts->BlitText(195, -App->renderer->camera.y / SCREEN_SIZE + 140, App->scene_intro->font_score, App->scene_intro->str1);
 
 	return UPDATE_CONTINUE;
 }
@@ -600,22 +612,26 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[1]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[1]->body)
 	{
+		App->audio->PlayFx(5);
 		App->scene_intro->points += 10;
 		p1 = true;
 	}
 	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[2]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[2]->body)
 	{
+		App->audio->PlayFx(5);
 		App->scene_intro->points += 10;
 		p2 = true;
 	}
 	if (bodyB->body == App->player->ball->body && bodyA->body == rotatingPokemons[3]->body || bodyA->body == App->player->ball->body && bodyB->body == rotatingPokemons[3]->body)
 	{
+		App->audio->PlayFx(5);
 		App->scene_intro->points += 10;
 		p3 = true;
 	}
 
 	// Cave
 	if (bodyB->body == App->player->ball->body && bodyA->body == cave->body || bodyA->body == App->player->ball->body && bodyB->body == cave->body) {
+		App->audio->PlayFx(6);
 		num_cave_hits++;
 		cave_hit = true;
 		App->scene_intro->points += 100;
@@ -623,18 +639,21 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	// Pokémon cave
 	if (pokemon_cave != nullptr) {
 		if (bodyB->body == App->player->ball->body && bodyA->body == pokemon_cave->body || bodyA->body == App->player->ball->body && bodyB->body == pokemon_cave->body) {
+			App->audio->PlayFx(6);
 			pokemon_cave_hit = true;
 			App->scene_intro->points += 10;
 		}
 	}
 	if (pokemon_cave1 != nullptr) {
 		if (bodyB->body == App->player->ball->body && bodyA->body == pokemon_cave1->body || bodyA->body == App->player->ball->body && bodyB->body == pokemon_cave1->body) {
+			App->audio->PlayFx(6);
 			pokemon_cave1_hit = true;
 			App->scene_intro->points += 50;
 		}
 	}
 	// Shark
 	if (bodyB->body == App->player->ball->body && bodyA->body == shark->body || bodyA->body == App->player->ball->body && bodyB->body == shark->body) {
+		App->audio->PlayFx(8);
 		shark_hit = true;
 		App->scene_intro->points += 100;
 	}
@@ -651,14 +670,17 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	//Coins
 	if (bodyB->body == App->player->ball->body && bodyA->body == coin_left->body || bodyA->body == App->player->ball->body && bodyB->body == coin_left->body) {
+		App->audio->PlayFx(9);
 		current_coin_left = &coin_picked;
 		App->scene_intro->points += 500;
 	}
 	if (bodyB->body == App->player->ball->body && bodyA->body == coin_right->body || bodyA->body == App->player->ball->body && bodyB->body == coin_right->body) {
+		App->audio->PlayFx(9);
 		current_coin_right = &coin_picked;
 		App->scene_intro->points += 500;
 	}
 	if ((bodyB->body == App->player->ball->body && bodyA->body == coin_mid->body || bodyA->body == App->player->ball->body && bodyB->body == coin_mid->body) && is_above) {
+		App->audio->PlayFx(9);
 		current_coin_mid = &coin_picked;
 		App->scene_intro->points += 500;
 	}
