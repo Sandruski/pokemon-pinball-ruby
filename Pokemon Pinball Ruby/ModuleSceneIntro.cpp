@@ -111,21 +111,28 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	latiosSave.PushBack({ 0, 0, 0, 0 });
 	latiosSave.speed = 0.075f;
 
-	pikachu.PushBack({ 64, 1280, 25, 24 });
-	pikachu.PushBack({ 726 - 2, 1228, 23, 24 });
+	pikachu.PushBack({ 51, 1199, 38, 91 });
+	pikachu.PushBack({ 91, 1199, 38, 91 });
 	pikachu.speed = 0.05f;
 
-	impactTrueno.PushBack({ 162, 1265, 23, 23 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.PushBack({ 319, 1264, 84, 8 });
-	impactTrueno.speed = 0.05f;
+	impactTrueno.PushBack({ 209, 1199, 38, 91 });
+	impactTrueno.PushBack({ 249, 1199, 38, 91 });
+	impactTrueno.PushBack({ 289, 1199, 38, 91 });
+	impactTrueno.PushBack({ 11, 920, 38, 91 });
+	impactTrueno.PushBack({ 51, 920, 38, 91 });
+	impactTrueno.PushBack({ 51, 1013, 38, 91 });
+	impactTrueno.speed = 0.1f;
+	impactTrueno.loop = false;
+
+
+	impactTrueno2.PushBack({ 11, 1106, 38, 91 });
+	impactTrueno2.PushBack({ 11, 1199, 38, 91 });
+	impactTrueno2.PushBack({ 51, 1106, 38, 91 });
+	impactTrueno2.PushBack({ 11, 1013, 38, 91 });
+	impactTrueno2.PushBack({ 369, 1199, 38, 91 });
+	impactTrueno2.PushBack({ 329, 1199, 38, 91 });
+	impactTrueno2.speed = 0.1f;
+	impactTrueno2.loop = false;
 
 	mPokemon.PushBack({ 345, 990, 28, 34 });
 	mPokemon.PushBack({ 375, 990, 30, 34 });
@@ -219,21 +226,36 @@ update_status ModuleSceneIntro::Update()
 		}
 	}
 
+	App->renderer->Blit(general, 0, 0, &background);
+
 	//Pikachu
-	if (checkTime && time < 60) {
+	if (impactCheck == 1 && !impactTrueno.Finished()) {
 		App->player->ball->body->SetLinearVelocity({0,0});
 		App->player->ball->body->SetGravityScale(0);
-		time++;
 	}
-	else if (checkTime && time >= 60) {
+	else if (impactCheck == 1 && impactTrueno.Finished()) {	
 		App->player->ball->body->SetGravityScale(1);
 		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
-		time = 0;
-		checkTime = false;
+		impactTrueno.Reset();
+		impactCheck = 2;
 	}
-	//
 
-	App->renderer->Blit(general, 0, 0, &background);
+	else if (impactTrueno2.Finished() && impactCheck == 2) {
+		impactCheck = 0;
+		impactTrueno2.Reset();
+	}
+
+	if (impactCheck == 0)
+		current_anim = &pikachu;
+	else if (impactCheck == 1)
+		current_anim = &impactTrueno;
+	else
+		current_anim = &impactTrueno2;
+	r = &current_anim->GetCurrentFrame();
+	int x, y;
+	sensorPikachu->GetPosition(x, y);
+	App->renderer->Blit(general, x - 10, y - 45, r);
+	//
 
 	if (trianglesBlit1) {
 		timeTriangle1++;
@@ -296,7 +318,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	// Check sensors
 	if (bodyB->body == App->player->ball->body && bodyA->body == sensorPikachu->body || bodyA->body == App->player->ball->body && bodyB->body == sensorPikachu->body)
 	{
-		checkTime = true;
+		impactCheck = 1;
 		points += 2;
 	}
 
@@ -962,12 +984,6 @@ void ModuleSceneIntro::BlitStaticPokemonsAndLife() {
 		App->renderer->Blit(general, 101, 353, r);
 		App->renderer->Blit(general, 98, 330, &rBall);
 	}
-
-	current_anim = &pikachu;
-	r = &current_anim->GetCurrentFrame();
-	int x, y;
-	sensorPikachu->GetPosition(x, y);
-	App->renderer->Blit(general, x - 2, y + 20, r);
 
 	//mPokemon
 	current_anim = &mPokemon;
