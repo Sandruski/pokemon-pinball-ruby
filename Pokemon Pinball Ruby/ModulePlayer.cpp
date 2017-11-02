@@ -3,6 +3,7 @@
 #include "ModulePlayer.h"
 #include "ModuleInput.h"
 #include "ModuleMenuScene.h"
+#include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleSceneIntro.h"
 
@@ -614,8 +615,12 @@ update_status ModulePlayer::Update()
 			flipperRevoluteJoints[1]->GetBodyA()->ApplyAngularImpulse(0.1f, true);
 
 		// Create ball
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && post_start > 0)
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && post_start > 0 && App->window->fullscreen == false) //THIS DOES NOT WORK IN FULLSCREEN MODE. PLEASE DO NOT CLICK THE SCREEN
 			CreateBall(ball_diameter, App->input->GetMouseX(), App->input->GetMouseY());
+
+		// Create ("move") ball at start position (in case the ball gets stuck, etc.)
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN && post_start > 0) // Respawn
+			CreateBall(ball_diameter, start_ball.x, start_ball.y);
 
 		// Destroy ball
 		if (App->scene_intro->destroy_ball && ball != nullptr)

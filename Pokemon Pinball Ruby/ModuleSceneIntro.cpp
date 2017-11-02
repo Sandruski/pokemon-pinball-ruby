@@ -215,7 +215,7 @@ update_status ModuleSceneIntro::Update()
 		}
 		else {
 			App->window->fullscreen = true;
-			SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN); //if not working properly, try SDL_WINDOW_FULLSCREEN_DESKTOP
+			SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP); //if not working properly, try SDL_WINDOW_FULLSCREEN_DESKTOP
 		}
 	}
 
