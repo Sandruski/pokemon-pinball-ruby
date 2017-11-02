@@ -252,6 +252,20 @@ update_status ModuleSceneIntro::Update()
 
 	Pikachu();
 
+	if (indexPikachu == 0 && sensorPikachu->body->GetPosition().x != 33) {
+		App->physics->world->DestroyBody(sensorPikachu->body);
+		sensorPikachu = App->physics->CreateRectangleSensor(33, 360, 10, 10);
+		sensorPikachu->listener = this;
+		sensorPikachu->body->GetFixtureList()->SetFilterData(f);
+	}
+
+	if (indexPikachu == 1 && sensorPikachu->body->GetPosition().x != 210) {
+		App->physics->world->DestroyBody(sensorPikachu->body);
+		sensorPikachu = App->physics->CreateRectangleSensor(210, 360, 10, 10);
+		sensorPikachu->listener = this;
+		sensorPikachu->body->GetFixtureList()->SetFilterData(f);
+	}
+
 	if (trianglesBlit1) {
 		timeTriangle1++;
 		App->renderer->Blit(general, 65, 331, &trianglesOnCollision);
@@ -935,7 +949,6 @@ void ModuleSceneIntro::CreateChains() {
 		678 - 533, 96
 	};
 
-	b2Filter f;
 	f.categoryBits = WALL;
 	f.maskBits = BALL;
 
