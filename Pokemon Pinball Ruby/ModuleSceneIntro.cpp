@@ -214,6 +214,8 @@ bool ModuleSceneIntro::Start()
 
 	SetSensors();
 
+	indexPikachu = 0;
+
 	return ret;
 }
 
@@ -248,49 +250,7 @@ update_status ModuleSceneIntro::Update()
 
 	App->renderer->Blit(general, 0, 0, &background);
 
-	//Pikachu
-	if (impactCheck == 1 && !impactTrueno.Finished()) {
-		App->player->ball->body->SetLinearVelocity({0,0});
-		App->player->ball->body->SetGravityScale(0);
-	}
-
-	else if (impactCheck == 1 && impactTrueno.Finished()) {	
-		App->player->ball->body->SetGravityScale(1);
-		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
-		impactTrueno.Reset();
-		impactCheck = 2;
-	}
-
-	else if (impactTrueno2.Finished() && impactCheck == 2) {
-		impactCheck = 0;
-		impactTrueno2.Reset();
-	}
-
-	if (impactCheck == 0)
-		current_anim = &pikachu;
-	else if (impactCheck == 1)
-		current_anim = &impactTrueno;
-	else
-		current_anim = &impactTrueno2;
-	r = &current_anim->GetCurrentFrame();
-	int x, y;
-	sensorPikachu->GetPosition(x, y);
-	App->renderer->Blit(general, x - 10, y - 45, r);
-
-	/// pikaCharge
-	if(!pikachuChargeCheck)
-	App->renderer->Blit(general, 209, 170, &rChargePikachu);
-
-	if (pikachuChargeCheck && !chargePikachu.Finished()) {
-		current_anim = &chargePikachu;
-		r = &current_anim->GetCurrentFrame();
-		App->renderer->Blit(general, 209, 170, r);
-	}
-	else {
-		pikachuChargeCheck = false;
-		chargePikachu.Reset();
-	}
-	//
+	Pikachu();
 
 	if (trianglesBlit1) {
 		timeTriangle1++;
@@ -691,25 +651,34 @@ void ModuleSceneIntro::SetSensors() {
 
 void ModuleSceneIntro::CreateChains() {
 
-	int triangle[14] = {
-		599 - 533, 337,
-		599 - 533, 356,
-		616 - 533, 367,
-		619 - 533, 366,
+	int triangle[6] = {
 		620 - 533, 362,
 		604 - 533, 339,
 		601 - 533, 336
 	};
 
-	int triangle2[14] = {
+	int triangle2[6] = {
+		686 - 533, 362,
+		702 - 533, 337,
+		705 - 533, 336
+	};
+
+	int triangleFloor1[10] = {
+		599 - 533, 337,
+		599 - 533, 356,
+		616 - 533, 367,
+		619 - 533, 366,
+		620 - 533, 362,
+	};
+
+	int triangleFloor2[10] = {
 		705 - 533, 338,
 		705 - 533, 355,
 		691 - 533, 364,
 		687 - 533, 366,
 		686 - 533, 362,
-		702 - 533, 337,
-		705 - 533, 336
 	};
+
 
 	int GeneralSpritesheet0[14] = {
 		679 - 533, 94,
@@ -995,14 +964,18 @@ void ModuleSceneIntro::CreateChains() {
 	map_chain11->body->GetFixtureList()->SetFilterData(f);
 
 	//Setting... triangles(?)
-	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 14, b2_staticBody);
-	trianglebody2 = App->physics->CreateChain(0, 0, triangle2, 14, b2_staticBody);
+	trianglebody1 = App->physics->CreateChain(0, 0, triangle, 6, b2_staticBody);
+	trianglebody2 = App->physics->CreateChain(0, 0, triangle2, 6, b2_staticBody);
+	trianglebody3 = App->physics->CreateChain(0, 0, triangleFloor1, 10, b2_staticBody);
+	trianglebody4 = App->physics->CreateChain(0, 0, triangleFloor2, 10, b2_staticBody);
 	trianglebody1->body->GetFixtureList()->SetRestitution(2.0f);
 	trianglebody2->body->GetFixtureList()->SetRestitution(2.0f);
 	trianglebody1->listener = this;
 	trianglebody2->listener = this;
 	trianglebody1->body->GetFixtureList()->SetFilterData(f);
 	trianglebody2->body->GetFixtureList()->SetFilterData(f);
+	trianglebody3->body->GetFixtureList()->SetFilterData(f);
+	trianglebody4->body->GetFixtureList()->SetFilterData(f);
 }
 
 void ModuleSceneIntro::BlitStaticPokemonsAndLife() {
@@ -1073,4 +1046,53 @@ bool ModuleSceneIntro::SaveScore() const {
 	scorefile2.close();
 
 	return ret;
+}
+
+void ModuleSceneIntro::Pikachu() {
+
+	//Pikachu
+	if (impactCheck == 1 && !impactTrueno.Finished()) {
+		App->player->ball->body->SetLinearVelocity({ 0,0 });
+		App->player->ball->body->SetGravityScale(0);
+	}
+
+	else if (impactCheck == 1 && impactTrueno.Finished()) {
+		App->player->ball->body->SetGravityScale(1);
+		App->player->ball->body->ApplyForceToCenter({ 0, -50 }, true);
+		impactTrueno.Reset();
+		impactCheck = 2;
+	}
+
+	else if (impactTrueno2.Finished() && impactCheck == 2) {
+		impactCheck = 0;
+		impactTrueno2.Reset();
+	}
+
+	if (impactCheck == 0)
+		current_anim = &pikachu;
+	else if (impactCheck == 1)
+		current_anim = &impactTrueno;
+	else
+		current_anim = &impactTrueno2;
+	r = &current_anim->GetCurrentFrame();
+	int x, y;
+	sensorPikachu->GetPosition(x, y);
+	App->renderer->Blit(general, x - 10, y - 45, r);
+
+	/// pikaCharge
+	if (!pikachuChargeCheck)
+		App->renderer->Blit(general, 209, 170, &rChargePikachu);
+
+	if (pikachuChargeCheck && !chargePikachu.Finished()) {
+		current_anim = &chargePikachu;
+		r = &current_anim->GetCurrentFrame();
+		App->renderer->Blit(general, 209, 170, r);
+	}
+	else {
+		pikachuChargeCheck = false;
+		chargePikachu.Reset();
+	}
+	//
+
+
 }

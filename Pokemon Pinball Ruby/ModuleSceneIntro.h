@@ -33,6 +33,8 @@ public:
 	Animation* current_anim;
 	SDL_Texture* general;
 
+	uint indexPikachu;
+
 	bool destroy_ball;
 	int points, highscore;
 
@@ -79,6 +81,8 @@ private:
 
 	PhysBody* trianglebody1;
 	PhysBody* trianglebody2;
+	PhysBody* trianglebody3;
+	PhysBody* trianglebody4;
 
 	Animation pikachu, impactTrueno, impactTrueno2, chargePikachu, slime, mPokemon, chikorita, topo, latiosSave, hatch, bumper, catchvar, hart;
 
@@ -92,4 +96,5 @@ public:
 	void SetSensors();
 	void CreateChains();
 	void BlitStaticPokemonsAndLife();
+	void Pikachu();
 };
