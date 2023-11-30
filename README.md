@@ -3,7 +3,7 @@
 ## About the game
 This is a tribute to <i>Pokémon Pinball: Ruby & Sapphire</i>, a pinball game developed by Jupiter, published by The Pokémon Company and distributed by Nintendo for the Game Boy Advance handheld game console.<br>
 
-•	GitHub repository: [Pokemon Ruby Pinball](https://github.com/Sandruski/Pokemon-Pinball-Ruby)
+•	GitHub repository: [Pokemon Ruby Pinball](https://github.com/Sandruski/pokemon-pinball-ruby)
 
 ## Inputs
 
